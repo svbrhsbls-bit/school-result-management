@@ -1,1969 +1,2868 @@
 <!DOCTYPE html>
 <html lang="kn">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Students Database</title>
+<title>Students Database</title>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<!-- SUPABASE -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-  <style>
-    * {
-      box-sizing: border-box;
-    }
+<!-- EXCEL READER -->
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: #f5f7fb;
-      color: #222;
-    }
+<style>
+* {
+  box-sizing: border-box;
+}
 
-    .header {
-      background: #1e40af;
-      color: white;
-      padding: 18px 25px;
-    }
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fb;
+  color: #222;
+}
 
-    .header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
+.header {
+  background: #1e40af;
+  color: white;
+  padding: 18px 25px;
+}
 
-    .header p {
-      margin: 5px 0 0;
-      font-size: 14px;
-    }
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+}
 
-    .container {
-      max-width: 1400px;
-      margin: 25px auto;
-      padding: 0 18px;
-    }
+.header p {
+  margin: 5px 0 0;
+  font-size: 14px;
+}
 
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 20px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    }
+.container {
+  max-width: 1500px;
+  margin: 25px auto;
+  padding: 0 18px;
+}
 
-    .card h2 {
-      margin-top: 0;
-      color: #1e40af;
-    }
+.card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
 
-    .filters {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
+.card h2 {
+  margin-top: 0;
+  color: #1e40af;
+}
 
-    label {
-      display: block;
-      font-weight: bold;
-      margin-bottom: 6px;
-    }
+.filters {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
 
-    select,
-    input {
-      width: 100%;
-      padding: 11px;
-      border: 1px solid #ccc;
-      border-radius: 7px;
-      font-size: 15px;
-    }
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+}
 
-    select:disabled,
-    input:read-only {
-      background: #f1f5f9;
-    }
+label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
 
-    button {
-      border: none;
-      padding: 11px 18px;
-      border-radius: 7px;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: bold;
-    }
+select,
+input {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #ccc;
+  border-radius: 7px;
+  font-size: 15px;
+}
 
-    .btn-primary {
-      background: #1e40af;
-      color: white;
-    }
+button {
+  border: none;
+  padding: 11px 18px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
 
-    .btn-success {
-      background: #15803d;
-      color: white;
-    }
+.btn-primary {
+  background: #1e40af;
+  color: white;
+}
 
-    .btn-danger {
-      background: #dc2626;
-      color: white;
-    }
+.btn-success {
+  background: #15803d;
+  color: white;
+}
 
-    .btn-secondary {
-      background: #64748b;
-      color: white;
-    }
+.btn-danger {
+  background: #dc2626;
+  color: white;
+}
 
-    .button-row {
-      margin-top: 18px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
+.btn-secondary {
+  background: #64748b;
+  color: white;
+}
 
-    .message {
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 7px;
-      display: none;
-    }
+.btn-excel {
+  background: #166534;
+  color: white;
+}
 
-    .success {
-      background: #dcfce7;
-      color: #166534;
-    }
+.btn-template {
+  background: #475569;
+  color: white;
+}
 
-    .error {
-      background: #fee2e2;
-      color: #991b1b;
-    }
+.button-row {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
 
-    .table-wrapper {
-      overflow-x: auto;
-    }
+.message {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 7px;
+  display: none;
+  white-space: pre-line;
+}
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 1200px;
-    }
+.success {
+  background: #dcfce7;
+  color: #166534;
+}
 
-    th,
-    td {
-      padding: 10px;
-      border: 1px solid #ddd;
-      text-align: left;
-      white-space: nowrap;
-    }
+.error {
+  background: #fee2e2;
+  color: #991b1b;
+}
 
-    th {
-      background: #1e40af;
-      color: white;
-    }
+.info {
+  background: #dbeafe;
+  color: #1e3a8a;
+}
 
-    tr:nth-child(even) {
-      background: #f8fafc;
-    }
+.small-note {
+  margin-top: 10px;
+  color: #64748b;
+  font-size: 13px;
+}
 
-    .count {
-      margin-bottom: 12px;
-      font-weight: bold;
-      color: #475569;
-    }
+.table-wrapper {
+  overflow-x: auto;
+}
 
-    .modal {
-      display: none;
-      position: fixed;
-      z-index: 1000;
-      left: 0;
-      top: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.55);
-      overflow-y: auto;
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 1250px;
+}
 
-    .modal-content {
-      background: white;
-      width: 95%;
-      max-width: 1000px;
-      margin: 40px auto;
-      padding: 25px;
-      border-radius: 12px;
-    }
+th,
+td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: left;
+  white-space: nowrap;
+}
 
-    .modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
+th {
+  background: #1e40af;
+  color: white;
+}
 
-    .modal-header h2 {
-      margin: 0;
-      color: #1e40af;
-    }
+tr:nth-child(even) {
+  background: #f8fafc;
+}
 
-    .close {
-      font-size: 28px;
-      cursor: pointer;
-      color: #555;
-    }
+.count {
+  margin-bottom: 12px;
+  font-weight: bold;
+  color: #475569;
+}
 
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
-    }
+.actions {
+  display: flex;
+  gap: 7px;
+}
 
-    .actions {
-      display: flex;
-      gap: 7px;
-    }
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.55);
+  overflow-y: auto;
+}
 
-    @media (max-width: 700px) {
-      .filters,
-      .form-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+.modal-content {
+  background: white;
+  width: 95%;
+  max-width: 1050px;
+  margin: 40px auto;
+  padding: 25px;
+  border-radius: 12px;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #1e40af;
+}
+
+.close {
+  font-size: 28px;
+  cursor: pointer;
+  color: #555;
+}
+
+.progress {
+  display: none;
+  margin-top: 15px;
+  background: #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  width: 0%;
+  padding: 6px;
+  text-align: center;
+  background: #16a34a;
+  color: white;
+  font-size: 12px;
+}
+
+@media (max-width: 700px) {
+
+  .filters,
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
-  <div class="header">
-    <h1>Students Database</h1>
-    <p>School Result Management System</p>
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
+<div class="header">
+
+  <h1>Students Database</h1>
+
+  <p>
+    School Result Management System
+  </p>
+
+</div>
+
+
+<div class="container">
+
+<!-- =====================================================
+     SELECTION
+===================================================== -->
+
+<div class="card">
+
+  <h2>Student Selection</h2>
+
+  <div class="filters">
+
+    <div>
+
+      <label for="classSelect">
+        Class
+      </label>
+
+      <select id="classSelect">
+
+        <option value="">
+          -- Select Class --
+        </option>
+
+      </select>
+
+    </div>
+
+
+    <div>
+
+      <label for="sectionSelect">
+        Division
+      </label>
+
+      <select id="sectionSelect">
+
+        <option value="">
+          -- Select Division --
+        </option>
+
+      </select>
+
+    </div>
+
   </div>
 
-  <div class="container">
 
-    <!-- CLASS / DIVISION SELECTION -->
-    <div class="card">
+  <div class="button-row">
 
-      <h2>Student Selection</h2>
+    <button
+      class="btn-primary"
+      onclick="loadStudents()">
 
-      <div class="filters">
+      View Students
+
+    </button>
+
+
+    <button
+      class="btn-success"
+      onclick="openAddStudent()">
+
+      + Add Student
+
+    </button>
+
+
+    <!-- EXCEL UPLOAD -->
+
+    <button
+      class="btn-excel"
+      onclick="document.getElementById('excelFile').click()">
+
+      📥 Upload Excel
+
+    </button>
+
+
+    <!-- TEMPLATE -->
+
+    <button
+      class="btn-template"
+      onclick="downloadTemplate()">
+
+      📄 Excel Template
+
+    </button>
+
+
+    <input
+      type="file"
+      id="excelFile"
+      accept=".xlsx,.xls,.csv"
+      style="display:none">
+
+  </div>
+
+
+  <div class="small-note">
+
+    Excelನಲ್ಲಿ Class ಮತ್ತು Division columns ಇದ್ದರೆ
+    ಪ್ರತಿ student ಸರಿಯಾದ Class / Divisionಗೆ ಸೇರಿಸಲಾಗುತ್ತದೆ.
+
+    <br>
+
+    Class / Division columns ಇಲ್ಲದಿದ್ದರೆ ಮೇಲಿನ ಆಯ್ಕೆ ಮಾಡಿದ
+    Class ಮತ್ತು Divisionಗೆ students ಸೇರಿಸಲಾಗುತ್ತದೆ.
+
+  </div>
+
+
+  <div id="message" class="message"></div>
+
+
+  <div id="progress" class="progress">
+
+    <div
+      id="progressBar"
+      class="progress-bar">
+
+      0%
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- =====================================================
+     STUDENT LIST
+===================================================== -->
+
+<div class="card">
+
+  <h2>
+    Student List
+  </h2>
+
+
+  <div
+    id="studentCount"
+    class="count">
+
+    Please select Class and Division.
+
+  </div>
+
+
+  <div class="table-wrapper">
+
+    <table>
+
+      <thead>
+
+        <tr>
+
+          <th>Sl.No</th>
+
+          <th>Admission No</th>
+
+          <th>Student Name</th>
+
+          <th>Father Name</th>
+
+          <th>Mother Name</th>
+
+          <th>Gender</th>
+
+          <th>Date of Birth</th>
+
+          <th>SATS Number</th>
+
+          <th>PEN Number</th>
+
+          <th>Caste</th>
+
+          <th>Mobile Number</th>
+
+          <th>Action</th>
+
+        </tr>
+
+      </thead>
+
+
+      <tbody id="studentTableBody">
+
+        <tr>
+
+          <td
+            colspan="12"
+            style="text-align:center">
+
+            No students loaded.
+
+          </td>
+
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     ADD / EDIT MODAL
+===================================================== -->
+
+<div
+  id="studentModal"
+  class="modal">
+
+
+  <div class="modal-content">
+
+
+    <div class="modal-header">
+
+      <h2 id="modalTitle">
+        Add Student
+      </h2>
+
+      <span
+        class="close"
+        onclick="closeModal()">
+
+        &times;
+
+      </span>
+
+    </div>
+
+
+    <form id="studentForm">
+
+      <input
+        type="hidden"
+        id="studentId">
+
+
+      <div class="form-grid">
+
 
         <div>
-          <label for="classSelect">Class</label>
 
-          <select id="classSelect">
-            <option value="">-- Select Class --</option>
-          </select>
+          <label>
+            Admission Number
+          </label>
+
+          <input
+            type="text"
+            id="admissionNumber">
+
         </div>
+
 
         <div>
-          <label for="sectionSelect">Division</label>
 
-          <select id="sectionSelect" disabled>
-            <option value="">-- Select Division --</option>
-          </select>
+          <label>
+            Student Name *
+          </label>
+
+          <input
+            type="text"
+            id="studentName"
+            required>
+
         </div>
+
+
+        <div>
+
+          <label>
+            Father Name
+          </label>
+
+          <input
+            type="text"
+            id="fatherName">
+
+        </div>
+
+
+        <div>
+
+          <label>
+            Mother Name
+          </label>
+
+          <input
+            type="text"
+            id="motherName">
+
+        </div>
+
+
+        <div>
+
+          <label>
+            Gender
+          </label>
+
+          <select id="gender">
+
+            <option value="">
+              -- Select --
+            </option>
+
+            <option value="Male">
+              Male
+            </option>
+
+            <option value="Female">
+              Female
+            </option>
+
+            <option value="Other">
+              Other
+            </option>
+
+          </select>
+
+        </div>
+
+
+        <div>
+
+          <label>
+            Date of Birth
+          </label>
+
+          <input
+            type="date"
+            id="dateOfBirth">
+
+        </div>
+
+
+        <div>
+
+          <label>
+            SATS Number
+          </label>
+
+          <input
+            type="text"
+            id="satsNumber">
+
+        </div>
+
+
+        <div>
+
+          <label>
+            PEN Number
+          </label>
+
+          <input
+            type="text"
+            id="penNumber">
+
+        </div>
+
+
+        <div>
+
+          <label>
+            Caste / Category
+          </label>
+
+          <input
+            type="text"
+            id="casteCategory">
+
+        </div>
+
+
+        <div>
+
+          <label>
+            Mobile Number
+          </label>
+
+          <input
+            type="text"
+            id="mobileNumber">
+
+        </div>
+
 
       </div>
+
 
       <div class="button-row">
 
         <button
-          type="button"
-          class="btn-primary"
-          id="viewStudentsBtn">
-          View Students
+          type="submit"
+          class="btn-success">
+
+          Save Student
+
         </button>
+
 
         <button
           type="button"
-          class="btn-success"
-          id="addStudentBtn">
-          + Add Student
+          class="btn-secondary"
+          onclick="closeModal()">
+
+          Cancel
+
         </button>
 
       </div>
 
-      <div id="message" class="message"></div>
 
-    </div>
-
-
-    <!-- STUDENT LIST -->
-    <div class="card">
-
-      <h2>Student List</h2>
-
-      <div id="studentCount" class="count">
-        Please select Class and Division.
-      </div>
-
-      <div class="table-wrapper">
-
-        <table>
-
-          <thead>
-            <tr>
-              <th>Sl.No</th>
-              <th>Admission No</th>
-              <th>Student Name</th>
-              <th>Father Name</th>
-              <th>Mother Name</th>
-              <th>Gender</th>
-              <th>Date of Birth</th>
-              <th>SATS Number</th>
-              <th>PEN Number</th>
-              <th>Caste</th>
-              <th>Mobile Number</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-
-          <tbody id="studentTableBody">
-
-            <tr>
-              <td colspan="12" style="text-align:center;">
-                No students loaded.
-              </td>
-            </tr>
-
-          </tbody>
-
-        </table>
-
-      </div>
-
-    </div>
+    </form>
 
   </div>
 
-
-  <!-- ADD / EDIT MODAL -->
-
-  <div id="studentModal" class="modal">
-
-    <div class="modal-content">
-
-      <div class="modal-header">
-
-        <h2 id="modalTitle">
-          Add Student
-        </h2>
-
-        <span
-          class="close"
-          id="closeModalBtn">
-          &times;
-        </span>
-
-      </div>
-
-
-      <form id="studentForm">
-
-        <input
-          type="hidden"
-          id="studentId">
-
-
-        <div class="form-grid">
-
-
-          <!-- CLASS -->
-          <div>
-
-            <label>
-              Class
-            </label>
-
-            <input
-              type="text"
-              id="editClassName"
-              readonly>
-
-          </div>
-
-
-          <!-- DIVISION -->
-          <div>
-
-            <label>
-              Division
-            </label>
-
-            <input
-              type="text"
-              id="editSectionName"
-              readonly>
-
-          </div>
-
-
-          <!-- ADMISSION -->
-          <div>
-
-            <label>
-              Admission Number
-            </label>
-
-            <input
-              type="text"
-              id="admissionNumber">
-
-          </div>
-
-
-          <!-- STUDENT NAME -->
-          <div>
-
-            <label>
-              Student Name *
-            </label>
-
-            <input
-              type="text"
-              id="studentName"
-              required>
-
-          </div>
-
-
-          <!-- FATHER -->
-          <div>
-
-            <label>
-              Father Name
-            </label>
-
-            <input
-              type="text"
-              id="fatherName">
-
-          </div>
-
-
-          <!-- MOTHER -->
-          <div>
-
-            <label>
-              Mother Name
-            </label>
-
-            <input
-              type="text"
-              id="motherName">
-
-          </div>
-
-
-          <!-- GENDER -->
-          <div>
-
-            <label>
-              Gender
-            </label>
-
-            <select id="gender">
-
-              <option value="">
-                -- Select --
-              </option>
-
-              <option value="Male">
-                Male
-              </option>
-
-              <option value="Female">
-                Female
-              </option>
-
-              <option value="Other">
-                Other
-              </option>
-
-            </select>
-
-          </div>
-
-
-          <!-- DOB -->
-          <div>
-
-            <label>
-              Date of Birth
-            </label>
-
-            <input
-              type="date"
-              id="dateOfBirth">
-
-          </div>
-
-
-          <!-- SATS -->
-          <div>
-
-            <label>
-              SATS Number
-            </label>
-
-            <input
-              type="text"
-              id="satsNumber">
-
-          </div>
-
-
-          <!-- PEN -->
-          <div>
-
-            <label>
-              PEN Number
-            </label>
-
-            <input
-              type="text"
-              id="penNumber">
-
-          </div>
-
-
-          <!-- CASTE -->
-          <div>
-
-            <label>
-              Caste / Category
-            </label>
-
-            <input
-              type="text"
-              id="casteCategory">
-
-          </div>
-
-
-          <!-- MOBILE -->
-          <div>
-
-            <label>
-              Mobile Number
-            </label>
-
-            <input
-              type="text"
-              id="mobileNumber">
-
-          </div>
-
-
-        </div>
-
-
-        <div class="button-row">
-
-          <button
-            type="submit"
-            class="btn-success">
-            Save Student
-          </button>
-
-          <button
-            type="button"
-            class="btn-secondary"
-            id="cancelBtn">
-            Cancel
-          </button>
-
-        </div>
-
-      </form>
-
-    </div>
-
-  </div>
+</div>
 
 
 <script>
 
-  // ==========================================================
-  // SUPABASE
-  // ==========================================================
+/* =========================================================
+   SUPABASE CONNECTION
+========================================================= */
 
-  const SUPABASE_URL =
-    "https://ezmudfrpcvjsgnjibvoq.supabase.co";
+const SUPABASE_URL =
+"https://ezmudfrpcvjsgnjibvoq.supabase.co";
 
-  const SUPABASE_ANON_KEY =
-    "sb_publishable__FYyH6NQaqgARaq2dvuovQ_rKmus0js";
 
-  const supabaseClient =
-    supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_ANON_KEY
+const SUPABASE_ANON_KEY =
+"sb_publishable__FYyH6NQaqgARaq2dvuovQ_rKmus0js";
+
+
+const supabaseClient =
+supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_ANON_KEY
+);
+
+
+let currentAcademicYearId = null;
+
+
+/* =========================================================
+   PAGE LOAD
+========================================================= */
+
+document.addEventListener(
+  "DOMContentLoaded",
+  async function() {
+
+    await loadAcademicYear();
+
+    await loadClasses();
+
+
+    document
+      .getElementById("classSelect")
+      .addEventListener(
+        "change",
+        loadSections
+      );
+
+
+    document
+      .getElementById("excelFile")
+      .addEventListener(
+        "change",
+        handleExcelUpload
+      );
+
+  }
+);
+
+
+/* =========================================================
+   MESSAGE
+========================================================= */
+
+function showMessage(
+  text,
+  type
+) {
+
+  const box =
+    document.getElementById("message");
+
+
+  box.innerText = text;
+
+
+  box.className =
+    "message " + type;
+
+
+  box.style.display =
+    "block";
+
+
+  setTimeout(
+    function() {
+
+      box.style.display =
+        "none";
+
+    },
+    8000
+  );
+
+}
+
+
+/* =========================================================
+   ACADEMIC YEAR
+========================================================= */
+
+async function loadAcademicYear() {
+
+  const {
+    data,
+    error
+  } = await supabaseClient
+
+    .from("academic_years")
+
+    .select(
+      "id, year_name, is_current"
+    )
+
+    .eq(
+      "is_current",
+      true
+    )
+
+    .maybeSingle();
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "Academic Year load ಆಗಲಿಲ್ಲ: "
+      + error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  if (data) {
+
+    currentAcademicYearId =
+      data.id;
+
+  }
+
+}
+
+
+/* =========================================================
+   LOAD CLASSES
+========================================================= */
+
+async function loadClasses() {
+
+  const classSelect =
+    document.getElementById(
+      "classSelect"
     );
 
 
-  // ==========================================================
-  // GLOBAL
-  // ==========================================================
-
-  let currentAcademicYearId = null;
-
-  let currentStudents = [];
+  classSelect.innerHTML =
+    `<option value="">
+      -- Select Class --
+    </option>`;
 
 
-  // ==========================================================
-  // PAGE LOAD
-  // ==========================================================
+  const {
+    data,
+    error
+  } = await supabaseClient
 
-  document.addEventListener(
-    "DOMContentLoaded",
-    async function() {
+    .from("classes")
 
-      await loadAcademicYear();
+    .select(
+      "id, class_name"
+    )
 
-      await loadClasses();
+    .order(
+      "display_order",
+      {
+        ascending: true
+      }
+    );
 
 
-      document
-        .getElementById("classSelect")
-        .addEventListener(
-          "change",
-          loadSections
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "Classes load ಆಗಲಿಲ್ಲ: "
+      + error.message,
+      "error"
+    );
+
+    return;
+  }
+
+
+  (data || []).forEach(
+    function(item) {
+
+      const option =
+        document.createElement(
+          "option"
         );
 
 
-      document
-        .getElementById("sectionSelect")
-        .addEventListener(
-          "change",
-          function() {
-
-            document
-              .getElementById("studentCount")
-              .innerText =
-              "Class ಮತ್ತು Division ಆಯ್ಕೆ ಮಾಡಲಾಗಿದೆ. View Students ಒತ್ತಿ.";
-
-          }
-        );
+      option.value =
+        item.id;
 
 
-      document
-        .getElementById("viewStudentsBtn")
-        .addEventListener(
-          "click",
-          loadStudents
-        );
+      option.textContent =
+        item.class_name;
 
 
-      document
-        .getElementById("addStudentBtn")
-        .addEventListener(
-          "click",
-          openAddStudent
-        );
-
-
-      document
-        .getElementById("closeModalBtn")
-        .addEventListener(
-          "click",
-          closeModal
-        );
-
-
-      document
-        .getElementById("cancelBtn")
-        .addEventListener(
-          "click",
-          closeModal
-        );
+      classSelect.appendChild(
+        option
+      );
 
     }
   );
 
+}
 
-  // ==========================================================
-  // MESSAGE
-  // ==========================================================
 
-  function showMessage(text, type) {
+/* =========================================================
+   LOAD DIVISIONS
+========================================================= */
 
-    const box =
-      document.getElementById("message");
+async function loadSections() {
 
-    box.innerText = text;
+  const classId =
+    document.getElementById(
+      "classSelect"
+    ).value;
 
-    box.className =
-      "message " + type;
 
-    box.style.display =
-      "block";
-
-
-    setTimeout(
-      function() {
-
-        box.style.display =
-          "none";
-
-      },
-      5000
-    );
-
-  }
-
-
-  // ==========================================================
-  // CURRENT ACADEMIC YEAR
-  // ==========================================================
-
-  async function loadAcademicYear() {
-
-    const { data, error } =
-      await supabaseClient
-        .from("academic_years")
-        .select(
-          "id, year_name, is_current"
-        )
-        .eq(
-          "is_current",
-          true
-        )
-        .maybeSingle();
-
-
-    if (error) {
-
-      console.error(error);
-
-      showMessage(
-        "Academic Year load ಆಗಲಿಲ್ಲ: " +
-        error.message,
-        "error"
-      );
-
-      return;
-    }
-
-
-    if (data) {
-
-      currentAcademicYearId =
-        data.id;
-
-    }
-
-  }
-
-
-  // ==========================================================
-  // LOAD CLASSES
-  // ==========================================================
-
-  async function loadClasses() {
-
-    const classSelect =
-      document.getElementById(
-        "classSelect"
-      );
-
-
-    classSelect.innerHTML =
-      '<option value="">-- Select Class --</option>';
-
-
-    const { data, error } =
-      await supabaseClient
-        .from("classes")
-        .select(
-          "id, class_name"
-        )
-        .order(
-          "display_order",
-          {
-            ascending: true
-          }
-        );
-
-
-    if (error) {
-
-      console.error(error);
-
-      showMessage(
-        "Classes load ಆಗಲಿಲ್ಲ: " +
-        error.message,
-        "error"
-      );
-
-      return;
-    }
-
-
-    data.forEach(
-      function(item) {
-
-        const option =
-          document.createElement(
-            "option"
-          );
-
-
-        option.value =
-          item.id;
-
-
-        option.textContent =
-          item.class_name;
-
-
-        classSelect.appendChild(
-          option
-        );
-
-      }
-    );
-
-  }
-
-
-  // ==========================================================
-  // LOAD DIVISIONS
-  // ==========================================================
-
-  async function loadSections() {
-
-    const classId =
-      document.getElementById(
-        "classSelect"
-      ).value;
-
-
-    const sectionSelect =
-      document.getElementById(
-        "sectionSelect"
-      );
-
-
-    sectionSelect.innerHTML =
-      '<option value="">-- Select Division --</option>';
-
-
-    sectionSelect.disabled =
-      true;
-
-
-    if (!classId) {
-
-      return;
-
-    }
-
-
-    const { data, error } =
-      await supabaseClient
-        .from("sections")
-        .select(
-          "id, section_name"
-        )
-        .eq(
-          "class_id",
-          classId
-        )
-        .eq(
-          "active",
-          true
-        )
-        .order(
-          "section_name"
-        );
-
-
-    if (error) {
-
-      console.error(error);
-
-      showMessage(
-        "Divisions load ಆಗಲಿಲ್ಲ: " +
-        error.message,
-        "error"
-      );
-
-      return;
-    }
-
-
-    data.forEach(
-      function(item) {
-
-        const option =
-          document.createElement(
-            "option"
-          );
-
-
-        option.value =
-          item.id;
-
-
-        option.textContent =
-          item.section_name;
-
-
-        sectionSelect.appendChild(
-          option
-        );
-
-      }
+  const sectionSelect =
+    document.getElementById(
+      "sectionSelect"
     );
 
 
-    sectionSelect.disabled =
-      false;
+  sectionSelect.innerHTML =
+    `<option value="">
+      -- Select Division --
+    </option>`;
+
+
+  if (!classId) {
+
+    return;
 
   }
 
 
-  // ==========================================================
-  // LOAD STUDENTS
-  // ==========================================================
+  const {
+    data,
+    error
+  } = await supabaseClient
 
-  async function loadStudents() {
+    .from("sections")
 
-    const classId =
-      document.getElementById(
-        "classSelect"
-      ).value;
+    .select(
+      "id, section_name"
+    )
 
+    .eq(
+      "class_id",
+      classId
+    )
 
-    const sectionId =
-      document.getElementById(
-        "sectionSelect"
-      ).value;
+    .eq(
+      "active",
+      true
+    )
 
-
-    if (!classId) {
-
-      showMessage(
-        "ಮೊದಲು Class ಆಯ್ಕೆ ಮಾಡಿ.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    if (!sectionId) {
-
-      showMessage(
-        "ಮೊದಲು Division ಆಯ್ಕೆ ಮಾಡಿ.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    let query =
-      supabaseClient
-        .from("students")
-        .select("*")
-        .eq(
-          "class_id",
-          classId
-        )
-        .eq(
-          "section_id",
-          sectionId
-        )
-        .eq(
-          "active",
-          true
-        )
-        .order(
-          "student_name"
-        );
-
-
-    if (currentAcademicYearId) {
-
-      query =
-        query.eq(
-          "academic_year_id",
-          currentAcademicYearId
-        );
-
-    }
-
-
-    const { data, error } =
-      await query;
-
-
-    if (error) {
-
-      console.error(error);
-
-      showMessage(
-        "Students load ಆಗಲಿಲ್ಲ: " +
-        error.message,
-        "error"
-      );
-
-      return;
-    }
-
-
-    currentStudents =
-      data || [];
-
-
-    displayStudents(
-      currentStudents
+    .order(
+      "section_name"
     );
 
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "Divisions load ಆಗಲಿಲ್ಲ: "
+      + error.message,
+      "error"
+    );
+
+    return;
   }
 
 
-  // ==========================================================
-  // DISPLAY STUDENTS
-  // ==========================================================
+  (data || []).forEach(
+    function(item) {
 
-  function displayStudents(
-    students
+      const option =
+        document.createElement(
+          "option"
+        );
+
+
+      option.value =
+        item.id;
+
+
+      option.textContent =
+        item.section_name;
+
+
+      sectionSelect.appendChild(
+        option
+      );
+
+    }
+  );
+
+}
+
+
+/* =========================================================
+   LOAD STUDENTS
+========================================================= */
+
+async function loadStudents() {
+
+  const classId =
+    document.getElementById(
+      "classSelect"
+    ).value;
+
+
+  const sectionId =
+    document.getElementById(
+      "sectionSelect"
+    ).value;
+
+
+  if (!classId) {
+
+    showMessage(
+      "ಮೊದಲು Class ಆಯ್ಕೆ ಮಾಡಿ.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  if (!sectionId) {
+
+    showMessage(
+      "ಮೊದಲು Division ಆಯ್ಕೆ ಮಾಡಿ.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  let query =
+    supabaseClient
+
+      .from("students")
+
+      .select("*")
+
+      .eq(
+        "class_id",
+        classId
+      )
+
+      .eq(
+        "section_id",
+        sectionId
+      )
+
+      .eq(
+        "active",
+        true
+      )
+
+      .order(
+        "student_name"
+      );
+
+
+  if (currentAcademicYearId) {
+
+    query =
+      query.eq(
+        "academic_year_id",
+        currentAcademicYearId
+      );
+
+  }
+
+
+  const {
+    data,
+    error
+  } = await query;
+
+
+  if (error) {
+
+    console.error(error);
+
+    showMessage(
+      "Students load ಆಗಲಿಲ್ಲ: "
+      + error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  displayStudents(
+    data || []
+  );
+
+}
+
+
+/* =========================================================
+   DISPLAY STUDENTS
+========================================================= */
+
+function displayStudents(
+  students
+) {
+
+  const tbody =
+    document.getElementById(
+      "studentTableBody"
+    );
+
+
+  tbody.innerHTML = "";
+
+
+  document.getElementById(
+    "studentCount"
+  ).innerText =
+    "Total Students: "
+    + students.length;
+
+
+  if (
+    students.length === 0
   ) {
 
-    const tbody =
-      document.getElementById(
-        "studentTableBody"
-      );
+    tbody.innerHTML = `
+      <tr>
+        <td
+          colspan="12"
+          style="text-align:center">
+
+          ಈ Class / Divisionನಲ್ಲಿ
+          ವಿದ್ಯಾರ್ಥಿಗಳು ಇಲ್ಲ.
+
+        </td>
+      </tr>
+    `;
+
+    return;
+
+  }
 
 
-    tbody.innerHTML = "";
+  students.forEach(
+    function(student, index) {
+
+      const row =
+        document.createElement(
+          "tr"
+        );
 
 
-    document
-      .getElementById(
-        "studentCount"
-      )
-      .innerText =
-      "Total Students: " +
-      students.length;
+      row.innerHTML = `
+
+        <td>
+          ${index + 1}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            student.admission_number || ""
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            student.student_name || ""
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            student.father_name || ""
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            student.mother_name || ""
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            student.gender || ""
+          )}
+        </td>
+
+        <td>
+          ${formatDate(
+            student.date_of_birth
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            student.sats_number || ""
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            student.pen_number || ""
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            student.caste_category || ""
+          )}
+        </td>
+
+        <td>
+          ${escapeHtml(
+            student.mobile_number || ""
+          )}
+        </td>
+
+        <td>
+
+          <div class="actions">
+
+            <button
+              class="btn-primary"
+              onclick='editStudent(${JSON.stringify(student)})'>
+
+              Edit
+
+            </button>
 
 
-    if (
-      students.length === 0
-    ) {
+            <button
+              class="btn-danger"
+              onclick="deleteStudent('${student.id}')">
 
-      tbody.innerHTML = `
-        <tr>
-          <td
-            colspan="12"
-            style="text-align:center;">
-            ಈ Class / Divisionನಲ್ಲಿ
-            ವಿದ್ಯಾರ್ಥಿಗಳು ಇಲ್ಲ.
-          </td>
-        </tr>
+              Delete
+
+            </button>
+
+          </div>
+
+        </td>
+
       `;
 
-      return;
+
+      tbody.appendChild(
+        row
+      );
+
     }
+  );
 
+}
 
-    students.forEach(
-      function(student, index) {
 
-        const row =
-          document.createElement(
-            "tr"
-          );
+/* =========================================================
+   ADD STUDENT
+========================================================= */
 
+function openAddStudent() {
 
-        // SERIAL NUMBER
-        const slNo =
-          document.createElement(
-            "td"
-          );
+  const classId =
+    document.getElementById(
+      "classSelect"
+    ).value;
 
-        slNo.innerText =
-          index + 1;
 
+  const sectionId =
+    document.getElementById(
+      "sectionSelect"
+    ).value;
 
-        // ADMISSION
-        const admission =
-          document.createElement(
-            "td"
-          );
 
-        admission.innerText =
-          student.admission_number || "";
-
-
-        // NAME
-        const name =
-          document.createElement(
-            "td"
-          );
-
-        name.innerText =
-          student.student_name || "";
-
-
-        // FATHER
-        const father =
-          document.createElement(
-            "td"
-          );
-
-        father.innerText =
-          student.father_name || "";
-
-
-        // MOTHER
-        const mother =
-          document.createElement(
-            "td"
-          );
-
-        mother.innerText =
-          student.mother_name || "";
-
-
-        // GENDER
-        const gender =
-          document.createElement(
-            "td"
-          );
-
-        gender.innerText =
-          student.gender || "";
-
-
-        // DOB
-        const dob =
-          document.createElement(
-            "td"
-          );
-
-        dob.innerText =
-          formatDate(
-            student.date_of_birth
-          );
-
-
-        // SATS
-        const sats =
-          document.createElement(
-            "td"
-          );
-
-        sats.innerText =
-          student.sats_number || "";
-
-
-        // PEN
-        const pen =
-          document.createElement(
-            "td"
-          );
-
-        pen.innerText =
-          student.pen_number || "";
-
-
-        // CASTE
-        const caste =
-          document.createElement(
-            "td"
-          );
-
-        caste.innerText =
-          student.caste_category || "";
-
-
-        // MOBILE
-        const mobile =
-          document.createElement(
-            "td"
-          );
-
-        mobile.innerText =
-          student.mobile_number || "";
-
-
-        // ACTION
-        const action =
-          document.createElement(
-            "td"
-          );
-
-
-        const actions =
-          document.createElement(
-            "div"
-          );
-
-        actions.className =
-          "actions";
-
-
-        // EDIT BUTTON
-        const editBtn =
-          document.createElement(
-            "button"
-          );
-
-        editBtn.className =
-          "btn-primary";
-
-        editBtn.innerText =
-          "Edit";
-
-
-        editBtn.addEventListener(
-          "click",
-          function() {
-
-            editStudent(
-              student
-            );
-
-          }
-        );
-
-
-        // DELETE BUTTON
-        const deleteBtn =
-          document.createElement(
-            "button"
-          );
-
-        deleteBtn.className =
-          "btn-danger";
-
-        deleteBtn.innerText =
-          "Delete";
-
-
-        deleteBtn.addEventListener(
-          "click",
-          function() {
-
-            deleteStudent(
-              student.id
-            );
-
-          }
-        );
-
-
-        actions.appendChild(
-          editBtn
-        );
-
-        actions.appendChild(
-          deleteBtn
-        );
-
-
-        action.appendChild(
-          actions
-        );
-
-
-        row.appendChild(
-          slNo
-        );
-
-        row.appendChild(
-          admission
-        );
-
-        row.appendChild(
-          name
-        );
-
-        row.appendChild(
-          father
-        );
-
-        row.appendChild(
-          mother
-        );
-
-        row.appendChild(
-          gender
-        );
-
-        row.appendChild(
-          dob
-        );
-
-        row.appendChild(
-          sats
-        );
-
-        row.appendChild(
-          pen
-        );
-
-        row.appendChild(
-          caste
-        );
-
-        row.appendChild(
-          mobile
-        );
-
-        row.appendChild(
-          action
-        );
-
-
-        tbody.appendChild(
-          row
-        );
-
-      }
-    );
-
-  }
-
-
-  // ==========================================================
-  // OPEN ADD STUDENT
-  // ==========================================================
-
-  function openAddStudent() {
-
-    const classSelect =
-      document.getElementById(
-        "classSelect"
-      );
-
-    const sectionSelect =
-      document.getElementById(
-        "sectionSelect"
-      );
-
-
-    const classId =
-      classSelect.value;
-
-    const sectionId =
-      sectionSelect.value;
-
-
-    if (
-      !classId ||
-      !sectionId
-    ) {
-
-      showMessage(
-        "Student add ಮಾಡಲು Class ಮತ್ತು Division ಆಯ್ಕೆ ಮಾಡಿ.",
-        "error"
-      );
-
-      return;
-    }
-
-
-    document
-      .getElementById(
-        "studentForm"
-      )
-      .reset();
-
-
-    document
-      .getElementById(
-        "studentId"
-      )
-      .value = "";
-
-
-    // CLASS NAME
-    document
-      .getElementById(
-        "editClassName"
-      )
-      .value =
-      classSelect.options[
-        classSelect.selectedIndex
-      ].text;
-
-
-    // DIVISION NAME
-    document
-      .getElementById(
-        "editSectionName"
-      )
-      .value =
-      sectionSelect.options[
-        sectionSelect.selectedIndex
-      ].text;
-
-
-    document
-      .getElementById(
-        "modalTitle"
-      )
-      .innerText =
-      "Add Student";
-
-
-    document
-      .getElementById(
-        "studentModal"
-      )
-      .style.display =
-      "block";
-
-  }
-
-
-  // ==========================================================
-  // EDIT STUDENT
-  // ==========================================================
-
-  function editStudent(
-    student
+  if (
+    !classId ||
+    !sectionId
   ) {
 
-    const classSelect =
-      document.getElementById(
-        "classSelect"
-      );
+    showMessage(
+      "Student add ಮಾಡಲು Class ಮತ್ತು Division ಆಯ್ಕೆ ಮಾಡಿ.",
+      "error"
+    );
 
-
-    const sectionSelect =
-      document.getElementById(
-        "sectionSelect"
-      );
-
-
-    // STUDENT ID
-    document
-      .getElementById(
-        "studentId"
-      )
-      .value =
-      student.id || "";
-
-
-    // CLASS
-    document
-      .getElementById(
-        "editClassName"
-      )
-      .value =
-      classSelect.options[
-        classSelect.selectedIndex
-      ].text;
-
-
-    // DIVISION
-    document
-      .getElementById(
-        "editSectionName"
-      )
-      .value =
-      sectionSelect.options[
-        sectionSelect.selectedIndex
-      ].text;
-
-
-    // ADMISSION
-    document
-      .getElementById(
-        "admissionNumber"
-      )
-      .value =
-      student.admission_number || "";
-
-
-    // NAME
-    document
-      .getElementById(
-        "studentName"
-      )
-      .value =
-      student.student_name || "";
-
-
-    // FATHER
-    document
-      .getElementById(
-        "fatherName"
-      )
-      .value =
-      student.father_name || "";
-
-
-    // MOTHER
-    document
-      .getElementById(
-        "motherName"
-      )
-      .value =
-      student.mother_name || "";
-
-
-    // GENDER
-    document
-      .getElementById(
-        "gender"
-      )
-      .value =
-      student.gender || "";
-
-
-    // DOB
-    document
-      .getElementById(
-        "dateOfBirth"
-      )
-      .value =
-      student.date_of_birth || "";
-
-
-    // SATS
-    document
-      .getElementById(
-        "satsNumber"
-      )
-      .value =
-      student.sats_number || "";
-
-
-    // PEN
-    document
-      .getElementById(
-        "penNumber"
-      )
-      .value =
-      student.pen_number || "";
-
-
-    // CASTE
-    document
-      .getElementById(
-        "casteCategory"
-      )
-      .value =
-      student.caste_category || "";
-
-
-    // MOBILE
-    document
-      .getElementById(
-        "mobileNumber"
-      )
-      .value =
-      student.mobile_number || "";
-
-
-    document
-      .getElementById(
-        "modalTitle"
-      )
-      .innerText =
-      "Edit Student";
-
-
-    document
-      .getElementById(
-        "studentModal"
-      )
-      .style.display =
-      "block";
+    return;
 
   }
 
-
-  // ==========================================================
-  // CLOSE MODAL
-  // ==========================================================
-
-  function closeModal() {
-
-    document
-      .getElementById(
-        "studentModal"
-      )
-      .style.display =
-      "none";
-
-  }
-
-
-  // ==========================================================
-  // SAVE / UPDATE STUDENT
-  // ==========================================================
 
   document
     .getElementById(
       "studentForm"
     )
-    .addEventListener(
-      "submit",
-      async function(event) {
-
-        event.preventDefault();
+    .reset();
 
 
-        const studentId =
+  document.getElementById(
+    "studentId"
+  ).value = "";
+
+
+  document.getElementById(
+    "modalTitle"
+  ).innerText =
+    "Add Student";
+
+
+  document.getElementById(
+    "studentModal"
+  ).style.display =
+    "block";
+
+}
+
+
+/* =========================================================
+   EDIT STUDENT
+========================================================= */
+
+function editStudent(
+  student
+) {
+
+  document.getElementById(
+    "studentId"
+  ).value =
+    student.id || "";
+
+
+  document.getElementById(
+    "admissionNumber"
+  ).value =
+    student.admission_number || "";
+
+
+  document.getElementById(
+    "studentName"
+  ).value =
+    student.student_name || "";
+
+
+  document.getElementById(
+    "fatherName"
+  ).value =
+    student.father_name || "";
+
+
+  document.getElementById(
+    "motherName"
+  ).value =
+    student.mother_name || "";
+
+
+  document.getElementById(
+    "gender"
+  ).value =
+    student.gender || "";
+
+
+  document.getElementById(
+    "dateOfBirth"
+  ).value =
+    student.date_of_birth || "";
+
+
+  document.getElementById(
+    "satsNumber"
+  ).value =
+    student.sats_number || "";
+
+
+  document.getElementById(
+    "penNumber"
+  ).value =
+    student.pen_number || "";
+
+
+  document.getElementById(
+    "casteCategory"
+  ).value =
+    student.caste_category || "";
+
+
+  document.getElementById(
+    "mobileNumber"
+  ).value =
+    student.mobile_number || "";
+
+
+  document.getElementById(
+    "modalTitle"
+  ).innerText =
+    "Edit Student";
+
+
+  document.getElementById(
+    "studentModal"
+  ).style.display =
+    "block";
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL
+========================================================= */
+
+function closeModal() {
+
+  document.getElementById(
+    "studentModal"
+  ).style.display =
+    "none";
+
+}
+
+
+/* =========================================================
+   SAVE / UPDATE
+========================================================= */
+
+document
+  .getElementById(
+    "studentForm"
+  )
+  .addEventListener(
+    "submit",
+    async function(event) {
+
+      event.preventDefault();
+
+
+      const studentId =
+        document.getElementById(
+          "studentId"
+        ).value;
+
+
+      const classId =
+        document.getElementById(
+          "classSelect"
+        ).value;
+
+
+      const sectionId =
+        document.getElementById(
+          "sectionSelect"
+        ).value;
+
+
+      const studentData = {
+
+        admission_number:
           document.getElementById(
-            "studentId"
-          ).value;
+            "admissionNumber"
+          ).value.trim(),
 
-
-        const classId =
+        student_name:
           document.getElementById(
-            "classSelect"
-          ).value;
+            "studentName"
+          ).value.trim(),
 
-
-        const sectionId =
+        father_name:
           document.getElementById(
-            "sectionSelect"
-          ).value;
+            "fatherName"
+          ).value.trim(),
 
+        mother_name:
+          document.getElementById(
+            "motherName"
+          ).value.trim(),
 
-        if (!classId) {
+        gender:
+          document.getElementById(
+            "gender"
+          ).value,
 
-          showMessage(
-            "Class ಆಯ್ಕೆ ಆಗಿಲ್ಲ.",
-            "error"
-          );
+        date_of_birth:
+          document.getElementById(
+            "dateOfBirth"
+          ).value || null,
 
-          return;
+        sats_number:
+          document.getElementById(
+            "satsNumber"
+          ).value.trim(),
 
-        }
+        pen_number:
+          document.getElementById(
+            "penNumber"
+          ).value.trim(),
 
+        caste_category:
+          document.getElementById(
+            "casteCategory"
+          ).value.trim(),
 
-        if (!sectionId) {
+        mobile_number:
+          document.getElementById(
+            "mobileNumber"
+          ).value.trim(),
 
-          showMessage(
-            "Division ಆಯ್ಕೆ ಆಗಿಲ್ಲ.",
-            "error"
-          );
+        class_id:
+          classId,
 
-          return;
+        section_id:
+          sectionId,
 
-        }
+        active:
+          true
 
+      };
 
-        const studentData = {
 
-          admission_number:
-            document
-              .getElementById(
-                "admissionNumber"
-              )
-              .value
-              .trim(),
+      if (
+        currentAcademicYearId
+      ) {
 
-
-          student_name:
-            document
-              .getElementById(
-                "studentName"
-              )
-              .value
-              .trim(),
-
-
-          father_name:
-            document
-              .getElementById(
-                "fatherName"
-              )
-              .value
-              .trim(),
-
-
-          mother_name:
-            document
-              .getElementById(
-                "motherName"
-              )
-              .value
-              .trim(),
-
-
-          gender:
-            document
-              .getElementById(
-                "gender"
-              )
-              .value,
-
-
-          date_of_birth:
-            document
-              .getElementById(
-                "dateOfBirth"
-              )
-              .value ||
-            null,
-
-
-          sats_number:
-            document
-              .getElementById(
-                "satsNumber"
-              )
-              .value
-              .trim(),
-
-
-          pen_number:
-            document
-              .getElementById(
-                "penNumber"
-              )
-              .value
-              .trim(),
-
-
-          caste_category:
-            document
-              .getElementById(
-                "casteCategory"
-              )
-              .value
-              .trim(),
-
-
-          mobile_number:
-            document
-              .getElementById(
-                "mobileNumber"
-              )
-              .value
-              .trim(),
-
-
-          class_id:
-            classId,
-
-
-          section_id:
-            sectionId,
-
-
-          active:
-            true
-
-        };
-
-
-        if (
-          currentAcademicYearId
-        ) {
-
-          studentData
-            .academic_year_id =
-            currentAcademicYearId;
-
-        }
-
-
-        let result;
-
-
-        // ====================================================
-        // UPDATE
-        // ====================================================
-
-        if (studentId) {
-
-          result =
-            await supabaseClient
-              .from("students")
-              .update(
-                studentData
-              )
-              .eq(
-                "id",
-                studentId
-              );
-
-        }
-
-
-        // ====================================================
-        // INSERT
-        // ====================================================
-
-        else {
-
-          result =
-            await supabaseClient
-              .from("students")
-              .insert([
-                studentData
-              ]);
-
-        }
-
-
-        if (result.error) {
-
-          console.error(
-            result.error
-          );
-
-
-          showMessage(
-            "Save ಆಗಲಿಲ್ಲ: " +
-            result.error.message,
-            "error"
-          );
-
-
-          return;
-
-        }
-
-
-        closeModal();
-
-
-        showMessage(
-          studentId
-            ? "Student successfully updated."
-            : "Student successfully added.",
-          "success"
-        );
-
-
-        await loadStudents();
+        studentData.academic_year_id =
+          currentAcademicYearId;
 
       }
-    );
 
 
-  // ==========================================================
-  // DELETE STUDENT
-  // ==========================================================
+      let result;
 
-  async function deleteStudent(
-    id
-  ) {
 
-    const confirmDelete =
-      confirm(
-        "ಈ ವಿದ್ಯಾರ್ಥಿಯನ್ನು delete ಮಾಡಬೇಕೇ?"
+      if (studentId) {
+
+        result =
+          await supabaseClient
+
+            .from("students")
+
+            .update(
+              studentData
+            )
+
+            .eq(
+              "id",
+              studentId
+            );
+
+      }
+
+      else {
+
+        result =
+          await supabaseClient
+
+            .from("students")
+
+            .insert([
+              studentData
+            ]);
+
+      }
+
+
+      if (result.error) {
+
+        console.error(
+          result.error
+        );
+
+        showMessage(
+          "Save ಆಗಲಿಲ್ಲ: "
+          + result.error.message,
+          "error"
+        );
+
+        return;
+
+      }
+
+
+      closeModal();
+
+
+      showMessage(
+        studentId
+          ? "Student successfully updated."
+          : "Student successfully added.",
+        "success"
       );
 
 
-    if (!confirmDelete) {
+      await loadStudents();
+
+    }
+  );
+
+
+/* =========================================================
+   DELETE
+========================================================= */
+
+async function deleteStudent(
+  id
+) {
+
+  const answer =
+    confirm(
+      "ಈ ವಿದ್ಯಾರ್ಥಿಯನ್ನು delete ಮಾಡಬೇಕೇ?"
+    );
+
+
+  if (!answer) {
+
+    return;
+
+  }
+
+
+  const {
+    error
+  } = await supabaseClient
+
+    .from("students")
+
+    .update({
+      active: false
+    })
+
+    .eq(
+      "id",
+      id
+    );
+
+
+  if (error) {
+
+    showMessage(
+      "Delete ಆಗಲಿಲ್ಲ: "
+      + error.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  showMessage(
+    "Student deleted successfully.",
+    "success"
+  );
+
+
+  await loadStudents();
+
+}
+
+
+/* =========================================================
+   EXCEL TEMPLATE
+========================================================= */
+
+function downloadTemplate() {
+
+  const rows = [
+
+    [
+
+      "Class",
+      "Division",
+      "Admission Number",
+      "Student Name",
+      "Father Name",
+      "Mother Name",
+      "Gender",
+      "Date of Birth",
+      "SATS Number",
+      "PEN Number",
+      "Caste",
+      "Mobile Number"
+
+    ],
+
+
+    [
+
+      "8",
+      "A",
+      "001",
+      "Ramesh",
+      "Kumarappa",
+      "Sakamma",
+      "Male",
+      "26-07-2013",
+      "123456789",
+      "455665566",
+      "Golla",
+      "9999999999"
+
+    ]
+
+  ];
+
+
+  const worksheet =
+    XLSX.utils.aoa_to_sheet(
+      rows
+    );
+
+
+  const workbook =
+    XLSX.utils.book_new();
+
+
+  XLSX.utils.book_append_sheet(
+    workbook,
+    worksheet,
+    "Students"
+  );
+
+
+  XLSX.writeFile(
+    workbook,
+    "students_template.xlsx"
+  );
+
+}
+
+
+/* =========================================================
+   EXCEL FILE READ
+========================================================= */
+
+async function handleExcelUpload(
+  event
+) {
+
+  const file =
+    event.target.files[0];
+
+
+  event.target.value = "";
+
+
+  if (!file) {
+
+    return;
+
+  }
+
+
+  try {
+
+    showMessage(
+      "Excel ಓದಲಾಗುತ್ತಿದೆ...",
+      "info"
+    );
+
+
+    const buffer =
+      await file.arrayBuffer();
+
+
+    const workbook =
+      XLSX.read(
+        buffer,
+        {
+          type: "array",
+          cellDates: true
+        }
+      );
+
+
+    const firstSheet =
+      workbook.Sheets[
+        workbook.SheetNames[0]
+      ];
+
+
+    const rows =
+      XLSX.utils.sheet_to_json(
+        firstSheet,
+        {
+          defval: "",
+          raw: false
+        }
+      );
+
+
+    if (
+      !rows.length
+    ) {
+
+      showMessage(
+        "Excel sheet ಖಾಲಿಯಾಗಿದೆ.",
+        "error"
+      );
 
       return;
 
     }
 
 
-    const { error } =
-      await supabaseClient
-        .from("students")
-        .update({
-          active: false
-        })
-        .eq(
-          "id",
-          id
+    await importStudents(
+      rows
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(error);
+
+    showMessage(
+      "Excel upload ಆಗಲಿಲ್ಲ: "
+      + error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   IMPORT STUDENTS
+========================================================= */
+
+async function importStudents(
+  rows
+) {
+
+  const selectedClassId =
+    document.getElementById(
+      "classSelect"
+    ).value;
+
+
+  const selectedSectionId =
+    document.getElementById(
+      "sectionSelect"
+    ).value;
+
+
+  /* LOAD CLASSES */
+
+  const {
+    data: classes,
+    error: classError
+  } = await supabaseClient
+
+    .from("classes")
+
+    .select(
+      "id, class_name"
+    );
+
+
+  if (classError) {
+
+    showMessage(
+      "Classes load ಆಗಲಿಲ್ಲ: "
+      + classError.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  /* LOAD SECTIONS */
+
+  const {
+    data: sections,
+    error: sectionError
+  } = await supabaseClient
+
+    .from("sections")
+
+    .select(
+      "id, section_name, class_id"
+    )
+
+    .eq(
+      "active",
+      true
+    );
+
+
+  if (sectionError) {
+
+    showMessage(
+      "Divisions load ಆಗಲಿಲ್ಲ: "
+      + sectionError.message,
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  /* CLASS MAP */
+
+  const classMap = {};
+
+
+  (classes || []).forEach(
+    function(c) {
+
+      classMap[
+        normalize(
+          c.class_name
+        )
+      ] = c.id;
+
+    }
+  );
+
+
+  /* SECTION MAP */
+
+  const sectionMap = {};
+
+
+  (sections || []).forEach(
+    function(s) {
+
+      sectionMap[
+        s.class_id
+        + "|"
+        + normalize(
+          s.section_name
+        )
+      ] = s.id;
+
+    }
+  );
+
+
+  const students = [];
+
+  const errors = [];
+
+
+  /* PROCESS EXCEL ROWS */
+
+  rows.forEach(
+    function(rawRow, index) {
+
+      const rowNumber =
+        index + 2;
+
+
+      const row =
+        normalizeRow(
+          rawRow
         );
+
+
+      let classId = "";
+
+      let sectionId = "";
+
+
+      /* CLASS */
+
+      if (
+        row.class
+      ) {
+
+        classId =
+          classMap[
+            normalize(
+              row.class
+            )
+          ] || "";
+
+      }
+
+      else {
+
+        classId =
+          selectedClassId;
+
+      }
+
+
+      /* DIVISION */
+
+      if (
+        row.division &&
+        classId
+      ) {
+
+        sectionId =
+          sectionMap[
+            classId
+            + "|"
+            + normalize(
+              row.division
+            )
+          ] || "";
+
+      }
+
+      else {
+
+        sectionId =
+          selectedSectionId;
+
+      }
+
+
+      if (!classId) {
+
+        errors.push(
+          "Row "
+          + rowNumber
+          + ": Class ಸಿಗಲಿಲ್ಲ."
+        );
+
+        return;
+
+      }
+
+
+      if (!sectionId) {
+
+        errors.push(
+          "Row "
+          + rowNumber
+          + ": Division ಸಿಗಲಿಲ್ಲ."
+        );
+
+        return;
+
+      }
+
+
+      if (
+        !row.student_name
+      ) {
+
+        errors.push(
+          "Row "
+          + rowNumber
+          + ": Student Name ಖಾಲಿಯಾಗಿದೆ."
+        );
+
+        return;
+
+      }
+
+
+      const student = {
+
+        admission_number:
+          row.admission_number || null,
+
+        student_name:
+          row.student_name,
+
+        father_name:
+          row.father_name || null,
+
+        mother_name:
+          row.mother_name || null,
+
+        gender:
+          normalizeGender(
+            row.gender
+          ),
+
+        date_of_birth:
+          excelDateToISO(
+            row.date_of_birth
+          ),
+
+        sats_number:
+          row.sats_number || null,
+
+        pen_number:
+          row.pen_number || null,
+
+        caste_category:
+          row.caste || null,
+
+        mobile_number:
+          row.mobile_number || null,
+
+        class_id:
+          classId,
+
+        section_id:
+          sectionId,
+
+        active:
+          true
+
+      };
+
+
+      if (
+        currentAcademicYearId
+      ) {
+
+        student.academic_year_id =
+          currentAcademicYearId;
+
+      }
+
+
+      students.push(
+        student
+      );
+
+    }
+  );
+
+
+  if (
+    !students.length
+  ) {
+
+    showMessage(
+      "Valid student records ಸಿಗಲಿಲ್ಲ.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  /* PROGRESS */
+
+  document.getElementById(
+    "progress"
+  ).style.display =
+    "block";
+
+
+  setProgress(0);
+
+
+  let added = 0;
+
+  let failed = 0;
+
+
+  /* INSERT 50 AT A TIME */
+
+  for (
+    let i = 0;
+    i < students.length;
+    i += 50
+  ) {
+
+    const batch =
+      students.slice(
+        i,
+        i + 50
+      );
+
+
+    const {
+      error
+    } = await supabaseClient
+
+      .from("students")
+
+      .insert(
+        batch
+      );
 
 
     if (error) {
 
       console.error(error);
 
+      failed +=
+        batch.length;
 
-      showMessage(
-        "Delete ಆಗಲಿಲ್ಲ: " +
-        error.message,
-        "error"
+
+      errors.push(
+        "Database Error: "
+        + error.message
       );
 
+    }
 
-      return;
+    else {
+
+      added +=
+        batch.length;
 
     }
 
 
-    showMessage(
-      "Student deleted successfully.",
-      "success"
+    setProgress(
+      Math.round(
+        (
+          (i + batch.length)
+          /
+          students.length
+        ) * 100
+      )
     );
 
+  }
+
+
+  setTimeout(
+    function() {
+
+      document.getElementById(
+        "progress"
+      ).style.display =
+        "none";
+
+    },
+    1000
+  );
+
+
+  let resultMessage =
+    "Excel Upload ಮುಗಿದಿದೆ.\n\n"
+    + "Added: "
+    + added
+    + "\n"
+    + "Failed: "
+    + failed
+    + "\n"
+    + "Total Excel Rows: "
+    + rows.length;
+
+
+  if (
+    errors.length
+  ) {
+
+    resultMessage +=
+      "\n\nErrors:\n"
+      + errors
+          .slice(0, 10)
+          .join("\n");
+
+  }
+
+
+  showMessage(
+    resultMessage,
+    failed || errors.length
+      ? "error"
+      : "success"
+  );
+
+
+  /*
+    CURRENT CLASS / DIVISION
+    REFRESH
+  */
+
+  if (
+    selectedClassId &&
+    selectedSectionId
+  ) {
 
     await loadStudents();
 
   }
 
-
-  // ==========================================================
-  // DATE FORMAT
-  // ==========================================================
-
-  function formatDate(
-    date
-  ) {
-
-    if (!date) {
-
-      return "";
-
-    }
+}
 
 
-    const parts =
-      date.split("-");
+/* =========================================================
+   NORMALIZE EXCEL ROW
+========================================================= */
+
+function normalizeRow(
+  row
+) {
+
+  const result = {};
 
 
-    if (
-      parts.length !== 3
-    ) {
+  Object.keys(
+    row
+  ).forEach(
+    function(key) {
 
-      return date;
-
-    }
-
-
-    return (
-      parts[2] +
-      "-" +
-      parts[1] +
-      "-" +
-      parts[0]
-    );
-
-  }
-
-
-  // ==========================================================
-  // CLICK OUTSIDE MODAL
-  // ==========================================================
-
-  window.addEventListener(
-    "click",
-    function(event) {
-
-      const modal =
-        document.getElementById(
-          "studentModal"
+      const k =
+        normalize(
+          key
         );
 
 
+      const value =
+        row[key];
+
+
       if (
-        event.target === modal
+        k === "class" ||
+        k === "classname" ||
+        k === "standard" ||
+        k === "grade"
       ) {
 
-        closeModal();
+        result.class =
+          value;
+
+      }
+
+
+      else if (
+        k === "division" ||
+        k === "section" ||
+        k === "sectionname"
+      ) {
+
+        result.division =
+          value;
+
+      }
+
+
+      else if (
+        k === "admissionnumber" ||
+        k === "admissionno" ||
+        k === "admission"
+      ) {
+
+        result.admission_number =
+          value;
+
+      }
+
+
+      else if (
+        k === "studentname" ||
+        k === "name" ||
+        k === "student"
+      ) {
+
+        result.student_name =
+          value;
+
+      }
+
+
+      else if (
+        k === "fathername" ||
+        k === "father"
+      ) {
+
+        result.father_name =
+          value;
+
+      }
+
+
+      else if (
+        k === "mothername" ||
+        k === "mother"
+      ) {
+
+        result.mother_name =
+          value;
+
+      }
+
+
+      else if (
+        k === "gender" ||
+        k === "sex"
+      ) {
+
+        result.gender =
+          value;
+
+      }
+
+
+      else if (
+        k === "dateofbirth" ||
+        k === "dob" ||
+        k === "birthdate"
+      ) {
+
+        result.date_of_birth =
+          value;
+
+      }
+
+
+      else if (
+        k === "satsnumber" ||
+        k === "satsno" ||
+        k === "sats"
+      ) {
+
+        result.sats_number =
+          value;
+
+      }
+
+
+      else if (
+        k === "pennumber" ||
+        k === "penno" ||
+        k === "pen"
+      ) {
+
+        result.pen_number =
+          value;
+
+      }
+
+
+      else if (
+        k === "caste" ||
+        k === "category" ||
+        k === "castecategory"
+      ) {
+
+        result.caste =
+          value;
+
+      }
+
+
+      else if (
+        k === "mobilenumber" ||
+        k === "mobileno" ||
+        k === "mobile" ||
+        k === "phone"
+      ) {
+
+        result.mobile_number =
+          value;
 
       }
 
     }
   );
+
+
+  return result;
+
+}
+
+
+/* =========================================================
+   NORMALIZE
+========================================================= */
+
+function normalize(
+  value
+) {
+
+  return String(
+    value ?? ""
+  )
+
+  .trim()
+
+  .toLowerCase()
+
+  .replace(
+    /\s+/g,
+    ""
+  )
+
+  .replace(
+    /[_-]/g,
+    ""
+  );
+
+}
+
+
+/* =========================================================
+   GENDER
+========================================================= */
+
+function normalizeGender(
+  value
+) {
+
+  const v =
+    normalize(
+      value
+    );
+
+
+  if (
+    v === "male" ||
+    v === "m"
+  ) {
+
+    return "Male";
+
+  }
+
+
+  if (
+    v === "female" ||
+    v === "f"
+  ) {
+
+    return "Female";
+
+  }
+
+
+  if (
+    v === "other" ||
+    v === "o"
+  ) {
+
+    return "Other";
+
+  }
+
+
+  return String(
+    value ?? ""
+  ).trim();
+
+}
+
+
+/* =========================================================
+   EXCEL DATE
+========================================================= */
+
+function excelDateToISO(
+  value
+) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+
+    return null;
+
+  }
+
+
+  if (
+    value instanceof Date &&
+    !isNaN(value)
+  ) {
+
+    return toISODate(
+      value
+    );
+
+  }
+
+
+  const text =
+    String(
+      value
+    ).trim();
+
+
+  /*
+    DD-MM-YYYY
+  */
+
+  let match =
+    text.match(
+      /^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/
+    );
+
+
+  if (match) {
+
+    const day =
+      Number(
+        match[1]
+      );
+
+
+    const month =
+      Number(
+        match[2]
+      );
+
+
+    const year =
+      Number(
+        match[3]
+      );
+
+
+    return (
+      year
+      + "-"
+      + String(month).padStart(2,"0")
+      + "-"
+      + String(day).padStart(2,"0")
+    );
+
+  }
+
+
+  /*
+    YYYY-MM-DD
+  */
+
+  match =
+    text.match(
+      /^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})$/
+    );
+
+
+  if (match) {
+
+    return (
+      match[1]
+      + "-"
+      + String(match[2]).padStart(2,"0")
+      + "-"
+      + String(match[3]).padStart(2,"0")
+    );
+
+  }
+
+
+  /*
+    Excel Serial Date
+  */
+
+  const number =
+    Number(
+      value
+    );
+
+
+  if (
+    !isNaN(number) &&
+    number > 20000 &&
+    number < 60000
+  ) {
+
+    const date =
+      new Date(
+        Date.UTC(
+          1899,
+          11,
+          30
+        )
+        +
+        number * 86400000
+      );
+
+
+    return toISODate(
+      date
+    );
+
+  }
+
+
+  return null;
+
+}
+
+
+/* =========================================================
+   DATE
+========================================================= */
+
+function toISODate(
+  date
+) {
+
+  return (
+    date.getUTCFullYear()
+    + "-"
+    + String(
+        date.getUTCMonth() + 1
+      ).padStart(2,"0")
+    + "-"
+    + String(
+        date.getUTCDate()
+      ).padStart(2,"0")
+  );
+
+}
+
+
+/* =========================================================
+   PROGRESS
+========================================================= */
+
+function setProgress(
+  percent
+) {
+
+  const bar =
+    document.getElementById(
+      "progressBar"
+    );
+
+
+  bar.style.width =
+    percent + "%";
+
+
+  bar.innerText =
+    percent + "%";
+
+}
+
+
+/* =========================================================
+   DISPLAY DATE
+========================================================= */
+
+function formatDate(
+  date
+) {
+
+  if (!date) {
+
+    return "";
+
+  }
+
+
+  const parts =
+    String(
+      date
+    ).split("-");
+
+
+  if (
+    parts.length !== 3
+  ) {
+
+    return date;
+
+  }
+
+
+  return (
+    parts[2]
+    + "-"
+    + parts[1]
+    + "-"
+    + parts[0]
+  );
+
+}
+
+
+/* =========================================================
+   SECURITY
+========================================================= */
+
+function escapeHtml(
+  value
+) {
+
+  return String(
+    value
+  )
+
+  .replace(
+    /&/g,
+    "&amp;"
+  )
+
+  .replace(
+    /</g,
+    "&lt;"
+  )
+
+  .replace(
+    />/g,
+    "&gt;"
+  )
+
+  .replace(
+    /"/g,
+    "&quot;"
+  )
+
+  .replace(
+    /'/g,
+    "&#039;"
+  );
+
+}
+
+
+/* =========================================================
+   CLOSE MODAL OUTSIDE
+========================================================= */
+
+window.onclick =
+function(event) {
+
+  const modal =
+    document.getElementById(
+      "studentModal"
+    );
+
+
+  if (
+    event.target === modal
+  ) {
+
+    closeModal();
+
+  }
+
+};
 
 </script>
 
