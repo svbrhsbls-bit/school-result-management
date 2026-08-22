@@ -1,0 +1,1072 @@
+<!DOCTYPE html>
+<html lang="kn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Students Database</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f5f7fb;
+      color: #222;
+    }
+
+    .header {
+      background: #1e40af;
+      color: white;
+      padding: 18px 25px;
+    }
+
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+
+    .header p {
+      margin: 5px 0 0;
+      font-size: 14px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 25px auto;
+      padding: 0 18px;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+
+    .card h2 {
+      margin-top: 0;
+      color: #1e40af;
+    }
+
+    .filters {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    select,
+    input {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 15px;
+    }
+
+    button {
+      border: none;
+      padding: 11px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    .btn-primary {
+      background: #1e40af;
+      color: white;
+    }
+
+    .btn-success {
+      background: #15803d;
+      color: white;
+    }
+
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+    }
+
+    .btn-secondary {
+      background: #64748b;
+      color: white;
+    }
+
+    .button-row {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 7px;
+      display: none;
+    }
+
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1200px;
+    }
+
+    th,
+    td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #1e40af;
+      color: white;
+    }
+
+    tr:nth-child(even) {
+      background: #f8fafc;
+    }
+
+    .count {
+      margin-bottom: 12px;
+      font-weight: bold;
+      color: #475569;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.55);
+      overflow-y: auto;
+    }
+
+    .modal-content {
+      background: white;
+      width: 95%;
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 25px;
+      border-radius: 12px;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: #1e40af;
+    }
+
+    .close {
+      font-size: 28px;
+      cursor: pointer;
+      color: #555;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .full {
+      grid-column: 1 / -1;
+    }
+
+    .actions {
+      display: flex;
+      gap: 7px;
+    }
+
+    @media (max-width: 700px) {
+      .filters,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full {
+        grid-column: auto;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <h1>Students Database</h1>
+    <p>School Result Management System</p>
+  </div>
+
+  <div class="container">
+
+    <!-- FILTER -->
+    <div class="card">
+      <h2>Student Selection</h2>
+
+      <div class="filters">
+
+        <div>
+          <label for="classSelect">Class</label>
+          <select id="classSelect">
+            <option value="">-- Select Class --</option>
+          </select>
+        </div>
+
+        <div>
+          <label for="sectionSelect">Division</label>
+          <select id="sectionSelect">
+            <option value="">-- Select Division --</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="button-row">
+        <button class="btn-primary" onclick="loadStudents()">
+          View Students
+        </button>
+
+        <button class="btn-success" onclick="openAddStudent()">
+          + Add Student
+        </button>
+      </div>
+
+      <div id="message" class="message"></div>
+    </div>
+
+    <!-- STUDENT LIST -->
+    <div class="card">
+
+      <h2>Student List</h2>
+
+      <div id="studentCount" class="count">
+        Please select Class and Division.
+      </div>
+
+      <div class="table-wrapper">
+
+        <table>
+          <thead>
+            <tr>
+              <th>Sl.No</th>
+              <th>Admission No</th>
+              <th>Student Name</th>
+              <th>Father Name</th>
+              <th>Mother Name</th>
+              <th>Gender</th>
+              <th>Date of Birth</th>
+              <th>SATS Number</th>
+              <th>PEN Number</th>
+              <th>Caste</th>
+              <th>Mobile Number</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+
+          <tbody id="studentTableBody">
+            <tr>
+              <td colspan="12" style="text-align:center;">
+                No students loaded.
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </div>
+
+  </div>
+
+
+  <!-- ADD / EDIT STUDENT MODAL -->
+
+  <div id="studentModal" class="modal">
+
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h2 id="modalTitle">Add Student</h2>
+        <span class="close" onclick="closeModal()">&times;</span>
+      </div>
+
+      <form id="studentForm">
+
+        <input type="hidden" id="studentId">
+
+        <div class="form-grid">
+
+          <div>
+            <label>Admission Number</label>
+            <input type="text" id="admissionNumber">
+          </div>
+
+          <div>
+            <label>Student Name *</label>
+            <input type="text" id="studentName" required>
+          </div>
+
+          <div>
+            <label>Father Name</label>
+            <input type="text" id="fatherName">
+          </div>
+
+          <div>
+            <label>Mother Name</label>
+            <input type="text" id="motherName">
+          </div>
+
+          <div>
+            <label>Gender</label>
+            <select id="gender">
+              <option value="">-- Select --</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+
+          <div>
+            <label>Date of Birth</label>
+            <input type="date" id="dateOfBirth">
+          </div>
+
+          <div>
+            <label>SATS Number</label>
+            <input type="text" id="satsNumber">
+          </div>
+
+          <div>
+            <label>PEN Number</label>
+            <input type="text" id="penNumber">
+          </div>
+
+          <div>
+            <label>Caste / Category</label>
+            <input type="text" id="casteCategory">
+          </div>
+
+          <div>
+            <label>Mobile Number</label>
+            <input type="text" id="mobileNumber">
+          </div>
+
+        </div>
+
+        <div class="button-row">
+
+          <button type="submit" class="btn-success">
+            Save Student
+          </button>
+
+          <button type="button" class="btn-secondary" onclick="closeModal()">
+            Cancel
+          </button>
+
+        </div>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+<script>
+
+  // ==========================================================
+  // SUPABASE CONNECTION
+  // ==========================================================
+
+  const SUPABASE_URL =
+    "https://ezmudfrpcvjsngjibvoq.supabase.co";
+
+  const SUPABASE_ANON_KEY =
+    "PASTE_YOUR_SUPABASE_ANON_KEY_HERE";
+
+  const supabaseClient =
+    supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_ANON_KEY
+    );
+
+
+  // ==========================================================
+  // GLOBAL VARIABLES
+  // ==========================================================
+
+  let currentAcademicYearId = null;
+
+
+  // ==========================================================
+  // PAGE LOAD
+  // ==========================================================
+
+  document.addEventListener("DOMContentLoaded", async function() {
+
+    await loadAcademicYear();
+
+    await loadClasses();
+
+    document
+      .getElementById("classSelect")
+      .addEventListener("change", loadSections);
+
+  });
+
+
+  // ==========================================================
+  // MESSAGE
+  // ==========================================================
+
+  function showMessage(text, type) {
+
+    const box = document.getElementById("message");
+
+    box.innerText = text;
+
+    box.className = "message " + type;
+
+    box.style.display = "block";
+
+    setTimeout(() => {
+      box.style.display = "none";
+    }, 5000);
+  }
+
+
+  // ==========================================================
+  // LOAD CURRENT ACADEMIC YEAR
+  // ==========================================================
+
+  async function loadAcademicYear() {
+
+    const { data, error } = await supabaseClient
+      .from("academic_years")
+      .select("id, year_name, is_current")
+      .eq("is_current", true)
+      .maybeSingle();
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        "Academic Year load ಆಗಲಿಲ್ಲ.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (data) {
+
+      currentAcademicYearId = data.id;
+
+      console.log(
+        "Current Academic Year:",
+        data.year_name
+      );
+    }
+  }
+
+
+  // ==========================================================
+  // LOAD CLASSES
+  // ==========================================================
+
+  async function loadClasses() {
+
+    const classSelect =
+      document.getElementById("classSelect");
+
+    classSelect.innerHTML =
+      '<option value="">-- Select Class --</option>';
+
+    const { data, error } = await supabaseClient
+      .from("classes")
+      .select("id, class_name")
+      .order("class_name");
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        "Classes load ಆಗಲಿಲ್ಲ. classes table ಪರಿಶೀಲಿಸಿ.",
+        "error"
+      );
+
+      return;
+    }
+
+    data.forEach(item => {
+
+      const option =
+        document.createElement("option");
+
+      option.value = item.id;
+
+      option.textContent =
+        item.class_name;
+
+      classSelect.appendChild(option);
+
+    });
+  }
+
+
+  // ==========================================================
+  // LOAD DIVISIONS
+  // ==========================================================
+
+  async function loadSections() {
+
+    const classId =
+      document.getElementById("classSelect").value;
+
+    const sectionSelect =
+      document.getElementById("sectionSelect");
+
+    sectionSelect.innerHTML =
+      '<option value="">-- Select Division --</option>';
+
+    if (!classId) return;
+
+    const { data, error } = await supabaseClient
+      .from("sections")
+      .select("id, section_name")
+      .eq("class_id", classId)
+      .eq("active", true)
+      .order("section_name");
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        "Divisions load ಆಗಲಿಲ್ಲ.",
+        "error"
+      );
+
+      return;
+    }
+
+    data.forEach(item => {
+
+      const option =
+        document.createElement("option");
+
+      option.value = item.id;
+
+      option.textContent =
+        item.section_name;
+
+      sectionSelect.appendChild(option);
+
+    });
+  }
+
+
+  // ==========================================================
+  // LOAD STUDENTS
+  // ==========================================================
+
+  async function loadStudents() {
+
+    const classId =
+      document.getElementById("classSelect").value;
+
+    const sectionId =
+      document.getElementById("sectionSelect").value;
+
+    if (!classId) {
+
+      showMessage(
+        "ಮೊದಲು Class ಆಯ್ಕೆ ಮಾಡಿ.",
+        "error"
+      );
+
+      return;
+    }
+
+    if (!sectionId) {
+
+      showMessage(
+        "ಮೊದಲು Division ಆಯ್ಕೆ ಮಾಡಿ.",
+        "error"
+      );
+
+      return;
+    }
+
+    let query = supabaseClient
+      .from("students")
+      .select("*")
+      .eq("class_id", classId)
+      .eq("section_id", sectionId)
+      .eq("active", true)
+      .order("student_name");
+
+    if (currentAcademicYearId) {
+
+      query = query.eq(
+        "academic_year_id",
+        currentAcademicYearId
+      );
+    }
+
+    const { data, error } = await query;
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        "Students load ಆಗಲಿಲ್ಲ: " + error.message,
+        "error"
+      );
+
+      return;
+    }
+
+    displayStudents(data);
+
+  }
+
+
+  // ==========================================================
+  // DISPLAY STUDENTS
+  // ==========================================================
+
+  function displayStudents(students) {
+
+    const tbody =
+      document.getElementById("studentTableBody");
+
+    tbody.innerHTML = "";
+
+    document.getElementById("studentCount").innerText =
+      "Total Students: " + students.length;
+
+    if (students.length === 0) {
+
+      tbody.innerHTML = `
+        <tr>
+          <td colspan="12" style="text-align:center;">
+            ಈ Class / Divisionನಲ್ಲಿ ವಿದ್ಯಾರ್ಥಿಗಳು ಇಲ್ಲ.
+          </td>
+        </tr>
+      `;
+
+      return;
+    }
+
+    students.forEach((student, index) => {
+
+      const row =
+        document.createElement("tr");
+
+      row.innerHTML = `
+
+        <td>${index + 1}</td>
+
+        <td>${escapeHtml(student.admission_number || "")}</td>
+
+        <td>${escapeHtml(student.student_name || "")}</td>
+
+        <td>${escapeHtml(student.father_name || "")}</td>
+
+        <td>${escapeHtml(student.mother_name || "")}</td>
+
+        <td>${escapeHtml(student.gender || "")}</td>
+
+        <td>${formatDate(student.date_of_birth)}</td>
+
+        <td>${escapeHtml(student.sats_number || "")}</td>
+
+        <td>${escapeHtml(student.pen_number || "")}</td>
+
+        <td>${escapeHtml(student.caste_category || "")}</td>
+
+        <td>${escapeHtml(student.mobile_number || "")}</td>
+
+        <td>
+          <div class="actions">
+
+            <button
+              class="btn-primary"
+              onclick='editStudent(${JSON.stringify(student)})'>
+              Edit
+            </button>
+
+            <button
+              class="btn-danger"
+              onclick="deleteStudent('${student.id}')">
+              Delete
+            </button>
+
+          </div>
+        </td>
+
+      `;
+
+      tbody.appendChild(row);
+
+    });
+
+  }
+
+
+  // ==========================================================
+  // OPEN ADD STUDENT
+  // ==========================================================
+
+  function openAddStudent() {
+
+    const classId =
+      document.getElementById("classSelect").value;
+
+    const sectionId =
+      document.getElementById("sectionSelect").value;
+
+    if (!classId || !sectionId) {
+
+      showMessage(
+        "Student add ಮಾಡಲು Class ಮತ್ತು Division ಆಯ್ಕೆ ಮಾಡಿ.",
+        "error"
+      );
+
+      return;
+    }
+
+    document.getElementById("studentForm").reset();
+
+    document.getElementById("studentId").value = "";
+
+    document.getElementById("modalTitle").innerText =
+      "Add Student";
+
+    document.getElementById("studentModal").style.display =
+      "block";
+
+  }
+
+
+  // ==========================================================
+  // EDIT STUDENT
+  // ==========================================================
+
+  function editStudent(student) {
+
+    document.getElementById("studentId").value =
+      student.id || "";
+
+    document.getElementById("admissionNumber").value =
+      student.admission_number || "";
+
+    document.getElementById("studentName").value =
+      student.student_name || "";
+
+    document.getElementById("fatherName").value =
+      student.father_name || "";
+
+    document.getElementById("motherName").value =
+      student.mother_name || "";
+
+    document.getElementById("gender").value =
+      student.gender || "";
+
+    document.getElementById("dateOfBirth").value =
+      student.date_of_birth || "";
+
+    document.getElementById("satsNumber").value =
+      student.sats_number || "";
+
+    document.getElementById("penNumber").value =
+      student.pen_number || "";
+
+    document.getElementById("casteCategory").value =
+      student.caste_category || "";
+
+    document.getElementById("mobileNumber").value =
+      student.mobile_number || "";
+
+    document.getElementById("modalTitle").innerText =
+      "Edit Student";
+
+    document.getElementById("studentModal").style.display =
+      "block";
+  }
+
+
+  // ==========================================================
+  // CLOSE MODAL
+  // ==========================================================
+
+  function closeModal() {
+
+    document.getElementById("studentModal").style.display =
+      "none";
+
+  }
+
+
+  // ==========================================================
+  // SAVE STUDENT
+  // ==========================================================
+
+  document
+    .getElementById("studentForm")
+    .addEventListener("submit", async function(event) {
+
+      event.preventDefault();
+
+      const studentId =
+        document.getElementById("studentId").value;
+
+      const classId =
+        document.getElementById("classSelect").value;
+
+      const sectionId =
+        document.getElementById("sectionSelect").value;
+
+      const studentData = {
+
+        admission_number:
+          document.getElementById("admissionNumber").value.trim(),
+
+        student_name:
+          document.getElementById("studentName").value.trim(),
+
+        father_name:
+          document.getElementById("fatherName").value.trim(),
+
+        mother_name:
+          document.getElementById("motherName").value.trim(),
+
+        gender:
+          document.getElementById("gender").value,
+
+        date_of_birth:
+          document.getElementById("dateOfBirth").value || null,
+
+        sats_number:
+          document.getElementById("satsNumber").value.trim(),
+
+        pen_number:
+          document.getElementById("penNumber").value.trim(),
+
+        caste_category:
+          document.getElementById("casteCategory").value.trim(),
+
+        mobile_number:
+          document.getElementById("mobileNumber").value.trim(),
+
+        class_id:
+          classId,
+
+        section_id:
+          sectionId,
+
+        active:
+          true
+      };
+
+
+      if (currentAcademicYearId) {
+
+        studentData.academic_year_id =
+          currentAcademicYearId;
+      }
+
+
+      let result;
+
+
+      // UPDATE
+      if (studentId) {
+
+        result = await supabaseClient
+          .from("students")
+          .update(studentData)
+          .eq("id", studentId);
+
+      }
+
+      // INSERT
+      else {
+
+        result = await supabaseClient
+          .from("students")
+          .insert([studentData]);
+
+      }
+
+
+      if (result.error) {
+
+        console.error(result.error);
+
+        showMessage(
+          "Save ಆಗಲಿಲ್ಲ: " + result.error.message,
+          "error"
+        );
+
+        return;
+      }
+
+
+      closeModal();
+
+      showMessage(
+        studentId
+          ? "Student successfully updated."
+          : "Student successfully added.",
+        "success"
+      );
+
+      await loadStudents();
+
+    });
+
+
+  // ==========================================================
+  // DELETE STUDENT
+  // ==========================================================
+
+  async function deleteStudent(id) {
+
+    const confirmDelete =
+      confirm(
+        "ಈ ವಿದ್ಯಾರ್ಥಿಯನ್ನು delete ಮಾಡಬೇಕೇ?"
+      );
+
+    if (!confirmDelete) return;
+
+
+    const { error } =
+      await supabaseClient
+        .from("students")
+        .update({ active: false })
+        .eq("id", id);
+
+
+    if (error) {
+
+      console.error(error);
+
+      showMessage(
+        "Delete ಆಗಲಿಲ್ಲ: " + error.message,
+        "error"
+      );
+
+      return;
+    }
+
+
+    showMessage(
+      "Student deleted successfully.",
+      "success"
+    );
+
+
+    await loadStudents();
+
+  }
+
+
+  // ==========================================================
+  // FORMAT DATE
+  // ==========================================================
+
+  function formatDate(date) {
+
+    if (!date) return "";
+
+    const parts =
+      date.split("-");
+
+    if (parts.length !== 3) return date;
+
+    return parts[2] + "-" +
+           parts[1] + "-" +
+           parts[0];
+
+  }
+
+
+  // ==========================================================
+  // SECURITY
+  // ==========================================================
+
+  function escapeHtml(value) {
+
+    return String(value)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+
+  }
+
+
+  // ==========================================================
+  // CLOSE MODAL WHEN CLICKING OUTSIDE
+  // ==========================================================
+
+  window.onclick = function(event) {
+
+    const modal =
+      document.getElementById("studentModal");
+
+    if (event.target === modal) {
+
+      closeModal();
+
+    }
+
+  };
+
+</script>
+
+</body>
+</html>
