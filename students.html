@@ -667,56 +667,48 @@
       return;
     }
 
-    displayStudents(data);
-
-  }
-
-
-  // ==========================================================
-  // DISPLAY STUDENTS
-  // ==========================================================
-
-  function displayStudents(students) {
-
-    const tbody =
-      document.getElementById("studentTableBody");
-
-    tbody.innerHTML = "";
-
-    document.getElementById("studentCount").innerText =
-      "Total Students: " + students.length;
-
-    if (students.length === 0) {
-
-      tbody.innerHTML = `
-        <tr>
-          <td colspan="12" style="text-align:center;">
-            ಈ Class / Divisionನಲ್ಲಿ ವಿದ್ಯಾರ್ಥಿಗಳು ಇಲ್ಲ.
-          </td>
-        </tr>
-      `;
-
-      return;
-    }
-
     students.forEach((student, index) => {
 
-      const row =
-        document.createElement("tr");
+  const row = document.createElement("tr");
 
-      row.innerHTML = `
+  row.innerHTML = `
+    <td>${index + 1}</td>
+    <td>${escapeHtml(student.admission_number || "")}</td>
+    <td>${escapeHtml(student.student_name || "")}</td>
+    <td>${escapeHtml(student.father_name || "")}</td>
+    <td>${escapeHtml(student.mother_name || "")}</td>
+    <td>${escapeHtml(student.gender || "")}</td>
+    <td>${formatDate(student.date_of_birth)}</td>
+    <td>${escapeHtml(student.sats_number || "")}</td>
+    <td>${escapeHtml(student.pen_number || "")}</td>
+    <td>${escapeHtml(student.caste_category || "")}</td>
+    <td>${escapeHtml(student.mobile_number || "")}</td>
+    <td>
+      <div class="actions">
+        <button class="btn-primary edit-btn">
+          Edit
+        </button>
 
-        <td>${index + 1}</td>
+        <button class="btn-danger delete-btn">
+          Delete
+        </button>
+      </div>
+    </td>
+  `;
 
-        <td>${escapeHtml(student.admission_number || "")}</td>
+  // EDIT BUTTON
+  row.querySelector(".edit-btn").addEventListener("click", function() {
+    editStudent(student);
+  });
 
-        <td>${escapeHtml(student.student_name || "")}</td>
+  // DELETE BUTTON
+  row.querySelector(".delete-btn").addEventListener("click", function() {
+    deleteStudent(student.id);
+  });
 
-        <td>${escapeHtml(student.father_name || "")}</td>
+  tbody.appendChild(row);
 
-        <td>${escapeHtml(student.mother_name || "")}</td>
-
-        <td>${escapeHtml(student.gender || "")}</td>
+});
 
         <td>${formatDate(student.date_of_birth)}</td>
 
