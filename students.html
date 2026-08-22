@@ -1,510 +1,484 @@
 <!DOCTYPE html>
 <html lang="kn">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Students Database</title>
+  <title>Students Database</title>
 
-<!-- SUPABASE -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <!-- SUPABASE -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-<!-- EXCEL READER -->
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <!-- EXCEL READER -->
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
-<style>
-* {
-  box-sizing: border-box;
-}
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: #f5f7fb;
-  color: #222;
-}
+    body {
+      margin: 0;
+      font-family: Arial, "Noto Sans Kannada", sans-serif;
+      background: #f5f7fb;
+      color: #222;
+    }
 
-.header {
-  background: #1e40af;
-  color: white;
-  padding: 18px 25px;
-}
+    .header {
+      background: #1e40af;
+      color: white;
+      padding: 20px 28px;
+    }
 
-.header h1 {
-  margin: 0;
-  font-size: 24px;
-}
+    .header h1 {
+      margin: 0;
+      font-size: 26px;
+    }
 
-.header p {
-  margin: 5px 0 0;
-  font-size: 14px;
-}
+    .header p {
+      margin: 6px 0 0;
+      font-size: 14px;
+    }
 
-.container {
-  max-width: 1500px;
-  margin: 25px auto;
-  padding: 0 18px;
-}
+    .container {
+      max-width: 1500px;
+      margin: 25px auto;
+      padding: 0 18px;
+    }
 
-.card {
-  background: white;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-}
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
 
-.card h2 {
-  margin-top: 0;
-  color: #1e40af;
-}
+    .card h2 {
+      margin-top: 0;
+      color: #1e40af;
+    }
 
-.filters {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
+    .filters {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 15px;
-}
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
 
-label {
-  display: block;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
+    select,
+    input {
+      width: 100%;
+      padding: 11px;
+      border: 1px solid #ccc;
+      border-radius: 7px;
+      font-size: 15px;
+    }
 
-select,
-input {
-  width: 100%;
-  padding: 11px;
-  border: 1px solid #ccc;
-  border-radius: 7px;
-  font-size: 15px;
-}
+    button {
+      border: none;
+      padding: 11px 18px;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
 
-button {
-  border: none;
-  padding: 11px 18px;
-  border-radius: 7px;
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: bold;
-}
+    button:hover {
+      opacity: 0.9;
+    }
 
-.btn-primary {
-  background: #1e40af;
-  color: white;
-}
+    .btn-primary {
+      background: #1e40af;
+      color: white;
+    }
 
-.btn-success {
-  background: #15803d;
-  color: white;
-}
+    .btn-success {
+      background: #15803d;
+      color: white;
+    }
 
-.btn-danger {
-  background: #dc2626;
-  color: white;
-}
+    .btn-danger {
+      background: #dc2626;
+      color: white;
+    }
 
-.btn-secondary {
-  background: #64748b;
-  color: white;
-}
+    .btn-secondary {
+      background: #64748b;
+      color: white;
+    }
 
-.btn-excel {
-  background: #166534;
-  color: white;
-}
+    .btn-excel {
+      background: #047857;
+      color: white;
+    }
 
-.btn-template {
-  background: #475569;
-  color: white;
-}
+    .button-row {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
 
-.button-row {
-  margin-top: 18px;
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
+    .message {
+      margin-top: 15px;
+      padding: 12px;
+      border-radius: 7px;
+      display: none;
+      font-weight: bold;
+    }
 
-.message {
-  margin-top: 15px;
-  padding: 12px;
-  border-radius: 7px;
-  display: none;
-  white-space: pre-line;
-}
+    .success {
+      background: #dcfce7;
+      color: #166534;
+    }
 
-.success {
-  background: #dcfce7;
-  color: #166534;
-}
+    .error {
+      background: #fee2e2;
+      color: #991b1b;
+    }
 
-.error {
-  background: #fee2e2;
-  color: #991b1b;
-}
+    .info {
+      background: #dbeafe;
+      color: #1e40af;
+    }
 
-.info {
-  background: #dbeafe;
-  color: #1e3a8a;
-}
+    .table-wrapper {
+      overflow-x: auto;
+    }
 
-.small-note {
-  margin-top: 10px;
-  color: #64748b;
-  font-size: 13px;
-}
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 1300px;
+    }
 
-.table-wrapper {
-  overflow-x: auto;
-}
+    th,
+    td {
+      padding: 10px;
+      border: 1px solid #ddd;
+      text-align: left;
+      white-space: nowrap;
+    }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 1250px;
-}
+    th {
+      background: #1e40af;
+      color: white;
+    }
 
-th,
-td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: left;
-  white-space: nowrap;
-}
+    tr:nth-child(even) {
+      background: #f8fafc;
+    }
 
-th {
-  background: #1e40af;
-  color: white;
-}
+    .count {
+      margin-bottom: 12px;
+      font-weight: bold;
+      color: #475569;
+      font-size: 16px;
+    }
 
-tr:nth-child(even) {
-  background: #f8fafc;
-}
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.55);
+      overflow-y: auto;
+    }
 
-.count {
-  margin-bottom: 12px;
-  font-weight: bold;
-  color: #475569;
-}
+    .modal-content {
+      background: white;
+      width: 95%;
+      max-width: 1000px;
+      margin: 40px auto;
+      padding: 25px;
+      border-radius: 12px;
+    }
 
-.actions {
-  display: flex;
-  gap: 7px;
-}
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
 
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.55);
-  overflow-y: auto;
-}
+    .modal-header h2 {
+      margin: 0;
+      color: #1e40af;
+    }
 
-.modal-content {
-  background: white;
-  width: 95%;
-  max-width: 1050px;
-  margin: 40px auto;
-  padding: 25px;
-  border-radius: 12px;
-}
+    .close {
+      font-size: 28px;
+      cursor: pointer;
+      color: #555;
+    }
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-}
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
 
-.modal-header h2 {
-  margin: 0;
-  color: #1e40af;
-}
+    .full {
+      grid-column: 1 / -1;
+    }
 
-.close {
-  font-size: 28px;
-  cursor: pointer;
-  color: #555;
-}
+    .actions {
+      display: flex;
+      gap: 7px;
+    }
 
-.progress {
-  display: none;
-  margin-top: 15px;
-  background: #e2e8f0;
-  border-radius: 8px;
-  overflow: hidden;
-}
+    .excel-box {
+      background: #f0fdf4;
+      border: 2px dashed #15803d;
+      padding: 18px;
+      border-radius: 10px;
+      margin-top: 15px;
+    }
 
-.progress-bar {
-  width: 0%;
-  padding: 6px;
-  text-align: center;
-  background: #16a34a;
-  color: white;
-  font-size: 12px;
-}
+    .excel-title {
+      color: #166534;
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
 
-@media (max-width: 700px) {
+    .excel-help {
+      color: #475569;
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
 
-  .filters,
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-}
-</style>
+    .import-status {
+      margin-top: 12px;
+      font-weight: bold;
+    }
+
+    @media (max-width: 700px) {
+      .filters,
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .full {
+        grid-column: auto;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
-
 <div class="header">
-
   <h1>Students Database</h1>
-
-  <p>
-    School Result Management System
-  </p>
-
+  <p>School Result Management System</p>
 </div>
-
 
 <div class="container">
 
-<!-- =====================================================
-     SELECTION
-===================================================== -->
+  <!-- ======================================================
+       STUDENT SELECTION
+  ======================================================= -->
 
-<div class="card">
+  <div class="card">
 
-  <h2>Student Selection</h2>
+    <h2>Student Selection</h2>
 
-  <div class="filters">
+    <div class="filters">
 
-    <div>
+      <div>
+        <label for="classSelect">Class</label>
 
-      <label for="classSelect">
-        Class
-      </label>
+        <select id="classSelect">
+          <option value="">-- Select Class --</option>
+        </select>
+      </div>
 
-      <select id="classSelect">
+      <div>
+        <label for="sectionSelect">Division</label>
 
-        <option value="">
-          -- Select Class --
-        </option>
-
-      </select>
+        <select id="sectionSelect">
+          <option value="">-- Select Division --</option>
+        </select>
+      </div>
 
     </div>
 
+    <div class="button-row">
 
-    <div>
+      <button
+        class="btn-primary"
+        onclick="loadStudents()">
+        View Students
+      </button>
 
-      <label for="sectionSelect">
+      <button
+        class="btn-success"
+        onclick="openAddStudent()">
+        + Add Student
+      </button>
+
+    </div>
+
+    <div id="message" class="message"></div>
+
+  </div>
+
+
+  <!-- ======================================================
+       EXCEL IMPORT
+  ======================================================= -->
+
+  <div class="card">
+
+    <h2>Excel Student Import</h2>
+
+    <div class="excel-box">
+
+      <div class="excel-title">
+        📊 Excel Sheet ಮೂಲಕ Students Import
+      </div>
+
+      <div class="excel-help">
+
+        Excel file ಆಯ್ಕೆ ಮಾಡಿ. ಅದರಲ್ಲಿ ಇರುವ ಎಲ್ಲಾ students
+        database ಗೆ ಸೇರಿಸಲಾಗುತ್ತದೆ.
+
+        <br><br>
+
+        <b>Excel Header:</b>
+
+        Admission Number,
+        Student Name,
+        Father Name,
+        Mother Name,
+        Gender,
+        Date of Birth,
+        SATS Number,
+        PEN Number,
+        Caste,
+        Mobile Number,
+        Class,
         Division
+
+        <br><br>
+
+        <b>ಗಮನಿಸಿ:</b>
+        Class ಮತ್ತು Division Excel ನಲ್ಲಿ ಇದ್ದರೆ ಅದನ್ನೇ ಬಳಸುತ್ತದೆ.
+        ಇಲ್ಲದಿದ್ದರೆ ಮೇಲಿನ Class ಮತ್ತು Division ಬಳಸಲಾಗುತ್ತದೆ.
+
+      </div>
+
+      <label for="excelFile">
+        Excel File ಆಯ್ಕೆ ಮಾಡಿ
       </label>
 
-      <select id="sectionSelect">
+      <input
+        type="file"
+        id="excelFile"
+        accept=".xlsx,.xls,.csv">
 
-        <option value="">
-          -- Select Division --
-        </option>
+      <div class="button-row">
 
-      </select>
+        <button
+          class="btn-excel"
+          onclick="importExcel()">
+          📥 Import Excel Students
+        </button>
 
-    </div>
+        <button
+          class="btn-secondary"
+          onclick="downloadTemplate()">
+          📄 Download Excel Format
+        </button>
 
-  </div>
+      </div>
 
-
-  <div class="button-row">
-
-    <button
-      class="btn-primary"
-      onclick="loadStudents()">
-
-      View Students
-
-    </button>
-
-
-    <button
-      class="btn-success"
-      onclick="openAddStudent()">
-
-      + Add Student
-
-    </button>
-
-
-    <!-- EXCEL UPLOAD -->
-
-    <button
-      class="btn-excel"
-      onclick="document.getElementById('excelFile').click()">
-
-      📥 Upload Excel
-
-    </button>
-
-
-    <!-- TEMPLATE -->
-
-    <button
-      class="btn-template"
-      onclick="downloadTemplate()">
-
-      📄 Excel Template
-
-    </button>
-
-
-    <input
-      type="file"
-      id="excelFile"
-      accept=".xlsx,.xls,.csv"
-      style="display:none">
-
-  </div>
-
-
-  <div class="small-note">
-
-    Excelನಲ್ಲಿ Class ಮತ್ತು Division columns ಇದ್ದರೆ
-    ಪ್ರತಿ student ಸರಿಯಾದ Class / Divisionಗೆ ಸೇರಿಸಲಾಗುತ್ತದೆ.
-
-    <br>
-
-    Class / Division columns ಇಲ್ಲದಿದ್ದರೆ ಮೇಲಿನ ಆಯ್ಕೆ ಮಾಡಿದ
-    Class ಮತ್ತು Divisionಗೆ students ಸೇರಿಸಲಾಗುತ್ತದೆ.
-
-  </div>
-
-
-  <div id="message" class="message"></div>
-
-
-  <div id="progress" class="progress">
-
-    <div
-      id="progressBar"
-      class="progress-bar">
-
-      0%
+      <div
+        id="importStatus"
+        class="import-status">
+      </div>
 
     </div>
 
   </div>
 
-</div>
 
+  <!-- ======================================================
+       STUDENT LIST
+  ======================================================= -->
 
-<!-- =====================================================
-     STUDENT LIST
-===================================================== -->
+  <div class="card">
 
-<div class="card">
+    <h2>Student List</h2>
 
-  <h2>
-    Student List
-  </h2>
+    <div id="studentCount" class="count">
+      Please select Class and Division.
+    </div>
 
+    <div class="table-wrapper">
 
-  <div
-    id="studentCount"
-    class="count">
+      <table>
 
-    Please select Class and Division.
+        <thead>
 
-  </div>
+          <tr>
+            <th>Sl.No</th>
+            <th>Admission No</th>
+            <th>Student Name</th>
+            <th>Father Name</th>
+            <th>Mother Name</th>
+            <th>Gender</th>
+            <th>Date of Birth</th>
+            <th>SATS Number</th>
+            <th>PEN Number</th>
+            <th>Caste</th>
+            <th>Mobile Number</th>
+            <th>Action</th>
+          </tr>
 
+        </thead>
 
-  <div class="table-wrapper">
+        <tbody id="studentTableBody">
 
-    <table>
+          <tr>
 
-      <thead>
+            <td
+              colspan="12"
+              style="text-align:center;">
 
-        <tr>
+              No students loaded.
 
-          <th>Sl.No</th>
+            </td>
 
-          <th>Admission No</th>
+          </tr>
 
-          <th>Student Name</th>
+        </tbody>
 
-          <th>Father Name</th>
+      </table>
 
-          <th>Mother Name</th>
-
-          <th>Gender</th>
-
-          <th>Date of Birth</th>
-
-          <th>SATS Number</th>
-
-          <th>PEN Number</th>
-
-          <th>Caste</th>
-
-          <th>Mobile Number</th>
-
-          <th>Action</th>
-
-        </tr>
-
-      </thead>
-
-
-      <tbody id="studentTableBody">
-
-        <tr>
-
-          <td
-            colspan="12"
-            style="text-align:center">
-
-            No students loaded.
-
-          </td>
-
-        </tr>
-
-      </tbody>
-
-    </table>
+    </div>
 
   </div>
 
 </div>
 
-</div>
 
+<!-- ======================================================
+     ADD / EDIT STUDENT MODAL
+======================================================= -->
 
-<!-- =====================================================
-     ADD / EDIT MODAL
-===================================================== -->
-
-<div
-  id="studentModal"
-  class="modal">
-
+<div id="studentModal" class="modal">
 
   <div class="modal-content">
-
 
     <div class="modal-header">
 
@@ -515,9 +489,7 @@ tr:nth-child(even) {
       <span
         class="close"
         onclick="closeModal()">
-
         &times;
-
       </span>
 
     </div>
@@ -531,7 +503,6 @@ tr:nth-child(even) {
 
 
       <div class="form-grid">
-
 
         <div>
 
@@ -679,7 +650,6 @@ tr:nth-child(even) {
 
         </div>
 
-
       </div>
 
 
@@ -705,7 +675,6 @@ tr:nth-child(even) {
 
       </div>
 
-
     </form>
 
   </div>
@@ -715,31 +684,33 @@ tr:nth-child(even) {
 
 <script>
 
-/* =========================================================
+/* ==========================================================
    SUPABASE CONNECTION
-========================================================= */
+========================================================== */
 
 const SUPABASE_URL =
-"https://ezmudfrpcvjsgnjibvoq.supabase.co";
-
+  "https://ezmudfrpcvjsgnjibvoq.supabase.co";
 
 const SUPABASE_ANON_KEY =
-"sb_publishable__FYyH6NQaqgARaq2dvuovQ_rKmus0js";
-
+  "sb_publishable__FYyH6NQaqgARaq2dvuovQ_rKmus0js";
 
 const supabaseClient =
-supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY
-);
+  supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+  );
 
+
+/* ==========================================================
+   GLOBAL
+========================================================== */
 
 let currentAcademicYearId = null;
 
 
-/* =========================================================
+/* ==========================================================
    PAGE LOAD
-========================================================= */
+========================================================== */
 
 document.addEventListener(
   "DOMContentLoaded",
@@ -749,86 +720,65 @@ document.addEventListener(
 
     await loadClasses();
 
-
     document
       .getElementById("classSelect")
       .addEventListener(
         "change",
-        loadSections
-      );
+        async function() {
 
+          await loadSections();
 
-    document
-      .getElementById("excelFile")
-      .addEventListener(
-        "change",
-        handleExcelUpload
+        }
       );
 
   }
 );
 
 
-/* =========================================================
+/* ==========================================================
    MESSAGE
-========================================================= */
+========================================================== */
 
-function showMessage(
-  text,
-  type
-) {
+function showMessage(text, type) {
 
   const box =
     document.getElementById("message");
 
-
   box.innerText = text;
-
 
   box.className =
     "message " + type;
 
-
-  box.style.display =
-    "block";
-
+  box.style.display = "block";
 
   setTimeout(
     function() {
 
-      box.style.display =
-        "none";
+      box.style.display = "none";
 
     },
-    8000
+    5000
   );
-
 }
 
 
-/* =========================================================
-   ACADEMIC YEAR
-========================================================= */
+/* ==========================================================
+   LOAD ACADEMIC YEAR
+========================================================== */
 
 async function loadAcademicYear() {
 
-  const {
-    data,
-    error
-  } = await supabaseClient
-
-    .from("academic_years")
-
-    .select(
-      "id, year_name, is_current"
-    )
-
-    .eq(
-      "is_current",
-      true
-    )
-
-    .maybeSingle();
+  const { data, error } =
+    await supabaseClient
+      .from("academic_years")
+      .select(
+        "id, year_name, is_current"
+      )
+      .eq(
+        "is_current",
+        true
+      )
+      .maybeSingle();
 
 
   if (error) {
@@ -836,8 +786,7 @@ async function loadAcademicYear() {
     console.error(error);
 
     showMessage(
-      "Academic Year load ಆಗಲಿಲ್ಲ: "
-      + error.message,
+      "Academic Year load ಆಗಲಿಲ್ಲ.",
       "error"
     );
 
@@ -855,9 +804,9 @@ async function loadAcademicYear() {
 }
 
 
-/* =========================================================
+/* ==========================================================
    LOAD CLASSES
-========================================================= */
+========================================================== */
 
 async function loadClasses() {
 
@@ -868,28 +817,19 @@ async function loadClasses() {
 
 
   classSelect.innerHTML =
-    `<option value="">
-      -- Select Class --
-    </option>`;
+    '<option value="">-- Select Class --</option>';
 
 
-  const {
-    data,
-    error
-  } = await supabaseClient
-
-    .from("classes")
-
-    .select(
-      "id, class_name"
-    )
-
-    .order(
-      "display_order",
-      {
-        ascending: true
-      }
-    );
+  const { data, error } =
+    await supabaseClient
+      .from("classes")
+      .select(
+        "id, class_name"
+      )
+      .order(
+        "display_order",
+        { ascending: true }
+      );
 
 
   if (error) {
@@ -897,8 +837,8 @@ async function loadClasses() {
     console.error(error);
 
     showMessage(
-      "Classes load ಆಗಲಿಲ್ಲ: "
-      + error.message,
+      "Classes load ಆಗಲಿಲ್ಲ: " +
+      error.message,
       "error"
     );
 
@@ -906,7 +846,7 @@ async function loadClasses() {
   }
 
 
-  (data || []).forEach(
+  data.forEach(
     function(item) {
 
       const option =
@@ -914,14 +854,11 @@ async function loadClasses() {
           "option"
         );
 
-
       option.value =
         item.id;
 
-
       option.textContent =
         item.class_name;
-
 
       classSelect.appendChild(
         option
@@ -933,9 +870,9 @@ async function loadClasses() {
 }
 
 
-/* =========================================================
+/* ==========================================================
    LOAD DIVISIONS
-========================================================= */
+========================================================== */
 
 async function loadSections() {
 
@@ -952,9 +889,7 @@ async function loadSections() {
 
 
   sectionSelect.innerHTML =
-    `<option value="">
-      -- Select Division --
-    </option>`;
+    '<option value="">-- Select Division --</option>';
 
 
   if (!classId) {
@@ -964,30 +899,23 @@ async function loadSections() {
   }
 
 
-  const {
-    data,
-    error
-  } = await supabaseClient
-
-    .from("sections")
-
-    .select(
-      "id, section_name"
-    )
-
-    .eq(
-      "class_id",
-      classId
-    )
-
-    .eq(
-      "active",
-      true
-    )
-
-    .order(
-      "section_name"
-    );
+  const { data, error } =
+    await supabaseClient
+      .from("sections")
+      .select(
+        "id, section_name"
+      )
+      .eq(
+        "class_id",
+        classId
+      )
+      .eq(
+        "active",
+        true
+      )
+      .order(
+        "section_name"
+      );
 
 
   if (error) {
@@ -995,8 +923,8 @@ async function loadSections() {
     console.error(error);
 
     showMessage(
-      "Divisions load ಆಗಲಿಲ್ಲ: "
-      + error.message,
+      "Divisions load ಆಗಲಿಲ್ಲ: " +
+      error.message,
       "error"
     );
 
@@ -1004,7 +932,7 @@ async function loadSections() {
   }
 
 
-  (data || []).forEach(
+  data.forEach(
     function(item) {
 
       const option =
@@ -1012,14 +940,11 @@ async function loadSections() {
           "option"
         );
 
-
       option.value =
         item.id;
 
-
       option.textContent =
         item.section_name;
-
 
       sectionSelect.appendChild(
         option
@@ -1031,9 +956,9 @@ async function loadSections() {
 }
 
 
-/* =========================================================
+/* ==========================================================
    LOAD STUDENTS
-========================================================= */
+========================================================== */
 
 async function loadStudents() {
 
@@ -1075,26 +1000,20 @@ async function loadStudents() {
 
   let query =
     supabaseClient
-
       .from("students")
-
       .select("*")
-
       .eq(
         "class_id",
         classId
       )
-
       .eq(
         "section_id",
         sectionId
       )
-
       .eq(
         "active",
         true
       )
-
       .order(
         "student_name"
       );
@@ -1111,10 +1030,8 @@ async function loadStudents() {
   }
 
 
-  const {
-    data,
-    error
-  } = await query;
+  const { data, error } =
+    await query;
 
 
   if (error) {
@@ -1122,8 +1039,8 @@ async function loadStudents() {
     console.error(error);
 
     showMessage(
-      "Students load ಆಗಲಿಲ್ಲ: "
-      + error.message,
+      "Students load ಆಗಲಿಲ್ಲ: " +
+      error.message,
       "error"
     );
 
@@ -1139,9 +1056,9 @@ async function loadStudents() {
 }
 
 
-/* =========================================================
+/* ==========================================================
    DISPLAY STUDENTS
-========================================================= */
+========================================================== */
 
 function displayStudents(
   students
@@ -1159,8 +1076,8 @@ function displayStudents(
   document.getElementById(
     "studentCount"
   ).innerText =
-    "Total Students: "
-    + students.length;
+    "Total Students: " +
+    students.length;
 
 
   if (
@@ -1171,11 +1088,8 @@ function displayStudents(
       <tr>
         <td
           colspan="12"
-          style="text-align:center">
-
-          ಈ Class / Divisionನಲ್ಲಿ
-          ವಿದ್ಯಾರ್ಥಿಗಳು ಇಲ್ಲ.
-
+          style="text-align:center;">
+          ಈ Class / Divisionನಲ್ಲಿ ವಿದ್ಯಾರ್ಥಿಗಳು ಇಲ್ಲ.
         </td>
       </tr>
     `;
@@ -1267,18 +1181,13 @@ function displayStudents(
             <button
               class="btn-primary"
               onclick='editStudent(${JSON.stringify(student)})'>
-
               Edit
-
             </button>
-
 
             <button
               class="btn-danger"
               onclick="deleteStudent('${student.id}')">
-
               Delete
-
             </button>
 
           </div>
@@ -1298,9 +1207,9 @@ function displayStudents(
 }
 
 
-/* =========================================================
+/* ==========================================================
    ADD STUDENT
-========================================================= */
+========================================================== */
 
 function openAddStudent() {
 
@@ -1357,9 +1266,9 @@ function openAddStudent() {
 }
 
 
-/* =========================================================
+/* ==========================================================
    EDIT STUDENT
-========================================================= */
+========================================================== */
 
 function editStudent(
   student
@@ -1445,9 +1354,9 @@ function editStudent(
 }
 
 
-/* =========================================================
+/* ==========================================================
    CLOSE MODAL
-========================================================= */
+========================================================== */
 
 function closeModal() {
 
@@ -1459,9 +1368,9 @@ function closeModal() {
 }
 
 
-/* =========================================================
-   SAVE / UPDATE
-========================================================= */
+/* ==========================================================
+   SAVE / UPDATE STUDENT
+========================================================== */
 
 document
   .getElementById(
@@ -1495,24 +1404,36 @@ document
       const studentData = {
 
         admission_number:
-          document.getElementById(
-            "admissionNumber"
-          ).value.trim(),
+          document
+            .getElementById(
+              "admissionNumber"
+            )
+            .value
+            .trim(),
 
         student_name:
-          document.getElementById(
-            "studentName"
-          ).value.trim(),
+          document
+            .getElementById(
+              "studentName"
+            )
+            .value
+            .trim(),
 
         father_name:
-          document.getElementById(
-            "fatherName"
-          ).value.trim(),
+          document
+            .getElementById(
+              "fatherName"
+            )
+            .value
+            .trim(),
 
         mother_name:
-          document.getElementById(
-            "motherName"
-          ).value.trim(),
+          document
+            .getElementById(
+              "motherName"
+            )
+            .value
+            .trim(),
 
         gender:
           document.getElementById(
@@ -1520,29 +1441,44 @@ document
           ).value,
 
         date_of_birth:
-          document.getElementById(
-            "dateOfBirth"
-          ).value || null,
+          document
+            .getElementById(
+              "dateOfBirth"
+            )
+            .value ||
+          null,
 
         sats_number:
-          document.getElementById(
-            "satsNumber"
-          ).value.trim(),
+          document
+            .getElementById(
+              "satsNumber"
+            )
+            .value
+            .trim(),
 
         pen_number:
-          document.getElementById(
-            "penNumber"
-          ).value.trim(),
+          document
+            .getElementById(
+              "penNumber"
+            )
+            .value
+            .trim(),
 
         caste_category:
-          document.getElementById(
-            "casteCategory"
-          ).value.trim(),
+          document
+            .getElementById(
+              "casteCategory"
+            )
+            .value
+            .trim(),
 
         mobile_number:
-          document.getElementById(
-            "mobileNumber"
-          ).value.trim(),
+          document
+            .getElementById(
+              "mobileNumber"
+            )
+            .value
+            .trim(),
 
         class_id:
           classId,
@@ -1560,7 +1496,8 @@ document
         currentAcademicYearId
       ) {
 
-        studentData.academic_year_id =
+        studentData
+          .academic_year_id =
           currentAcademicYearId;
 
       }
@@ -1573,13 +1510,10 @@ document
 
         result =
           await supabaseClient
-
             .from("students")
-
             .update(
               studentData
             )
-
             .eq(
               "id",
               studentId
@@ -1591,9 +1525,7 @@ document
 
         result =
           await supabaseClient
-
             .from("students")
-
             .insert([
               studentData
             ]);
@@ -1608,8 +1540,8 @@ document
         );
 
         showMessage(
-          "Save ಆಗಲಿಲ್ಲ: "
-          + result.error.message,
+          "Save ಆಗಲಿಲ್ಲ: " +
+          result.error.message,
           "error"
         );
 
@@ -1635,48 +1567,46 @@ document
   );
 
 
-/* =========================================================
-   DELETE
-========================================================= */
+/* ==========================================================
+   DELETE STUDENT
+========================================================== */
 
 async function deleteStudent(
   id
 ) {
 
-  const answer =
+  const confirmDelete =
     confirm(
       "ಈ ವಿದ್ಯಾರ್ಥಿಯನ್ನು delete ಮಾಡಬೇಕೇ?"
     );
 
 
-  if (!answer) {
+  if (!confirmDelete) {
 
     return;
 
   }
 
 
-  const {
-    error
-  } = await supabaseClient
-
-    .from("students")
-
-    .update({
-      active: false
-    })
-
-    .eq(
-      "id",
-      id
-    );
+  const { error } =
+    await supabaseClient
+      .from("students")
+      .update({
+        active: false
+      })
+      .eq(
+        "id",
+        id
+      );
 
 
   if (error) {
 
+    console.error(error);
+
     showMessage(
-      "Delete ಆಗಲಿಲ್ಲ: "
-      + error.message,
+      "Delete ಆಗಲಿಲ್ಲ: " +
+      error.message,
       "error"
     );
 
@@ -1696,55 +1626,1075 @@ async function deleteStudent(
 }
 
 
-/* =========================================================
-   EXCEL TEMPLATE
-========================================================= */
+/* ==========================================================
+   EXCEL IMPORT
+========================================================== */
+
+async function importExcel() {
+
+  const fileInput =
+    document.getElementById(
+      "excelFile"
+    );
+
+  const status =
+    document.getElementById(
+      "importStatus"
+    );
+
+
+  if (
+    !fileInput.files ||
+    !fileInput.files.length
+  ) {
+
+    showMessage(
+      "ಮೊದಲು Excel file ಆಯ್ಕೆ ಮಾಡಿ.",
+      "error"
+    );
+
+    return;
+
+  }
+
+
+  const file =
+    fileInput.files[0];
+
+
+  status.innerText =
+    "Excel ಓದಲಾಗುತ್ತಿದೆ...";
+
+
+  try {
+
+    const arrayBuffer =
+      await file.arrayBuffer();
+
+
+    const workbook =
+      XLSX.read(
+        arrayBuffer,
+        {
+          type: "array",
+          cellDates: true
+        }
+      );
+
+
+    if (
+      !workbook.SheetNames.length
+    ) {
+
+      throw new Error(
+        "Excel Sheet ಸಿಗಲಿಲ್ಲ."
+      );
+
+    }
+
+
+    const firstSheet =
+      workbook.Sheets[
+        workbook.SheetNames[0]
+      ];
+
+
+    const rows =
+      XLSX.utils.sheet_to_json(
+        firstSheet,
+        {
+          defval: ""
+        }
+      );
+
+
+    if (!rows.length) {
+
+      throw new Error(
+        "Excel ನಲ್ಲಿ data ಇಲ್ಲ."
+      );
+
+    }
+
+
+    status.innerText =
+      rows.length +
+      " rows ಸಿಕ್ಕಿವೆ. Database ಗೆ ಸೇರಿಸಲಾಗುತ್ತಿದೆ...";
+
+
+    /* -----------------------------------------
+       LOAD CLASSES
+    ----------------------------------------- */
+
+    const {
+      data: classes,
+      error: classError
+    } =
+      await supabaseClient
+        .from("classes")
+        .select(
+          "id, class_name"
+        );
+
+
+    if (classError) {
+
+      throw classError;
+
+    }
+
+
+    /* -----------------------------------------
+       LOAD SECTIONS
+    ----------------------------------------- */
+
+    const {
+      data: sections,
+      error: sectionError
+    } =
+      await supabaseClient
+        .from("sections")
+        .select(
+          "id, section_name, class_id"
+        )
+        .eq(
+          "active",
+          true
+        );
+
+
+    if (sectionError) {
+
+      throw sectionError;
+
+    }
+
+
+    const selectedClassId =
+      document.getElementById(
+        "classSelect"
+      ).value;
+
+
+    const selectedSectionId =
+      document.getElementById(
+        "sectionSelect"
+      ).value;
+
+
+    let successCount = 0;
+
+    let errorCount = 0;
+
+    let errors = [];
+
+
+    /* -----------------------------------------
+       PROCESS EACH EXCEL ROW
+    ----------------------------------------- */
+
+    for (
+      let i = 0;
+      i < rows.length;
+      i++
+    ) {
+
+      const row =
+        rows[i];
+
+
+      try {
+
+        const admissionNumber =
+          getExcelValue(
+            row,
+            [
+              "Admission Number",
+              "Admission No",
+              "Admission",
+              "admission_number",
+              "ಪ್ರವೇಶ ಸಂಖ್ಯೆ",
+              "ಪ್ರವೇಶ ಸಂಖ್ಯೆ."
+            ]
+          );
+
+
+        const studentName =
+          getExcelValue(
+            row,
+            [
+              "Student Name",
+              "Student",
+              "Name",
+              "student_name",
+              "ವಿದ್ಯಾರ್ಥಿಯ ಹೆಸರು",
+              "ವಿದ್ಯಾರ್ಥಿ ಹೆಸರು"
+            ]
+          );
+
+
+        if (!studentName) {
+
+          throw new Error(
+            "Student Name ಖಾಲಿ ಇದೆ."
+          );
+
+        }
+
+
+        const fatherName =
+          getExcelValue(
+            row,
+            [
+              "Father Name",
+              "Father",
+              "father_name",
+              "ತಂದೆಯ ಹೆಸರು"
+            ]
+          );
+
+
+        const motherName =
+          getExcelValue(
+            row,
+            [
+              "Mother Name",
+              "Mother",
+              "mother_name",
+              "ತಾಯಿಯ ಹೆಸರು"
+            ]
+          );
+
+
+        const gender =
+          getExcelValue(
+            row,
+            [
+              "Gender",
+              "gender",
+              "ಲಿಂಗ"
+            ]
+          );
+
+
+        const dobRaw =
+          getExcelValue(
+            row,
+            [
+              "Date of Birth",
+              "DOB",
+              "date_of_birth",
+              "ಜನ್ಮ ದಿನಾಂಕ"
+            ]
+          );
+
+
+        const satsNumber =
+          getExcelValue(
+            row,
+            [
+              "SATS Number",
+              "SATS No",
+              "SATS",
+              "sats_number",
+              "SATS ಸಂಖ್ಯೆ"
+            ]
+          );
+
+
+        const penNumber =
+          getExcelValue(
+            row,
+            [
+              "PEN Number",
+              "PEN No",
+              "PEN",
+              "pen_number",
+              "PEN ಸಂಖ್ಯೆ"
+            ]
+          );
+
+
+        const casteCategory =
+          getExcelValue(
+            row,
+            [
+              "Caste",
+              "Category",
+              "Caste Category",
+              "caste_category",
+              "ಜಾತಿ",
+              "ವರ್ಗ"
+            ]
+          );
+
+
+        const mobileNumber =
+          getExcelValue(
+            row,
+            [
+              "Mobile Number",
+              "Mobile",
+              "Phone",
+              "mobile_number",
+              "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ"
+            ]
+          );
+
+
+        /* ---------------------------------------
+           CLASS
+        --------------------------------------- */
+
+        let className =
+          getExcelValue(
+            row,
+            [
+              "Class",
+              "class",
+              "Class Name",
+              "class_name",
+              "ತರಗತಿ"
+            ]
+          );
+
+
+        /* ---------------------------------------
+           DIVISION
+        --------------------------------------- */
+
+        let divisionName =
+          getExcelValue(
+            row,
+            [
+              "Division",
+              "Section",
+              "division",
+              "section",
+              "section_name",
+              "ವಿಭಾಗ"
+            ]
+          );
+
+
+        let classId =
+          null;
+
+
+        let sectionId =
+          null;
+
+
+        /* ---------------------------------------
+           IF EXCEL CLASS EMPTY
+           USE SELECTED CLASS
+        --------------------------------------- */
+
+        if (!className) {
+
+          classId =
+            selectedClassId;
+
+        }
+
+        else {
+
+          const classItem =
+            classes.find(
+              function(c) {
+
+                return normalize(
+                  c.class_name
+                ) ===
+                normalize(
+                  className
+                );
+
+              }
+            );
+
+
+          if (!classItem) {
+
+            throw new Error(
+              "Class '" +
+              className +
+              "' databaseನಲ್ಲಿ ಸಿಗಲಿಲ್ಲ."
+            );
+
+          }
+
+
+          classId =
+            classItem.id;
+
+        }
+
+
+        if (!classId) {
+
+          throw new Error(
+            "Class ಆಯ್ಕೆ ಆಗಿಲ್ಲ."
+          );
+
+        }
+
+
+        /* ---------------------------------------
+           IF EXCEL DIVISION EMPTY
+           USE SELECTED DIVISION
+        --------------------------------------- */
+
+        if (!divisionName) {
+
+          sectionId =
+            selectedSectionId;
+
+        }
+
+        else {
+
+          const sectionItem =
+            sections.find(
+              function(s) {
+
+                return (
+                  s.class_id ===
+                    classId
+                  &&
+                  normalize(
+                    s.section_name
+                  ) ===
+                  normalize(
+                    divisionName
+                  )
+                );
+
+              }
+            );
+
+
+          if (!sectionItem) {
+
+            throw new Error(
+              "Division '" +
+              divisionName +
+              "' databaseನಲ್ಲಿ ಸಿಗಲಿಲ್ಲ."
+            );
+
+          }
+
+
+          sectionId =
+            sectionItem.id;
+
+        }
+
+
+        if (!sectionId) {
+
+          throw new Error(
+            "Division ಆಯ್ಕೆ ಆಗಿಲ್ಲ."
+          );
+
+        }
+
+
+        /* ---------------------------------------
+           STUDENT DATA
+        --------------------------------------- */
+
+        const studentData = {
+
+          admission_number:
+            String(
+              admissionNumber || ""
+            ).trim(),
+
+          student_name:
+            String(
+              studentName || ""
+            ).trim(),
+
+          father_name:
+            String(
+              fatherName || ""
+            ).trim(),
+
+          mother_name:
+            String(
+              motherName || ""
+            ).trim(),
+
+          gender:
+            normalizeGender(
+              gender
+            ),
+
+          date_of_birth:
+            convertExcelDate(
+              dobRaw
+            ),
+
+          sats_number:
+            String(
+              satsNumber || ""
+            ).trim(),
+
+          pen_number:
+            String(
+              penNumber || ""
+            ).trim(),
+
+          caste_category:
+            String(
+              casteCategory || ""
+            ).trim(),
+
+          mobile_number:
+            String(
+              mobileNumber || ""
+            ).trim(),
+
+          class_id:
+            classId,
+
+          section_id:
+            sectionId,
+
+          active:
+            true
+
+        };
+
+
+        if (
+          currentAcademicYearId
+        ) {
+
+          studentData
+            .academic_year_id =
+            currentAcademicYearId;
+
+        }
+
+
+        /* ---------------------------------------
+           INSERT
+        --------------------------------------- */
+
+        const {
+          error
+        } =
+          await supabaseClient
+            .from("students")
+            .insert([
+              studentData
+            ]);
+
+
+        if (error) {
+
+          throw error;
+
+        }
+
+
+        successCount++;
+
+
+        status.innerText =
+          "Import: " +
+          (i + 1) +
+          " / " +
+          rows.length;
+
+
+      }
+
+      catch (rowError) {
+
+        errorCount++;
+
+
+        errors.push(
+          "Row " +
+          (i + 2) +
+          ": " +
+          rowError.message
+        );
+
+      }
+
+    }
+
+
+    /* -----------------------------------------
+       RESULT
+    ----------------------------------------- */
+
+    if (errorCount === 0) {
+
+      status.innerText =
+        "✅ " +
+        successCount +
+        " students successfully imported.";
+
+      showMessage(
+        successCount +
+        " students Excel‌ನಿಂದ successfully imported.",
+        "success"
+      );
+
+    }
+
+    else {
+
+      status.innerText =
+        "Import ಮುಗಿದಿದೆ. Success: " +
+        successCount +
+        " | Error: " +
+        errorCount;
+
+
+      console.error(
+        "Excel Import Errors:",
+        errors
+      );
+
+
+      showMessage(
+        successCount +
+        " students added. " +
+        errorCount +
+        " rows failed. Browser Console ಪರಿಶೀಲಿಸಿ.",
+        "info"
+      );
+
+    }
+
+
+    /* -----------------------------------------
+       REFRESH CLASS / DIVISION
+    ----------------------------------------- */
+
+    await loadClasses();
+
+    await loadSections();
+
+
+    /* -----------------------------------------
+       LOAD CURRENT STUDENTS
+    ----------------------------------------- */
+
+    if (
+      document.getElementById(
+        "classSelect"
+      ).value
+      &&
+      document.getElementById(
+        "sectionSelect"
+      ).value
+    ) {
+
+      await loadStudents();
+
+    }
+
+
+    fileInput.value = "";
+
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Excel Import Error:",
+      error
+    );
+
+
+    status.innerText =
+      "❌ Import failed: " +
+      error.message;
+
+
+    showMessage(
+      "Excel Import ಆಗಲಿಲ್ಲ: " +
+      error.message,
+      "error"
+    );
+
+  }
+
+}
+
+
+/* ==========================================================
+   EXCEL VALUE HELPER
+========================================================== */
+
+function getExcelValue(
+  row,
+  possibleNames
+) {
+
+  const keys =
+    Object.keys(row);
+
+
+  for (
+    const name of possibleNames
+  ) {
+
+    const exact =
+      keys.find(
+        function(key) {
+
+          return key === name;
+
+        }
+      );
+
+
+    if (exact !== undefined) {
+
+      return row[exact];
+
+    }
+
+  }
+
+
+  /* ------------------------------------------
+     NORMALIZED MATCH
+  ------------------------------------------ */
+
+  for (
+    const name of possibleNames
+  ) {
+
+    const found =
+      keys.find(
+        function(key) {
+
+          return normalize(
+            key
+          ) ===
+          normalize(
+            name
+          );
+
+        }
+      );
+
+
+    if (found !== undefined) {
+
+      return row[found];
+
+    }
+
+  }
+
+
+  return "";
+
+}
+
+
+/* ==========================================================
+   NORMALIZE TEXT
+========================================================== */
+
+function normalize(
+  value
+) {
+
+  return String(
+    value || ""
+  )
+    .trim()
+    .toLowerCase()
+    .replace(
+      /\s+/g,
+      " "
+    );
+
+}
+
+
+/* ==========================================================
+   GENDER
+========================================================== */
+
+function normalizeGender(
+  value
+) {
+
+  const v =
+    normalize(value);
+
+
+  if (
+    v === "male" ||
+    v === "m" ||
+    v === "ಗಂಡು" ||
+    v === "ಪುರುಷ"
+  ) {
+
+    return "Male";
+
+  }
+
+
+  if (
+    v === "female" ||
+    v === "f" ||
+    v === "ಹೆಣ್ಣು" ||
+    v === "ಮಹಿಳೆ"
+  ) {
+
+    return "Female";
+
+  }
+
+
+  if (v) {
+
+    return value;
+
+  }
+
+
+  return "";
+
+}
+
+
+/* ==========================================================
+   EXCEL DATE CONVERSION
+========================================================== */
+
+function convertExcelDate(
+  value
+) {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
+
+    return null;
+
+  }
+
+
+  /* ------------------------------------------
+     JS DATE
+  ------------------------------------------ */
+
+  if (
+    Object.prototype.toString
+      .call(value)
+      === "[object Date]"
+  ) {
+
+    if (
+      isNaN(
+        value.getTime()
+      )
+    ) {
+
+      return null;
+
+    }
+
+
+    return (
+      value.getFullYear()
+      + "-" +
+      String(
+        value.getMonth() + 1
+      ).padStart(2, "0")
+      + "-" +
+      String(
+        value.getDate()
+      ).padStart(2, "0")
+    );
+
+  }
+
+
+  /* ------------------------------------------
+     EXCEL SERIAL DATE
+  ------------------------------------------ */
+
+  if (
+    typeof value === "number"
+  ) {
+
+    const excelEpoch =
+      new Date(
+        Date.UTC(
+          1899,
+          11,
+          30
+        )
+      );
+
+
+    const date =
+      new Date(
+        excelEpoch.getTime()
+        +
+        value *
+        86400000
+      );
+
+
+    return (
+      date.getUTCFullYear()
+      + "-" +
+      String(
+        date.getUTCMonth() + 1
+      ).padStart(2, "0")
+      + "-" +
+      String(
+        date.getUTCDate()
+      ).padStart(2, "0")
+    );
+
+  }
+
+
+  /* ------------------------------------------
+     STRING DATE
+  ------------------------------------------ */
+
+  let text =
+    String(value)
+      .trim();
+
+
+  if (!text) {
+
+    return null;
+
+  }
+
+
+  /* DD-MM-YYYY */
+
+  let match =
+    text.match(
+      /^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/
+    );
+
+
+  if (match) {
+
+    return (
+      match[3]
+      + "-" +
+      String(
+        match[2]
+      ).padStart(2, "0")
+      + "-" +
+      String(
+        match[1]
+      ).padStart(2, "0")
+    );
+
+  }
+
+
+  /* YYYY-MM-DD */
+
+  match =
+    text.match(
+      /^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})$/
+    );
+
+
+  if (match) {
+
+    return (
+      match[1]
+      + "-" +
+      String(
+        match[2]
+      ).padStart(2, "0")
+      + "-" +
+      String(
+        match[3]
+      ).padStart(2, "0")
+    );
+
+  }
+
+
+  return null;
+
+}
+
+
+/* ==========================================================
+   DOWNLOAD EXCEL TEMPLATE
+========================================================== */
 
 function downloadTemplate() {
 
-  const rows = [
+  const data = [
 
-    [
+    {
 
-      "Class",
-      "Division",
-      "Admission Number",
-      "Student Name",
-      "Father Name",
-      "Mother Name",
-      "Gender",
-      "Date of Birth",
-      "SATS Number",
-      "PEN Number",
-      "Caste",
-      "Mobile Number"
+      "Admission Number":
+        "01",
 
-    ],
+      "Student Name":
+        "ರಮೇಶ್",
 
+      "Father Name":
+        "ಕುಮಾರಪ್ಪ",
 
-    [
+      "Mother Name":
+        "ಸಾಕಮ್ಮ",
 
-      "8",
-      "A",
-      "001",
-      "Ramesh",
-      "Kumarappa",
-      "Sakamma",
-      "Male",
-      "26-07-2013",
-      "123456789",
-      "455665566",
-      "Golla",
-      "9999999999"
+      "Gender":
+        "Male",
 
-    ]
+      "Date of Birth":
+        "26-07-2013",
+
+      "SATS Number":
+        "1236971545",
+
+      "PEN Number":
+        "45566545661",
+
+      "Caste":
+        "Golla",
+
+      "Mobile Number":
+        "99956645",
+
+      "Class":
+        "8",
+
+      "Division":
+        "A"
+
+    }
 
   ];
 
 
   const worksheet =
-    XLSX.utils.aoa_to_sheet(
-      rows
+    XLSX.utils.json_to_sheet(
+      data
     );
 
 
@@ -1761,1008 +2711,15 @@ function downloadTemplate() {
 
   XLSX.writeFile(
     workbook,
-    "students_template.xlsx"
+    "Students_Import_Format.xlsx"
   );
 
 }
 
 
-/* =========================================================
-   EXCEL FILE READ
-========================================================= */
-
-async function handleExcelUpload(
-  event
-) {
-
-  const file =
-    event.target.files[0];
-
-
-  event.target.value = "";
-
-
-  if (!file) {
-
-    return;
-
-  }
-
-
-  try {
-
-    showMessage(
-      "Excel ಓದಲಾಗುತ್ತಿದೆ...",
-      "info"
-    );
-
-
-    const buffer =
-      await file.arrayBuffer();
-
-
-    const workbook =
-      XLSX.read(
-        buffer,
-        {
-          type: "array",
-          cellDates: true
-        }
-      );
-
-
-    const firstSheet =
-      workbook.Sheets[
-        workbook.SheetNames[0]
-      ];
-
-
-    const rows =
-      XLSX.utils.sheet_to_json(
-        firstSheet,
-        {
-          defval: "",
-          raw: false
-        }
-      );
-
-
-    if (
-      !rows.length
-    ) {
-
-      showMessage(
-        "Excel sheet ಖಾಲಿಯಾಗಿದೆ.",
-        "error"
-      );
-
-      return;
-
-    }
-
-
-    await importStudents(
-      rows
-    );
-
-  }
-
-  catch (error) {
-
-    console.error(error);
-
-    showMessage(
-      "Excel upload ಆಗಲಿಲ್ಲ: "
-      + error.message,
-      "error"
-    );
-
-  }
-
-}
-
-
-/* =========================================================
-   IMPORT STUDENTS
-========================================================= */
-
-async function importStudents(
-  rows
-) {
-
-  const selectedClassId =
-    document.getElementById(
-      "classSelect"
-    ).value;
-
-
-  const selectedSectionId =
-    document.getElementById(
-      "sectionSelect"
-    ).value;
-
-
-  /* LOAD CLASSES */
-
-  const {
-    data: classes,
-    error: classError
-  } = await supabaseClient
-
-    .from("classes")
-
-    .select(
-      "id, class_name"
-    );
-
-
-  if (classError) {
-
-    showMessage(
-      "Classes load ಆಗಲಿಲ್ಲ: "
-      + classError.message,
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  /* LOAD SECTIONS */
-
-  const {
-    data: sections,
-    error: sectionError
-  } = await supabaseClient
-
-    .from("sections")
-
-    .select(
-      "id, section_name, class_id"
-    )
-
-    .eq(
-      "active",
-      true
-    );
-
-
-  if (sectionError) {
-
-    showMessage(
-      "Divisions load ಆಗಲಿಲ್ಲ: "
-      + sectionError.message,
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  /* CLASS MAP */
-
-  const classMap = {};
-
-
-  (classes || []).forEach(
-    function(c) {
-
-      classMap[
-        normalize(
-          c.class_name
-        )
-      ] = c.id;
-
-    }
-  );
-
-
-  /* SECTION MAP */
-
-  const sectionMap = {};
-
-
-  (sections || []).forEach(
-    function(s) {
-
-      sectionMap[
-        s.class_id
-        + "|"
-        + normalize(
-          s.section_name
-        )
-      ] = s.id;
-
-    }
-  );
-
-
-  const students = [];
-
-  const errors = [];
-
-
-  /* PROCESS EXCEL ROWS */
-
-  rows.forEach(
-    function(rawRow, index) {
-
-      const rowNumber =
-        index + 2;
-
-
-      const row =
-        normalizeRow(
-          rawRow
-        );
-
-
-      let classId = "";
-
-      let sectionId = "";
-
-
-      /* CLASS */
-
-      if (
-        row.class
-      ) {
-
-        classId =
-          classMap[
-            normalize(
-              row.class
-            )
-          ] || "";
-
-      }
-
-      else {
-
-        classId =
-          selectedClassId;
-
-      }
-
-
-      /* DIVISION */
-
-      if (
-        row.division &&
-        classId
-      ) {
-
-        sectionId =
-          sectionMap[
-            classId
-            + "|"
-            + normalize(
-              row.division
-            )
-          ] || "";
-
-      }
-
-      else {
-
-        sectionId =
-          selectedSectionId;
-
-      }
-
-
-      if (!classId) {
-
-        errors.push(
-          "Row "
-          + rowNumber
-          + ": Class ಸಿಗಲಿಲ್ಲ."
-        );
-
-        return;
-
-      }
-
-
-      if (!sectionId) {
-
-        errors.push(
-          "Row "
-          + rowNumber
-          + ": Division ಸಿಗಲಿಲ್ಲ."
-        );
-
-        return;
-
-      }
-
-
-      if (
-        !row.student_name
-      ) {
-
-        errors.push(
-          "Row "
-          + rowNumber
-          + ": Student Name ಖಾಲಿಯಾಗಿದೆ."
-        );
-
-        return;
-
-      }
-
-
-      const student = {
-
-        admission_number:
-          row.admission_number || null,
-
-        student_name:
-          row.student_name,
-
-        father_name:
-          row.father_name || null,
-
-        mother_name:
-          row.mother_name || null,
-
-        gender:
-          normalizeGender(
-            row.gender
-          ),
-
-        date_of_birth:
-          excelDateToISO(
-            row.date_of_birth
-          ),
-
-        sats_number:
-          row.sats_number || null,
-
-        pen_number:
-          row.pen_number || null,
-
-        caste_category:
-          row.caste || null,
-
-        mobile_number:
-          row.mobile_number || null,
-
-        class_id:
-          classId,
-
-        section_id:
-          sectionId,
-
-        active:
-          true
-
-      };
-
-
-      if (
-        currentAcademicYearId
-      ) {
-
-        student.academic_year_id =
-          currentAcademicYearId;
-
-      }
-
-
-      students.push(
-        student
-      );
-
-    }
-  );
-
-
-  if (
-    !students.length
-  ) {
-
-    showMessage(
-      "Valid student records ಸಿಗಲಿಲ್ಲ.",
-      "error"
-    );
-
-    return;
-
-  }
-
-
-  /* PROGRESS */
-
-  document.getElementById(
-    "progress"
-  ).style.display =
-    "block";
-
-
-  setProgress(0);
-
-
-  let added = 0;
-
-  let failed = 0;
-
-
-  /* INSERT 50 AT A TIME */
-
-  for (
-    let i = 0;
-    i < students.length;
-    i += 50
-  ) {
-
-    const batch =
-      students.slice(
-        i,
-        i + 50
-      );
-
-
-    const {
-      error
-    } = await supabaseClient
-
-      .from("students")
-
-      .insert(
-        batch
-      );
-
-
-    if (error) {
-
-      console.error(error);
-
-      failed +=
-        batch.length;
-
-
-      errors.push(
-        "Database Error: "
-        + error.message
-      );
-
-    }
-
-    else {
-
-      added +=
-        batch.length;
-
-    }
-
-
-    setProgress(
-      Math.round(
-        (
-          (i + batch.length)
-          /
-          students.length
-        ) * 100
-      )
-    );
-
-  }
-
-
-  setTimeout(
-    function() {
-
-      document.getElementById(
-        "progress"
-      ).style.display =
-        "none";
-
-    },
-    1000
-  );
-
-
-  let resultMessage =
-    "Excel Upload ಮುಗಿದಿದೆ.\n\n"
-    + "Added: "
-    + added
-    + "\n"
-    + "Failed: "
-    + failed
-    + "\n"
-    + "Total Excel Rows: "
-    + rows.length;
-
-
-  if (
-    errors.length
-  ) {
-
-    resultMessage +=
-      "\n\nErrors:\n"
-      + errors
-          .slice(0, 10)
-          .join("\n");
-
-  }
-
-
-  showMessage(
-    resultMessage,
-    failed || errors.length
-      ? "error"
-      : "success"
-  );
-
-
-  /*
-    CURRENT CLASS / DIVISION
-    REFRESH
-  */
-
-  if (
-    selectedClassId &&
-    selectedSectionId
-  ) {
-
-    await loadStudents();
-
-  }
-
-}
-
-
-/* =========================================================
-   NORMALIZE EXCEL ROW
-========================================================= */
-
-function normalizeRow(
-  row
-) {
-
-  const result = {};
-
-
-  Object.keys(
-    row
-  ).forEach(
-    function(key) {
-
-      const k =
-        normalize(
-          key
-        );
-
-
-      const value =
-        row[key];
-
-
-      if (
-        k === "class" ||
-        k === "classname" ||
-        k === "standard" ||
-        k === "grade"
-      ) {
-
-        result.class =
-          value;
-
-      }
-
-
-      else if (
-        k === "division" ||
-        k === "section" ||
-        k === "sectionname"
-      ) {
-
-        result.division =
-          value;
-
-      }
-
-
-      else if (
-        k === "admissionnumber" ||
-        k === "admissionno" ||
-        k === "admission"
-      ) {
-
-        result.admission_number =
-          value;
-
-      }
-
-
-      else if (
-        k === "studentname" ||
-        k === "name" ||
-        k === "student"
-      ) {
-
-        result.student_name =
-          value;
-
-      }
-
-
-      else if (
-        k === "fathername" ||
-        k === "father"
-      ) {
-
-        result.father_name =
-          value;
-
-      }
-
-
-      else if (
-        k === "mothername" ||
-        k === "mother"
-      ) {
-
-        result.mother_name =
-          value;
-
-      }
-
-
-      else if (
-        k === "gender" ||
-        k === "sex"
-      ) {
-
-        result.gender =
-          value;
-
-      }
-
-
-      else if (
-        k === "dateofbirth" ||
-        k === "dob" ||
-        k === "birthdate"
-      ) {
-
-        result.date_of_birth =
-          value;
-
-      }
-
-
-      else if (
-        k === "satsnumber" ||
-        k === "satsno" ||
-        k === "sats"
-      ) {
-
-        result.sats_number =
-          value;
-
-      }
-
-
-      else if (
-        k === "pennumber" ||
-        k === "penno" ||
-        k === "pen"
-      ) {
-
-        result.pen_number =
-          value;
-
-      }
-
-
-      else if (
-        k === "caste" ||
-        k === "category" ||
-        k === "castecategory"
-      ) {
-
-        result.caste =
-          value;
-
-      }
-
-
-      else if (
-        k === "mobilenumber" ||
-        k === "mobileno" ||
-        k === "mobile" ||
-        k === "phone"
-      ) {
-
-        result.mobile_number =
-          value;
-
-      }
-
-    }
-  );
-
-
-  return result;
-
-}
-
-
-/* =========================================================
-   NORMALIZE
-========================================================= */
-
-function normalize(
-  value
-) {
-
-  return String(
-    value ?? ""
-  )
-
-  .trim()
-
-  .toLowerCase()
-
-  .replace(
-    /\s+/g,
-    ""
-  )
-
-  .replace(
-    /[_-]/g,
-    ""
-  );
-
-}
-
-
-/* =========================================================
-   GENDER
-========================================================= */
-
-function normalizeGender(
-  value
-) {
-
-  const v =
-    normalize(
-      value
-    );
-
-
-  if (
-    v === "male" ||
-    v === "m"
-  ) {
-
-    return "Male";
-
-  }
-
-
-  if (
-    v === "female" ||
-    v === "f"
-  ) {
-
-    return "Female";
-
-  }
-
-
-  if (
-    v === "other" ||
-    v === "o"
-  ) {
-
-    return "Other";
-
-  }
-
-
-  return String(
-    value ?? ""
-  ).trim();
-
-}
-
-
-/* =========================================================
-   EXCEL DATE
-========================================================= */
-
-function excelDateToISO(
-  value
-) {
-
-  if (
-    value === null ||
-    value === undefined ||
-    value === ""
-  ) {
-
-    return null;
-
-  }
-
-
-  if (
-    value instanceof Date &&
-    !isNaN(value)
-  ) {
-
-    return toISODate(
-      value
-    );
-
-  }
-
-
-  const text =
-    String(
-      value
-    ).trim();
-
-
-  /*
-    DD-MM-YYYY
-  */
-
-  let match =
-    text.match(
-      /^(\d{1,2})[-\/](\d{1,2})[-\/](\d{4})$/
-    );
-
-
-  if (match) {
-
-    const day =
-      Number(
-        match[1]
-      );
-
-
-    const month =
-      Number(
-        match[2]
-      );
-
-
-    const year =
-      Number(
-        match[3]
-      );
-
-
-    return (
-      year
-      + "-"
-      + String(month).padStart(2,"0")
-      + "-"
-      + String(day).padStart(2,"0")
-    );
-
-  }
-
-
-  /*
-    YYYY-MM-DD
-  */
-
-  match =
-    text.match(
-      /^(\d{4})[-\/](\d{1,2})[-\/](\d{1,2})$/
-    );
-
-
-  if (match) {
-
-    return (
-      match[1]
-      + "-"
-      + String(match[2]).padStart(2,"0")
-      + "-"
-      + String(match[3]).padStart(2,"0")
-    );
-
-  }
-
-
-  /*
-    Excel Serial Date
-  */
-
-  const number =
-    Number(
-      value
-    );
-
-
-  if (
-    !isNaN(number) &&
-    number > 20000 &&
-    number < 60000
-  ) {
-
-    const date =
-      new Date(
-        Date.UTC(
-          1899,
-          11,
-          30
-        )
-        +
-        number * 86400000
-      );
-
-
-    return toISODate(
-      date
-    );
-
-  }
-
-
-  return null;
-
-}
-
-
-/* =========================================================
-   DATE
-========================================================= */
-
-function toISODate(
-  date
-) {
-
-  return (
-    date.getUTCFullYear()
-    + "-"
-    + String(
-        date.getUTCMonth() + 1
-      ).padStart(2,"0")
-    + "-"
-    + String(
-        date.getUTCDate()
-      ).padStart(2,"0")
-  );
-
-}
-
-
-/* =========================================================
-   PROGRESS
-========================================================= */
-
-function setProgress(
-  percent
-) {
-
-  const bar =
-    document.getElementById(
-      "progressBar"
-    );
-
-
-  bar.style.width =
-    percent + "%";
-
-
-  bar.innerText =
-    percent + "%";
-
-}
-
-
-/* =========================================================
-   DISPLAY DATE
-========================================================= */
+/* ==========================================================
+   FORMAT DATE FOR DISPLAY
+========================================================== */
 
 function formatDate(
   date
@@ -2776,9 +2733,7 @@ function formatDate(
 
 
   const parts =
-    String(
-      date
-    ).split("-");
+    String(date).split("-");
 
 
   if (
@@ -2792,77 +2747,74 @@ function formatDate(
 
   return (
     parts[2]
-    + "-"
-    + parts[1]
-    + "-"
-    + parts[0]
+    + "-" +
+    parts[1]
+    + "-" +
+    parts[0]
   );
 
 }
 
 
-/* =========================================================
+/* ==========================================================
    SECURITY
-========================================================= */
+========================================================== */
 
 function escapeHtml(
   value
 ) {
 
   return String(
-    value
+    value || ""
   )
-
-  .replace(
-    /&/g,
-    "&amp;"
-  )
-
-  .replace(
-    /</g,
-    "&lt;"
-  )
-
-  .replace(
-    />/g,
-    "&gt;"
-  )
-
-  .replace(
-    /"/g,
-    "&quot;"
-  )
-
-  .replace(
-    /'/g,
-    "&#039;"
-  );
+    .replace(
+      /&/g,
+      "&amp;"
+    )
+    .replace(
+      /</g,
+      "&lt;"
+    )
+    .replace(
+      />/g,
+      "&gt;"
+    )
+    .replace(
+      /"/g,
+      "&quot;"
+    )
+    .replace(
+      /'/g,
+      "&#039;"
+    );
 
 }
 
 
-/* =========================================================
-   CLOSE MODAL OUTSIDE
-========================================================= */
+/* ==========================================================
+   CLOSE MODAL WHEN CLICK OUTSIDE
+========================================================== */
 
-window.onclick =
-function(event) {
+window.addEventListener(
+  "click",
+  function(event) {
 
-  const modal =
-    document.getElementById(
-      "studentModal"
-    );
+    const modal =
+      document.getElementById(
+        "studentModal"
+      );
 
 
-  if (
-    event.target === modal
-  ) {
+    if (
+      event.target === modal
+    ) {
 
-    closeModal();
+      closeModal();
+
+    }
 
   }
-
-};
+);
 
 </script>
 
