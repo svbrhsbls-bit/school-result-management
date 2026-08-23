@@ -25,6 +25,7 @@ body{
     background:#173b68;
     color:white;
     padding:18px 25px;
+    text-align:center;
 }
 
 .header h1{
@@ -331,14 +332,7 @@ td{
     color:#dc2626 !important;
 }
 
-.small-note{
-    font-size:13px;
-    color:#666;
-    margin-top:8px;
-}
-
 @media(max-width:1000px){
-
     .controls{
         grid-template-columns:1fr 1fr;
     }
@@ -349,7 +343,6 @@ td{
 }
 
 @media(max-width:600px){
-
     .controls{
         grid-template-columns:1fr;
     }
@@ -375,7 +368,6 @@ td{
 
 
 <div class="container">
-
 
 <!-- =====================================================
      SELECTION
@@ -464,53 +456,58 @@ td{
 
 <div class="card">
 
-    <div class="info">
+<div class="info">
 
-        <strong>📌 ಅಂಕಗಳ ನಮೂದು ನಿಯಮ:</strong>
+<strong>📌 ಅಂಕಗಳ ನಮೂದು ನಿಯಮ:</strong>
 
-        <br>
+<br>
 
-        Marks boxನಲ್ಲಿ ನೇರವಾಗಿ ಅಂಕಗಳನ್ನು type ಮಾಡಬಹುದು.
+Marks boxನಲ್ಲಿ ನೇರವಾಗಿ ಅಂಕಗಳನ್ನು type ಮಾಡಬಹುದು.
 
-        <br>
+<br>
 
-        ಪ್ರತಿಯೊಂದು ವಿಷಯದ Grade ಸ್ವಯಂ ಬರುತ್ತದೆ.
+ಪ್ರತಿಯೊಂದು ವಿಷಯದ Grade ಸ್ವಯಂ ಬರುತ್ತದೆ.
 
-        <br>
+<br>
 
-        Total, Percentage, Overall Grade ಮತ್ತು Result
-        ಸ್ವಯಂ ಲೆಕ್ಕವಾಗುತ್ತದೆ.
+Total, Percentage, Overall Grade ಮತ್ತು Result
+ಸ್ವಯಂ ಲೆಕ್ಕವಾಗುತ್ತದೆ.
 
-        <br>
+<br>
 
-        Enter ಒತ್ತಿದರೆ ಮುಂದಿನ Marks boxಗೆ ಹೋಗುತ್ತದೆ.
+Enter ಒತ್ತಿದರೆ ಮುಂದಿನ Marks boxಗೆ ಹೋಗುತ್ತದೆ.
 
-        <br><br>
+<br><br>
 
-        <strong>8ನೇ ತರಗತಿ Grade:</strong>
 
-        <br>
+<strong>8ನೇ ತರಗತಿ Grade:</strong>
 
-        FA → A+ 9-10 | A 7-8 | B+ 5-6 | B 3-4 | C 0-2
+<br>
 
-        <br>
+FA-1 / FA-2 / FA-3 / FA-4
+→ A+ 9-10 | A 7-8 | B+ 5-6 | B 3-4 | C 0-2
 
-        SA → A+ 27-30 | A 22-26 | B+ 16-21 | B 10-15 | C 0-9
+<br>
 
-        <br>
+SA-1 / SA-2
+→ A+ 27-30 | A 22-26 | B+ 16-21 | B 10-15 | C 0-9
 
-        Annual → A+ 90-100 | A 70-89 | B+ 50-69 | B 30-49 | C 0-29
+<br>
 
-        <br><br>
+Annual
+→ A+ 90-100 | A 70-89 | B+ 50-69 | B 30-49 | C 0-29
 
-        <strong>9ನೇ ಮತ್ತು 10ನೇ ತರಗತಿ Grade:</strong>
+<br><br>
 
-        <br>
 
-        A+ 90%+ | A 80%+ | B+ 70%+ | B 60%+
-        | C+ 50%+ | C 40%+ | NA below 40%
+<strong>9ನೇ ಮತ್ತು 10ನೇ ತರಗತಿ Grade:</strong>
 
-    </div>
+<br>
+
+A+ 90%+ | A 80%+ | B+ 70%+ | B 60%+
+| C+ 50%+ | C 40%+ | NA below 40%
+
+</div>
 
 </div>
 
@@ -641,7 +638,7 @@ td{
 <script>
 
 /* =========================================================
-   SUPABASE
+   SUPABASE CONNECTION
 ========================================================= */
 
 const SUPABASE_URL =
@@ -681,69 +678,6 @@ let selectedExamCode = "";
 
 
 /* =========================================================
-   STANDARD EXAMS
-========================================================= */
-
-const STANDARD_EXAMS = [
-
-    {
-        code:"FA1",
-        name:"FA-1",
-        order:1
-    },
-
-    {
-        code:"FA2",
-        name:"FA-2",
-        order:2
-    },
-
-    {
-        code:"FA3",
-        name:"FA-3",
-        order:3
-    },
-
-    {
-        code:"FA4",
-        name:"FA-4",
-        order:4
-    },
-
-    {
-        code:"SA1",
-        name:"SA-1",
-        order:5
-    },
-
-    {
-        code:"SA2",
-        name:"SA-2",
-        order:6
-    },
-
-    {
-        code:"TERM1",
-        name:"TERM-1",
-        order:7
-    },
-
-    {
-        code:"TERM2",
-        name:"TERM-2",
-        order:8
-    },
-
-    {
-        code:"ANNUAL",
-        name:"ANNUAL EXAM",
-        order:9
-    }
-
-];
-
-
-/* =========================================================
    PAGE LOAD
 ========================================================= */
 
@@ -776,10 +710,15 @@ document.addEventListener(
    MESSAGE
 ========================================================= */
 
-function showMessage(text,type){
+function showMessage(
+    text,
+    type
+){
 
     const box =
-        document.getElementById("message");
+        document.getElementById(
+            "message"
+        );
 
     box.innerText = text;
 
@@ -818,6 +757,7 @@ async function loadAcademicYear(){
         console.error(error);
 
         return;
+
     }
 
 
@@ -841,6 +781,7 @@ async function loadClasses(){
         document.getElementById(
             "classSelect"
         );
+
 
     select.innerHTML = `
         <option value="">
@@ -877,6 +818,7 @@ async function loadClasses(){
         );
 
         return;
+
     }
 
 
@@ -946,6 +888,7 @@ function getClassNumber(){
 
 
     return "";
+
 }
 
 
@@ -1115,6 +1058,7 @@ async function loadExams(){
         );
 
         return;
+
     }
 
 
@@ -1248,8 +1192,8 @@ async function loadSubjects(){
 
 
     /*
-       Subject Masterನಲ್ಲಿ subjects ಇಲ್ಲದಿದ್ದರೂ
-       screenನಲ್ಲಿ standard subjects ತೋರಿಸಲು fallback.
+       Supabaseನಲ್ಲಿ subjects ಸಿಗದಿದ್ದರೆ
+       standard subjects screenನಲ್ಲಿ ತೋರಿಸಲಾಗುತ್ತದೆ.
     */
 
     if(subjects.length === 0){
@@ -1329,19 +1273,16 @@ function getMarkRule(subject){
         );
 
 
-    /*
-    ========================================================
-    8ನೇ ತರಗತಿ
-    ========================================================
-    */
-
+    /* =====================================================
+       8ನೇ ತರಗತಿ
+    ===================================================== */
 
     if(classNo === "8"){
 
         /*
-        FA-1 to FA-4
-        Maximum = 10
-        Passing = 3
+           FA-1 to FA-4
+           Maximum = 10
+           Passing = 3
         */
 
         if(
@@ -1350,20 +1291,17 @@ function getMarkRule(subject){
         ){
 
             return {
-
                 max:10,
-
                 pass:3
-
             };
 
         }
 
 
         /*
-        SA-1 and SA-2
-        Maximum = 30
-        Passing = 10
+           SA-1 and SA-2
+           Maximum = 30
+           Passing = 10
         */
 
         if(
@@ -1372,20 +1310,17 @@ function getMarkRule(subject){
         ){
 
             return {
-
                 max:30,
-
                 pass:10
-
             };
 
         }
 
 
         /*
-        TERM-1 and TERM-2
-        Maximum = 50
-        Passing = 18
+           TERM-1 / TERM-2
+           Maximum = 50
+           Passing = 18
         */
 
         if(
@@ -1394,30 +1329,26 @@ function getMarkRule(subject){
         ){
 
             return {
-
                 max:50,
-
                 pass:18
-
             };
 
         }
 
 
         /*
-        ANNUAL
-        Maximum = 100
-        Passing = 35
+           ANNUAL
+           Maximum = 100
+           Passing = 35
         */
 
-        if(exam === "ANNUAL"){
+        if(
+            exam === "ANNUAL"
+        ){
 
             return {
-
                 max:100,
-
                 pass:35
-
             };
 
         }
@@ -1425,11 +1356,9 @@ function getMarkRule(subject){
     }
 
 
-    /*
-    ========================================================
-    9ನೇ ಮತ್ತು 10ನೇ ತರಗತಿ
-    ========================================================
-    */
+    /* =====================================================
+       9ನೇ ಮತ್ತು 10ನೇ ತರಗತಿ
+    ===================================================== */
 
     if(
         classNo === "9" ||
@@ -1437,7 +1366,7 @@ function getMarkRule(subject){
     ){
 
         /*
-        FA-1 to FA-4 = 50
+           FA-1 to FA-4 = 50
         */
 
         if(
@@ -1446,18 +1375,15 @@ function getMarkRule(subject){
         ){
 
             return {
-
                 max:50,
-
                 pass:18
-
             };
 
         }
 
 
         /*
-        SA-1 and SA-2 = 80
+           SA-1 / SA-2 = 80
         */
 
         if(
@@ -1466,18 +1392,15 @@ function getMarkRule(subject){
         ){
 
             return {
-
                 max:80,
-
                 pass:28
-
             };
 
         }
 
 
         /*
-        TERM-1 and TERM-2 = 80
+           TERM-1 / TERM-2 = 80
         */
 
         if(
@@ -1486,45 +1409,38 @@ function getMarkRule(subject){
         ){
 
             return {
-
                 max:80,
-
                 pass:28
-
             };
 
         }
 
 
         /*
-        ANNUAL
-        Kannada = 125
-        Other subjects = 100
+           Annual
+           Kannada = 125
+           Other = 100
         */
 
-        if(exam === "ANNUAL"){
+        if(
+            exam === "ANNUAL"
+        ){
 
             if(
                 subject.subject_code === "01K"
             ){
 
                 return {
-
                     max:125,
-
                     pass:44
-
                 };
 
             }
 
 
             return {
-
                 max:100,
-
                 pass:35
-
             };
 
         }
@@ -1533,7 +1449,7 @@ function getMarkRule(subject){
 
 
     /*
-    Final fallback
+       Subject Master fallback
     */
 
     let max =
@@ -1571,11 +1487,8 @@ function getMarkRule(subject){
 
 
     return {
-
         max:max,
-
         pass:pass
-
     };
 
 }
@@ -1684,16 +1597,8 @@ async function loadStudents(){
 
     try{
 
-        /*
-        SUBJECTS
-        */
-
         await loadSubjects();
 
-
-        /*
-        STUDENTS
-        */
 
         let query =
             supabaseClient
@@ -1779,10 +1684,8 @@ async function loadStudents(){
                 "tableArea"
             ).innerHTML = `
                 <div class="no-data">
-
                     ಈ Class / Divisionನಲ್ಲಿ
                     ವಿದ್ಯಾರ್ಥಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ.
-
                 </div>
             `;
 
@@ -1799,7 +1702,6 @@ async function loadStudents(){
 
 
         renderTable();
-
 
         await loadExistingMarks();
 
@@ -1819,16 +1721,12 @@ async function loadStudents(){
             "tableArea"
         ).innerHTML = `
             <div class="no-data">
-
                 ❌ Data load ಆಗಲಿಲ್ಲ.
-
                 <br><br>
-
                 ${escapeHtml(
                     error.message ||
                     String(error)
                 )}
-
             </div>
         `;
 
@@ -1994,14 +1892,11 @@ function renderTable(){
 
             html += `
 
-            <tr
-                data-student-id="${escapeHtml(studentId)}"
-            >
+            <tr>
 
                 <td>
                     ${index + 1}
                 </td>
-
 
                 <td class="student-name">
 
@@ -2274,9 +2169,7 @@ function markChanged(input){
         Number(value);
 
 
-    if(
-        !Number.isFinite(mark)
-    ){
+    if(!Number.isFinite(mark)){
 
         return;
 
@@ -2436,21 +2329,20 @@ function getSubjectGrade(
         );
 
 
-    /*
-    ========================================================
-    8ನೇ ತರಗತಿ
-    ========================================================
-    */
+    /* =====================================================
+       8ನೇ ತರಗತಿ - ವಿಶೇಷ Grade System
+    ===================================================== */
 
     if(classNo === "8"){
 
         /*
-        FA
-        A+ = 9-10
-        A  = 7-8
-        B+ = 5-6
-        B  = 3-4
-        C  = 0-2
+           FA-1 to FA-4
+
+           A+ = 9-10
+           A  = 7-8
+           B+ = 5-6
+           B  = 3-4
+           C  = 0-2
         */
 
         if(
@@ -2476,12 +2368,13 @@ function getSubjectGrade(
 
 
         /*
-        SA
-        A+ = 27-30
-        A  = 22-26
-        B+ = 16-21
-        B  = 10-15
-        C  = 0-9
+           SA-1 / SA-2
+
+           A+ = 27-30
+           A  = 22-26
+           B+ = 16-21
+           B  = 10-15
+           C  = 0-9
         */
 
         if(
@@ -2507,15 +2400,18 @@ function getSubjectGrade(
 
 
         /*
-        ANNUAL
-        A+ = 90-100
-        A  = 70-89
-        B+ = 50-69
-        B  = 30-49
-        C  = 0-29
+           ANNUAL
+
+           A+ = 90-100
+           A  = 70-89
+           B+ = 50-69
+           B  = 30-49
+           C  = 0-29
         */
 
-        if(exam === "ANNUAL"){
+        if(
+            exam === "ANNUAL"
+        ){
 
             if(mark >= 90)
                 return "A+";
@@ -2536,13 +2432,10 @@ function getSubjectGrade(
     }
 
 
-    /*
-    ========================================================
-    9ನೇ ಮತ್ತು 10ನೇ ತರಗತಿ
-    ========================================================
-
-    ಫೋಟೋದಲ್ಲಿರುವ Percentage Grade System
-    */
+    /* =====================================================
+       9ನೇ / 10ನೇ ತರಗತಿ
+       Percentage Grade
+    ===================================================== */
 
     if(
         classNo === "9" ||
@@ -2559,62 +2452,27 @@ function getSubjectGrade(
         if(percentage >= 90)
             return "A+";
 
-
         if(percentage >= 80)
             return "A";
-
 
         if(percentage >= 70)
             return "B+";
 
-
         if(percentage >= 60)
             return "B";
-
 
         if(percentage >= 50)
             return "C+";
 
-
         if(percentage >= 40)
             return "C";
-
 
         return "NA";
 
     }
 
 
-    /*
-    Other fallback
-    */
-
-    const percentage =
-        (
-            Number(mark) /
-            Number(max)
-        ) * 100;
-
-
-    if(percentage >= 90)
-        return "A+";
-
-    if(percentage >= 80)
-        return "A";
-
-    if(percentage >= 70)
-        return "B+";
-
-    if(percentage >= 60)
-        return "B";
-
-    if(percentage >= 50)
-        return "C+";
-
-    if(percentage >= 40)
-        return "C";
-
-    return "NA";
+    return "-";
 
 }
 
@@ -2633,33 +2491,31 @@ function getOverallGrade(
         );
 
 
-    /*
-    8ನೇ ತರಗತಿ
-    Overall grade ಕೂಡ exam-specific
-    subject grade rulesಗೆ ಅನುಗುಣವಾಗಿರುತ್ತದೆ.
-    */
+    const exam =
+        normalizeExam(
+            selectedExamCode
+        );
+
+
+    /* =====================================================
+       8ನೇ ತರಗತಿ
+    ===================================================== */
 
     if(classNo === "8"){
 
-        const exam =
-            normalizeExam(
-                selectedExamCode
-            );
-
+        /*
+           FA Overall:
+           90-100 A+
+           70-89 A
+           50-69 B+
+           30-49 B
+           0-29 C
+        */
 
         if(
             ["FA1","FA2","FA3","FA4"]
             .includes(exam)
         ){
-
-            /*
-            Percentage equivalent:
-            90-100 = A+
-            70-89 = A
-            50-69 = B+
-            30-49 = B
-            0-29 = C
-            */
 
             if(percentage >= 90)
                 return "A+";
@@ -2677,6 +2533,15 @@ function getOverallGrade(
 
         }
 
+
+        /*
+           SA Overall
+
+           27/30 = 90%
+           22/30 = 73.333%
+           16/30 = 53.333%
+           10/30 = 33.333%
+        */
 
         if(
             ["SA1","SA2"]
@@ -2700,7 +2565,13 @@ function getOverallGrade(
         }
 
 
-        if(exam === "ANNUAL"){
+        /*
+           Annual
+        */
+
+        if(
+            exam === "ANNUAL"
+        ){
 
             if(percentage >= 90)
                 return "A+";
@@ -2721,9 +2592,9 @@ function getOverallGrade(
     }
 
 
-    /*
-    9 / 10
-    */
+    /* =====================================================
+       9ನೇ / 10ನೇ
+    ===================================================== */
 
     if(
         classNo === "9" ||
@@ -3096,8 +2967,8 @@ async function saveAllMarks(){
                 function(subject){
 
                     /*
-                    Database Subject ID ಇಲ್ಲದ fallback
-                    save ಮಾಡುವುದಿಲ್ಲ.
+                       Subject ID ಇಲ್ಲದಿದ್ದರೆ
+                       Databaseಗೆ save ಮಾಡುವುದಿಲ್ಲ.
                     */
 
                     if(!subject.id){
@@ -3150,7 +3021,10 @@ async function saveAllMarks(){
                     }
 
 
-                    if(mark < 0 || mark > max){
+                    if(
+                        mark < 0 ||
+                        mark > max
+                    ){
 
                         return;
 
@@ -3217,7 +3091,7 @@ async function saveAllMarks(){
 
 
         /*
-        ಒಂದೊಂದು row update / insert
+           ಒಂದೊಂದು row update / insert
         */
 
         for(
@@ -3392,7 +3266,7 @@ async function saveAllMarks(){
 
 
 /* =========================================================
-   CLEAR SCREEN
+   CLEAR MARKS
 ========================================================= */
 
 function clearMarks(){
