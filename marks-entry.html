@@ -2762,48 +2762,50 @@ async function loadExistingMarks(){
 
 async function saveAllMarks(){
 
-    if(students.length === 0){
+   /* =========================================================
+   FIND SUPABASE SUBJECT - FIXED
+========================================================= */
 
-        showMessage(
-            "ಮೊದಲು ವಿದ್ಯಾರ್ಥಿಗಳನ್ನು Load ಮಾಡಿ.",
-            "error"
-        );
+function findDatabaseSubject(subject){
 
-        return;
-
+    if(!subject){
+        return null;
     }
 
+    const code =
+        String(
+            subject.code ||
+            subject.subject_code ||
+            subject.subjectCode ||
+            ""
+        )
+        .trim()
+        .toUpperCase();
 
-    if(!selectedExamId){
-
-        showMessage(
-            "ಮೊದಲು ಪರೀಕ್ಷೆ ಆಯ್ಕೆ ಮಾಡಿ.",
-            "error"
-        );
-
-        return;
-
+    if(!code){
+        return null;
     }
 
+    const found =
+        subjectsDatabase.find(
+            function(dbSubject){
 
-    /*
-       Database subject ID ಇಲ್ಲದ fallback
-       subjects save ಆಗುವುದಿಲ್ಲ.
-    */
+                const dbCode =
+                    String(
+                        dbSubject.subject_code ||
+                        dbSubject.code ||
+                        ""
+                    )
+                    .trim()
+                    .toUpperCase();
 
-    const rows = [];
+                return dbCode === code;
 
+            }
+        );
 
-    students.forEach(
-        function(student){
-
-            subjects.forEach(
-                function(subject){
-
-                    if(!subject.id){
-
-                        return;
-
+    return found || null;
+}
                     }
 
 
