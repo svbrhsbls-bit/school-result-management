@@ -2,13 +2,14 @@
 <html lang="kn">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
 <title>Marks Entry - School Result Management</title>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
+
 *{
     box-sizing:border-box;
     margin:0;
@@ -33,7 +34,6 @@ body{
 
 .header p{
     margin-top:6px;
-    opacity:.9;
 }
 
 .container{
@@ -153,7 +153,7 @@ button{
 table{
     width:100%;
     border-collapse:collapse;
-    min-width:1450px;
+    min-width:1500px;
 }
 
 th{
@@ -230,15 +230,17 @@ td{
     color:#d62839;
 }
 
-.total-cell{
+.total-cell,
+.percent-cell{
     background:#eef6ff;
     font-weight:bold;
+}
+
+.total-cell{
     min-width:110px;
 }
 
 .percent-cell{
-    background:#eef6ff;
-    font-weight:bold;
     min-width:80px;
 }
 
@@ -304,6 +306,7 @@ td{
 }
 
 @media(max-width:1000px){
+
     .controls{
         grid-template-columns:1fr 1fr;
     }
@@ -311,9 +314,11 @@ td{
     .stats{
         grid-template-columns:1fr 1fr;
     }
+
 }
 
 @media(max-width:600px){
+
     .controls{
         grid-template-columns:1fr;
     }
@@ -321,98 +326,128 @@ td{
     .stats{
         grid-template-columns:1fr;
     }
+
 }
+
 </style>
 </head>
 
 <body>
 
 <div class="header">
-    <h1>📊 ಶಾಲಾ ಫಲಿತಾಂಶ ನಿರ್ವಹಣಾ ವ್ಯವಸ್ಥೆ</h1>
-    <p>Marks Entry / ಅಂಕಗಳ ನಮೂದು</p>
+
+    <h1>
+        📊 ಶಾಲಾ ಫಲಿತಾಂಶ ನಿರ್ವಹಣಾ ವ್ಯವಸ್ಥೆ
+    </h1>
+
+    <p>
+        Marks Entry / ಅಂಕಗಳ ನಮೂದು
+    </p>
+
 </div>
+
 
 <div class="container">
 
+
 <!-- =====================================================
-     SELECT CARD
+     SELECT
 ===================================================== -->
 
 <div class="card">
 
-    <h2>📝 ಪರೀಕ್ಷೆ ಆಯ್ಕೆ</h2>
+<h2>📝 ಪರೀಕ್ಷೆ ಆಯ್ಕೆ</h2>
 
-    <div class="controls">
+<div class="controls">
 
-        <div class="control-group">
-            <label>ತರಗತಿ</label>
+<div class="control-group">
 
-            <select id="classSelect">
-                <option value="">ತರಗತಿ ಆಯ್ಕೆ ಮಾಡಿ</option>
-            </select>
-        </div>
+<label>ತರಗತಿ</label>
 
+<select id="classSelect">
 
-        <div class="control-group">
-            <label>ವಿಭಾಗ</label>
+<option value="">
+ತರಗತಿ ಆಯ್ಕೆ ಮಾಡಿ
+</option>
 
-            <select id="sectionSelect">
-                <option value="">ಮೊದಲು ತರಗತಿ ಆಯ್ಕೆ ಮಾಡಿ</option>
-            </select>
-        </div>
+</select>
+
+</div>
 
 
-        <div class="control-group">
-            <label>ಪರೀಕ್ಷೆ</label>
+<div class="control-group">
 
-            <select id="examSelect">
-                <option value="">ಪರೀಕ್ಷೆ ಆಯ್ಕೆ ಮಾಡಿ</option>
-            </select>
-        </div>
+<label>ವಿಭಾಗ</label>
+
+<select id="sectionSelect">
+
+<option value="">
+ಮೊದಲು ತರಗತಿ ಆಯ್ಕೆ ಮಾಡಿ
+</option>
+
+</select>
+
+</div>
 
 
-        <div class="control-group"
-             style="display:flex;align-items:end;">
+<div class="control-group">
 
-            <button
-                class="btn-blue"
-                style="width:100%;"
-                onclick="loadStudents()">
+<label>ಪರೀಕ್ಷೆ</label>
 
-                🔍 ವಿದ್ಯಾರ್ಥಿಗಳನ್ನು ತೋರಿಸಿ
+<select id="examSelect">
 
-            </button>
+<option value="">
+ಪರೀಕ್ಷೆ ಆಯ್ಕೆ ಮಾಡಿ
+</option>
 
-        </div>
+</select>
 
-    </div>
+</div>
 
-    <div id="message" class="message"></div>
+
+<div class="control-group"
+style="display:flex;align-items:end;">
+
+<button
+class="btn-blue"
+style="width:100%;"
+onclick="loadStudents()">
+
+🔍 ವಿದ್ಯಾರ್ಥಿಗಳನ್ನು ತೋರಿಸಿ
+
+</button>
+
+</div>
+
+</div>
+
+<div id="message"
+class="message">
+</div>
 
 </div>
 
 
 <!-- =====================================================
-     INFORMATION
+     INFO
 ===================================================== -->
 
 <div class="card">
 
-    <div class="info">
+<div class="info">
 
-        <strong>📌 ಅಂಕಗಳ ನಿಯಮ:</strong><br>
+<strong>📌 ಅಂಕಗಳ ನಿಯಮ:</strong><br>
 
-        Subject Master ನಲ್ಲಿ ಕೊಟ್ಟಿರುವ Maximum Marks ಮತ್ತು Passing Marks
-        ಆಧಾರದ ಮೇಲೆ Marks Entry ನಡೆಯುತ್ತದೆ.<br>
+Marks boxನಲ್ಲಿ ನೇರವಾಗಿ ಅಂಕಗಳನ್ನು type ಮಾಡಬಹುದು.<br>
 
-        Marks boxನಲ್ಲಿ ನೇರವಾಗಿ ಅಂಕಗಳನ್ನು type ಮಾಡಬಹುದು.<br>
+ಪ್ರತಿಯೊಂದು ವಿಷಯದ Grade ಸ್ವಯಂ ಲೆಕ್ಕವಾಗುತ್ತದೆ.<br>
 
-        ಪ್ರತಿಯೊಂದು ವಿಷಯದ Grade ಸ್ವಯಂ ಲೆಕ್ಕವಾಗುತ್ತದೆ.<br>
+Total, Percentage, Overall Grade ಮತ್ತು Result
+ಸ್ವಯಂ ಲೆಕ್ಕವಾಗುತ್ತದೆ.<br>
 
-        Total, Percentage, Overall Grade ಮತ್ತು Result ಕೂಡ
-        ಸ್ವಯಂ ಲೆಕ್ಕವಾಗುತ್ತದೆ.
+Enter ಒತ್ತಿದರೆ ಮುಂದಿನ Marks boxಗೆ ಹೋಗುತ್ತದೆ.
 
-    </div>
+</div>
 
 </div>
 
@@ -423,30 +458,30 @@ td{
 
 <div class="stats">
 
-    <div class="stat">
-        <small>ವಿದ್ಯಾರ್ಥಿಗಳು</small>
-        <strong id="studentCount">0</strong>
-    </div>
+<div class="stat">
+<small>ವಿದ್ಯಾರ್ಥಿಗಳು</small>
+<strong id="studentCount">0</strong>
+</div>
 
-    <div class="stat">
-        <small>ವಿಷಯಗಳು</small>
-        <strong id="subjectCount">0</strong>
-    </div>
+<div class="stat">
+<small>ವಿಷಯಗಳು</small>
+<strong id="subjectCount">0</strong>
+</div>
 
-    <div class="stat">
-        <small>ಪರೀಕ್ಷೆ</small>
-        <strong id="examName">-</strong>
-    </div>
+<div class="stat">
+<small>ಪರೀಕ್ಷೆ</small>
+<strong id="examName">-</strong>
+</div>
 
-    <div class="stat">
-        <small>ತರಗತಿ</small>
-        <strong id="className">-</strong>
-    </div>
+<div class="stat">
+<small>ತರಗತಿ</small>
+<strong id="className">-</strong>
+</div>
 
-    <div class="stat">
-        <small>Status</small>
-        <strong id="statusText">Ready</strong>
-    </div>
+<div class="stat">
+<small>Status</small>
+<strong id="statusText">Ready</strong>
+</div>
 
 </div>
 
@@ -457,46 +492,50 @@ td{
 
 <div class="card">
 
-    <h2>📊 ವಿದ್ಯಾರ್ಥಿಗಳ ಅಂಕಗಳ ನಮೂದು</h2>
+<h2>
+📊 ವಿದ್ಯಾರ್ಥಿಗಳ ಅಂಕಗಳ ನಮೂದು
+</h2>
 
-    <div id="tableArea">
+<div id="tableArea">
 
-        <div class="no-data">
-            ಮೊದಲು ತರಗತಿ, ವಿಭಾಗ ಮತ್ತು ಪರೀಕ್ಷೆಯನ್ನು ಆಯ್ಕೆ ಮಾಡಿ.
-        </div>
+<div class="no-data">
 
-    </div>
+ಮೊದಲು ತರಗತಿ, ವಿಭಾಗ ಮತ್ತು ಪರೀಕ್ಷೆಯನ್ನು ಆಯ್ಕೆ ಮಾಡಿ.
 
+</div>
 
-    <div class="footer-buttons">
-
-        <button
-            class="btn-green"
-            onclick="saveAllMarks()">
-
-            💾 Save All Marks
-
-        </button>
+</div>
 
 
-        <button
-            class="btn-yellow"
-            onclick="calculateAll()">
+<div class="footer-buttons">
 
-            🧮 Calculate
+<button
+class="btn-green"
+onclick="saveAllMarks()">
 
-        </button>
+💾 Save All Marks
+
+</button>
 
 
-        <button
-            class="btn-gray"
-            onclick="clearMarks()">
+<button
+class="btn-yellow"
+onclick="calculateAll()">
 
-            🗑 Clear Marks
+🧮 Calculate
 
-        </button>
+</button>
 
-    </div>
+
+<button
+class="btn-gray"
+onclick="clearMarks()">
+
+🗑 Clear Marks
+
+</button>
+
+</div>
 
 </div>
 
@@ -505,30 +544,32 @@ td{
 
 <script>
 
-/* =========================================================
-   SUPABASE CONNECTION
-========================================================= */
+/* =====================================================
+   SUPABASE
+===================================================== */
 
 const SUPABASE_URL =
-    "https://ezmudfrpcvjsgnjibvoq.supabase.co";
+"https://ezmudfrpcvjsgnjibvoq.supabase.co";
 
 const SUPABASE_ANON_KEY =
-    "sb_publishable__FYyH6NQaqgARaq2dvuovQ_rKmus0js";
+"sb_publishable__FYyH6NQaqgARaq2dvuovQ_rKmus0js";
 
 const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_ANON_KEY
-    );
+window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_ANON_KEY
+);
 
 
-/* =========================================================
+/* =====================================================
    GLOBAL VARIABLES
-========================================================= */
+===================================================== */
 
 let students = [];
 
 let subjects = [];
+
+let subjectsDatabase = [];
 
 let exams = [];
 
@@ -545,50 +586,47 @@ let selectedClassNumber = "";
 let selectedExamCode = "";
 
 
-/* =========================================================
+/* =====================================================
    PAGE LOAD
-========================================================= */
+===================================================== */
 
 document.addEventListener(
-    "DOMContentLoaded",
-    async function(){
+"DOMContentLoaded",
+async function(){
 
-        await loadAcademicYear();
+    await loadAcademicYear();
 
-        await loadClasses();
+    await loadClasses();
 
-        await loadExams();
+    await loadExams();
 
-        document
-            .getElementById("classSelect")
-            .addEventListener(
-                "change",
-                async function(){
+    document
+    .getElementById("classSelect")
+    .addEventListener(
+        "change",
+        async function(){
 
-                    await loadSections();
+            await loadSections();
 
-                    await loadExams();
+        }
+    );
 
-                }
-            );
-
-    }
-);
+});
 
 
-/* =========================================================
+/* =====================================================
    MESSAGE
-========================================================= */
+===================================================== */
 
 function showMessage(text,type){
 
     const box =
-        document.getElementById("message");
+    document.getElementById("message");
 
     box.innerText = text;
 
     box.className =
-        "message " + type;
+    "message " + type;
 
     box.style.display = "block";
 
@@ -598,29 +636,29 @@ function showMessage(text,type){
             box.style.display = "none";
 
         },
-        6000
+        5000
     );
+
 }
 
 
-/* =========================================================
+/* =====================================================
    ACADEMIC YEAR
-========================================================= */
+===================================================== */
 
 async function loadAcademicYear(){
 
     const {data,error} =
-        await supabaseClient
-        .from("academic_years")
-        .select(
-            "id,year_name,is_current"
-        )
-        .eq(
-            "is_current",
-            true
-        )
-        .maybeSingle();
-
+    await supabaseClient
+    .from("academic_years")
+    .select(
+        "id,year_name,is_current"
+    )
+    .eq(
+        "is_current",
+        true
+    )
+    .maybeSingle();
 
     if(error){
 
@@ -630,51 +668,46 @@ async function loadAcademicYear(){
 
     }
 
-
     if(data){
 
         currentAcademicYearId =
-            data.id;
+        data.id;
 
     }
 
 }
 
 
-/* =========================================================
-   LOAD CLASSES
-========================================================= */
+/* =====================================================
+   CLASSES
+===================================================== */
 
 async function loadClasses(){
 
     const select =
-        document.getElementById(
-            "classSelect"
-        );
+    document.getElementById(
+        "classSelect"
+    );
 
     select.innerHTML =
-        `<option value="">
-            ತರಗತಿ ಆಯ್ಕೆ ಮಾಡಿ
-         </option>`;
-
+    `<option value="">
+        ತರಗತಿ ಆಯ್ಕೆ ಮಾಡಿ
+     </option>`;
 
     const {data,error} =
-        await supabaseClient
-        .from("classes")
-        .select(
-            "id,class_name"
-        )
-        .order(
-            "display_order",
-            {
-                ascending:true
-            }
-        );
-
+    await supabaseClient
+    .from("classes")
+    .select(
+        "id,class_name,display_order"
+    )
+    .order(
+        "display_order",
+        {
+            ascending:true
+        }
+    );
 
     if(error){
-
-        console.error(error);
 
         showMessage(
             "Classes load ಆಗಲಿಲ್ಲ: " +
@@ -686,23 +719,19 @@ async function loadClasses(){
 
     }
 
-
     (data || []).forEach(
         function(item){
 
             const option =
-                document.createElement(
-                    "option"
-                );
+            document.createElement(
+                "option"
+            );
 
             option.value =
-                item.id;
+            item.id;
 
             option.textContent =
-                item.class_name;
-
-            option.dataset.className =
-                item.class_name;
+            item.class_name;
 
             select.appendChild(option);
 
@@ -712,45 +741,46 @@ async function loadClasses(){
 }
 
 
-/* =========================================================
-   GET CLASS NUMBER
-========================================================= */
+/* =====================================================
+   CLASS NUMBER
+===================================================== */
 
 function getClassNumber(){
 
     const select =
-        document.getElementById(
-            "classSelect"
-        );
+    document.getElementById(
+        "classSelect"
+    );
 
     const option =
-        select.selectedOptions[0];
+    select.selectedOptions[0];
 
     if(!option){
-
         return "";
-
     }
 
     const text =
-        option.textContent || "";
+    option.textContent || "";
 
-    if(text.includes("10")){
-
+    if(
+        text.includes("10") ||
+        text.includes("೧೦")
+    ){
         return "10";
-
     }
 
-    if(text.includes("9")){
-
+    if(
+        text.includes("9") ||
+        text.includes("೯")
+    ){
         return "9";
-
     }
 
-    if(text.includes("8")){
-
+    if(
+        text.includes("8") ||
+        text.includes("೮")
+    ){
         return "8";
-
     }
 
     return "";
@@ -758,29 +788,33 @@ function getClassNumber(){
 }
 
 
-/* =========================================================
-   LOAD SECTIONS
-========================================================= */
+/* =====================================================
+   SECTIONS
+===================================================== */
 
 async function loadSections(){
 
     selectedClassId =
-        document.getElementById(
-            "classSelect"
-        ).value;
-
+    document.getElementById(
+        "classSelect"
+    ).value;
 
     const select =
-        document.getElementById(
-            "sectionSelect"
-        );
-
+    document.getElementById(
+        "sectionSelect"
+    );
 
     select.innerHTML =
-        `<option value="">
-            ವಿಭಾಗ ಆಯ್ಕೆ ಮಾಡಿ
-         </option>`;
+    `<option value="">
+        ವಿಭಾಗ ಆಯ್ಕೆ ಮಾಡಿ
+     </option>`;
 
+    document.getElementById(
+        "examSelect"
+    ).innerHTML =
+    `<option value="">
+        ಪರೀಕ್ಷೆ ಆಯ್ಕೆ ಮಾಡಿ
+     </option>`;
 
     if(!selectedClassId){
 
@@ -788,32 +822,28 @@ async function loadSections(){
 
     }
 
-
     const {data,error} =
-        await supabaseClient
-        .from("sections")
-        .select(
-            "id,section_name"
-        )
-        .eq(
-            "class_id",
-            selectedClassId
-        )
-        .eq(
-            "active",
-            true
-        )
-        .order(
-            "section_name"
-        );
-
+    await supabaseClient
+    .from("sections")
+    .select(
+        "id,section_name"
+    )
+    .eq(
+        "class_id",
+        selectedClassId
+    )
+    .eq(
+        "active",
+        true
+    )
+    .order(
+        "section_name"
+    );
 
     if(error){
 
-        console.error(error);
-
         showMessage(
-            "ವಿಭಾಗಗಳು load ಆಗಲಿಲ್ಲ: " +
+            "ವಿಭಾಗ load ಆಗಲಿಲ್ಲ: " +
             error.message,
             "error"
         );
@@ -822,74 +852,146 @@ async function loadSections(){
 
     }
 
-
     (data || []).forEach(
         function(item){
 
             const option =
-                document.createElement(
-                    "option"
-                );
+            document.createElement(
+                "option"
+            );
 
             option.value =
-                item.id;
+            item.id;
 
             option.textContent =
-                item.section_name;
+            item.section_name;
 
             select.appendChild(option);
 
         }
     );
 
+    /* Exams ಮತ್ತೆ load */
+
+    await loadExams();
+
 }
 
 
-/* =========================================================
+/* =====================================================
    NORMALIZE EXAM
-========================================================= */
+===================================================== */
 
 function normalizeExam(value){
 
     return String(value || "")
-        .trim()
-        .toUpperCase()
-        .replace(/[\s_]+/g,"")
-        .replace(/-/g,"");
+    .trim()
+    .toUpperCase()
+    .replace(/[\s_-]+/g,"");
 
 }
 
 
-/* =========================================================
-   LOAD EXAMS FROM SUPABASE
-========================================================= */
+/* =====================================================
+   DEFAULT EXAMS
+===================================================== */
+
+const DEFAULT_EXAMS = [
+
+    {
+        code:"FA-1",
+        name:"FA-1",
+        order:1
+    },
+
+    {
+        code:"FA-2",
+        name:"FA-2",
+        order:2
+    },
+
+    {
+        code:"FA-3",
+        name:"FA-3",
+        order:3
+    },
+
+    {
+        code:"FA-4",
+        name:"FA-4",
+        order:4
+    },
+
+    {
+        code:"SA-1",
+        name:"SA-1",
+        order:5
+    },
+
+    {
+        code:"SA-2",
+        name:"SA-2",
+        order:6
+    },
+
+    {
+        code:"TERM-1",
+        name:"TERM-1",
+        order:7
+    },
+
+    {
+        code:"TERM-2",
+        name:"TERM-2",
+        order:8
+    },
+
+    {
+        code:"ANNUAL",
+        name:"ANNUAL EXAM",
+        order:9
+    }
+
+];
+
+
+/* =====================================================
+   LOAD ALL EXAMS
+===================================================== */
 
 async function loadExams(){
 
     const select =
-        document.getElementById(
-            "examSelect"
-        );
+    document.getElementById(
+        "examSelect"
+    );
 
     select.innerHTML =
-        `<option value="">
-            ಪರೀಕ್ಷೆ ಆಯ್ಕೆ ಮಾಡಿ
-         </option>`;
+    `<option value="">
+        ಪರೀಕ್ಷೆ ಆಯ್ಕೆ ಮಾಡಿ
+     </option>`;
 
+    /*
+       ಮುಖ್ಯ ಬದಲಾವಣೆ:
+
+       active = true ಮಾತ್ರ filter ಮಾಡುತ್ತಿಲ್ಲ.
+
+       Databaseನಲ್ಲಿ active false ಇದ್ದರೂ
+       ಪರೀಕ್ಷೆ dropdownನಲ್ಲಿ ತೋರಿಸುತ್ತದೆ.
+    */
 
     const {data,error} =
-        await supabaseClient
-        .from("exams")
-        .select(
-            "id,exam_code,exam_name,display_order,active"
-        )
-        .order(
-            "display_order",
-            {
-                ascending:true
-            }
-        );
-
+    await supabaseClient
+    .from("exams")
+    .select(
+        "id,exam_code,exam_name,display_order,active"
+    )
+    .order(
+        "display_order",
+        {
+            ascending:true
+        }
+    );
 
     if(error){
 
@@ -905,37 +1007,148 @@ async function loadExams(){
 
     }
 
+    exams = data || [];
 
-    exams =
-        (data || []).filter(
-            function(exam){
 
-                return exam.active !== false;
+    /*
+       Databaseನಲ್ಲಿ ಪರೀಕ್ಷೆಗಳಿಲ್ಲದಿದ್ದರೆ
+       default exams create ಮಾಡಲು ಪ್ರಯತ್ನ.
+    */
+
+    if(exams.length === 0){
+
+        for(
+            const exam of DEFAULT_EXAMS
+        ){
+
+            try{
+
+                const {data:newExam,error:newError} =
+                await supabaseClient
+                .from("exams")
+                .insert([
+                    {
+                        exam_code:exam.code,
+                        exam_name:exam.name,
+                        display_order:exam.order,
+                        active:true
+                    }
+                ])
+                .select()
+                .single();
+
+                if(!newError && newExam){
+
+                    exams.push(newExam);
+
+                }
 
             }
-        );
+            catch(e){
+
+                console.error(e);
+
+            }
+
+        }
+
+    }
+
+
+    /*
+       Databaseನಲ್ಲಿ ಕೆಲವು exams ಮಾತ್ರ ಇದ್ದರೆ
+       missing exams create ಮಾಡಲು ಪ್ರಯತ್ನ.
+    */
+
+    const existingCodes =
+    exams.map(
+        function(e){
+
+            return normalizeExam(
+                e.exam_code ||
+                e.exam_name
+            );
+
+        }
+    );
+
+
+    for(
+        const def of DEFAULT_EXAMS
+    ){
+
+        if(
+            existingCodes.includes(
+                normalizeExam(def.code)
+            )
+        ){
+
+            continue;
+
+        }
+
+        try{
+
+            const {data:newExam,error:newError} =
+            await supabaseClient
+            .from("exams")
+            .insert([
+                {
+                    exam_code:def.code,
+                    exam_name:def.name,
+                    display_order:def.order,
+                    active:true
+                }
+            ])
+            .select()
+            .single();
+
+            if(!newError && newExam){
+
+                exams.push(newExam);
+
+            }
+
+        }
+        catch(e){
+
+            console.error(e);
+
+        }
+
+    }
+
+
+    /*
+       ಎಲ್ಲ exams dropdownಗೆ
+    */
+
+    exams.sort(
+        function(a,b){
+
+            return (
+                Number(a.display_order || 999) -
+                Number(b.display_order || 999)
+            );
+
+        }
+    );
 
 
     exams.forEach(
         function(exam){
 
             const option =
-                document.createElement(
-                    "option"
-                );
+            document.createElement(
+                "option"
+            );
 
             option.value =
-                exam.id;
+            exam.id;
 
             option.textContent =
-                exam.exam_name ||
-                exam.exam_code;
-
-            option.dataset.code =
-                exam.exam_code || "";
-
-            option.dataset.name =
-                exam.exam_name || "";
+            exam.exam_name ||
+            exam.exam_code;
 
             select.appendChild(option);
 
@@ -945,32 +1158,25 @@ async function loadExams(){
 }
 
 
-/* =========================================================
-   FIND EXAM CODE
-========================================================= */
+/* =====================================================
+   SELECTED EXAM
+===================================================== */
 
 function getSelectedExam(){
 
     const select =
-        document.getElementById(
-            "examSelect"
-        );
+    document.getElementById(
+        "examSelect"
+    );
 
-    const option =
-        select.selectedOptions[0];
-
-    if(!option){
-
-        return null;
-
-    }
-
+    const id =
+    select.value;
 
     return exams.find(
         function(exam){
 
             return String(exam.id) ===
-                   String(option.value);
+                   String(id);
 
         }
     ) || null;
@@ -978,20 +1184,20 @@ function getSelectedExam(){
 }
 
 
-/* =========================================================
-   LOAD SUBJECTS
-========================================================= */
+/* =====================================================
+   SUBJECT MASTER LOCAL STORAGE
+===================================================== */
 
 function loadSubjectsFromLocalStorage(){
 
     try{
 
         subjects =
-            JSON.parse(
-                localStorage.getItem(
-                    "schoolSubjects"
-                )
-            ) || [];
+        JSON.parse(
+            localStorage.getItem(
+                "schoolSubjects"
+            )
+        ) || [];
 
     }
     catch(error){
@@ -1004,8 +1210,8 @@ function loadSubjectsFromLocalStorage(){
 
 
     /*
-       Subject Master empty ಇದ್ದರೆ
-       default six subjects
+       Subject Master data ಇಲ್ಲದಿದ್ದರೆ
+       default six subjects.
     */
 
     if(subjects.length === 0){
@@ -1055,9 +1261,71 @@ function loadSubjectsFromLocalStorage(){
 }
 
 
-/* =========================================================
+/* =====================================================
+   DATABASE SUBJECTS
+===================================================== */
+
+async function loadDatabaseSubjects(){
+
+    const {data,error} =
+    await supabaseClient
+    .from("subjects")
+    .select(
+        "id,subject_code,subject_name,class_id,active"
+    )
+    .order(
+        "subject_code"
+    );
+
+    if(error){
+
+        console.error(error);
+
+        subjectsDatabase = [];
+
+        return;
+
+    }
+
+    subjectsDatabase =
+    data || [];
+
+}
+
+
+/* =====================================================
+   FIND DATABASE SUBJECT
+===================================================== */
+
+function findDatabaseSubject(subject){
+
+    const code =
+    String(
+        subject.code ||
+        subject.subject_code ||
+        ""
+    )
+    .trim()
+    .toUpperCase();
+
+    return subjectsDatabase.find(
+        function(item){
+
+            return String(
+                item.subject_code || ""
+            )
+            .trim()
+            .toUpperCase() === code;
+
+        }
+    ) || null;
+
+}
+
+
+/* =====================================================
    DEFAULT MARK RULE
-========================================================= */
+===================================================== */
 
 function defaultMarks(
     subjectCode,
@@ -1066,8 +1334,12 @@ function defaultMarks(
 ){
 
     const exam =
-        normalizeExam(examCode);
+    normalizeExam(examCode);
 
+
+    /*
+       8ನೇ ತರಗತಿ
+    */
 
     if(classNo === "8"){
 
@@ -1121,6 +1393,10 @@ function defaultMarks(
 
     }
 
+
+    /*
+       9 ಮತ್ತು 10
+    */
 
     if(
         classNo === "9" ||
@@ -1195,70 +1471,67 @@ function defaultMarks(
 }
 
 
-/* =========================================================
-   GET MARK RULE FROM SUBJECT MASTER
-========================================================= */
+/* =====================================================
+   GET MARK RULE
+===================================================== */
 
 function getMarkRule(subject){
 
     const classNo =
-        selectedClassNumber;
+    selectedClassNumber;
 
     const examCode =
-        selectedExamCode;
-
-    const key =
-        classNo + "_" + examCode;
+    selectedExamCode;
 
 
     /*
-       Exact Subject Master rule
+       Subject Master rule
     */
 
     if(
         subject &&
-        subject.marks &&
-        subject.marks[key]
+        subject.marks
     ){
 
-        return {
+        const wanted =
+        normalizeExam(examCode);
 
-            max:Number(
-                subject.marks[key].max
-            ),
+        const exactKey =
+        classNo + "_" + examCode;
 
-            pass:Number(
-                subject.marks[key].pass
-            )
+        if(
+            subject.marks[exactKey]
+        ){
 
-        };
+            return {
 
-    }
+                max:Number(
+                    subject.marks[exactKey].max
+                ),
 
+                pass:Number(
+                    subject.marks[exactKey].pass
+                )
 
-    /*
-       Try normalized key
-    */
+            };
 
-    if(subject && subject.marks){
+        }
+
 
         const keys =
-            Object.keys(
-                subject.marks
-            );
+        Object.keys(
+            subject.marks
+        );
 
-        const wanted =
-            normalizeExam(examCode);
 
         for(
-            const originalKey of keys
+            const key of keys
         ){
 
             const parts =
-                originalKey.split("_");
+            key.split("_");
 
             if(
-                parts.length >= 2 &&
                 parts[0] === classNo &&
                 normalizeExam(
                     parts.slice(1).join("_")
@@ -1268,15 +1541,11 @@ function getMarkRule(subject){
                 return {
 
                     max:Number(
-                        subject.marks[
-                            originalKey
-                        ].max
+                        subject.marks[key].max
                     ),
 
                     pass:Number(
-                        subject.marks[
-                            originalKey
-                        ].pass
+                        subject.marks[key].pass
                     )
 
                 };
@@ -1289,7 +1558,8 @@ function getMarkRule(subject){
 
 
     return defaultMarks(
-        subject.code,
+        subject.code ||
+        subject.subject_code,
         classNo,
         examCode
     );
@@ -1297,110 +1567,33 @@ function getMarkRule(subject){
 }
 
 
-/* =========================================================
-   FIND SUPABASE SUBJECT
-========================================================= */
-
-function findDatabaseSubject(
-    subject
-){
-
-    const code =
-        String(
-            subject.code || ""
-        )
-        .trim()
-        .toUpperCase();
-
-
-    return subjectsDatabase.find(
-        function(dbSubject){
-
-            return String(
-                dbSubject.subject_code || ""
-            )
-            .trim()
-            .toUpperCase() === code;
-
-        }
-    ) || null;
-
-}
-
-
-let subjectsDatabase = [];
-
-
-/* =========================================================
-   LOAD DATABASE SUBJECTS
-========================================================= */
-
-async function loadDatabaseSubjects(){
-
-    const {data,error} =
-        await supabaseClient
-        .from("subjects")
-        .select(
-            "id,subject_code,subject_name,class_id,active"
-        )
-        .order(
-            "subject_code"
-        );
-
-
-    if(error){
-
-        console.error(error);
-
-        showMessage(
-            "Database Subjects load ಆಗಲಿಲ್ಲ: " +
-            error.message,
-            "error"
-        );
-
-        subjectsDatabase = [];
-
-        return;
-
-    }
-
-
-    subjectsDatabase =
-        data || [];
-
-}
-
-
-/* =========================================================
+/* =====================================================
    LOAD STUDENTS
-========================================================= */
+===================================================== */
 
 async function loadStudents(){
 
     selectedClassId =
-        document.getElementById(
-            "classSelect"
-        ).value;
-
+    document.getElementById(
+        "classSelect"
+    ).value;
 
     selectedSectionId =
-        document.getElementById(
-            "sectionSelect"
-        ).value;
-
+    document.getElementById(
+        "sectionSelect"
+    ).value;
 
     selectedExamId =
-        document.getElementById(
-            "examSelect"
-        ).value;
-
+    document.getElementById(
+        "examSelect"
+    ).value;
 
     selectedClassNumber =
-        getClassNumber();
+    getClassNumber();
 
 
     const exam =
-        getSelectedExam();
+    getSelectedExam();
 
 
     if(!selectedClassId){
@@ -1464,67 +1657,54 @@ async function loadStudents(){
 
 
     selectedExamCode =
-        exam.exam_code ||
-        exam.exam_name ||
-        "";
+    exam.exam_code ||
+    exam.exam_name ||
+    "";
 
 
     document.getElementById(
         "tableArea"
     ).innerHTML =
-        `<div class="loading">
-            ⏳ ವಿದ್ಯಾರ್ಥಿಗಳ ಮಾಹಿತಿ ಲೋಡ್ ಆಗುತ್ತಿದೆ...
-         </div>`;
+    `<div class="loading">
+        ⏳ ವಿದ್ಯಾರ್ಥಿಗಳ ಮಾಹಿತಿ ಲೋಡ್ ಆಗುತ್ತಿದೆ...
+     </div>`;
 
 
     try{
 
-        /*
-           Subject Master localStorage
-        */
-
         loadSubjectsFromLocalStorage();
-
-
-        /*
-           Supabase subjects
-        */
 
         await loadDatabaseSubjects();
 
 
-        /*
-           Students
-        */
-
         let query =
-            supabaseClient
-            .from("students")
-            .select("*")
-            .eq(
-                "class_id",
-                selectedClassId
-            )
-            .eq(
-                "section_id",
-                selectedSectionId
-            )
-            .eq(
-                "active",
-                true
-            )
-            .order(
-                "student_name"
-            );
+        supabaseClient
+        .from("students")
+        .select("*")
+        .eq(
+            "class_id",
+            selectedClassId
+        )
+        .eq(
+            "section_id",
+            selectedSectionId
+        )
+        .eq(
+            "active",
+            true
+        )
+        .order(
+            "student_name"
+        );
 
 
         if(currentAcademicYearId){
 
             query =
-                query.eq(
-                    "academic_year_id",
-                    currentAcademicYearId
-                );
+            query.eq(
+                "academic_year_id",
+                currentAcademicYearId
+            );
 
         }
 
@@ -1533,7 +1713,7 @@ async function loadStudents(){
             data,
             error
         } =
-            await query;
+        await query;
 
 
         if(error){
@@ -1544,34 +1724,33 @@ async function loadStudents(){
 
 
         students =
-            data || [];
+        data || [];
 
 
         document.getElementById(
             "studentCount"
         ).textContent =
-            students.length;
+        students.length;
 
 
         document.getElementById(
             "subjectCount"
         ).textContent =
-            subjects.length;
+        subjects.length;
 
 
         document.getElementById(
             "examName"
         ).textContent =
-            exam.exam_name ||
-            exam.exam_code ||
-            "-";
+        exam.exam_name ||
+        exam.exam_code;
 
 
         document.getElementById(
             "className"
         ).textContent =
-            selectedClassNumber +
-            "ನೇ";
+        selectedClassNumber +
+        "ನೇ";
 
 
         if(students.length === 0){
@@ -1579,10 +1758,10 @@ async function loadStudents(){
             document.getElementById(
                 "tableArea"
             ).innerHTML =
-                `<div class="no-data">
-                    ಈ Class / Divisionನಲ್ಲಿ
-                    ವಿದ್ಯಾರ್ಥಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ.
-                 </div>`;
+            `<div class="no-data">
+                ಈ Class / Divisionನಲ್ಲಿ
+                ವಿದ್ಯಾರ್ಥಿಗಳು ಕಂಡುಬಂದಿಲ್ಲ.
+             </div>`;
 
             return;
 
@@ -1590,7 +1769,6 @@ async function loadStudents(){
 
 
         renderTable();
-
 
         await loadExistingMarks();
 
@@ -1602,26 +1780,30 @@ async function loadStudents(){
         document.getElementById(
             "tableArea"
         ).innerHTML =
-            `<div class="no-data">
-                ❌ Data load ಆಗಲಿಲ್ಲ.<br><br>
-                ${escapeHtml(
-                    error.message || String(error)
-                )}
-             </div>`;
+        `<div class="no-data">
+
+            ❌ Data load ಆಗಲಿಲ್ಲ.<br><br>
+
+            ${escapeHtml(
+                error.message ||
+                String(error)
+            )}
+
+         </div>`;
 
         document.getElementById(
             "statusText"
         ).textContent =
-            "Error";
+        "Error";
 
     }
 
 }
 
 
-/* =========================================================
+/* =====================================================
    RENDER TABLE
-========================================================= */
+===================================================== */
 
 function renderTable(){
 
@@ -1642,6 +1824,7 @@ function renderTable(){
         <th rowspan="2">
             ವಿದ್ಯಾರ್ಥಿಯ ಹೆಸರು
         </th>
+
     `;
 
 
@@ -1649,8 +1832,7 @@ function renderTable(){
         function(subject){
 
             const rule =
-                getMarkRule(subject);
-
+            getMarkRule(subject);
 
             html += `
 
@@ -1659,8 +1841,7 @@ function renderTable(){
 
                 ${escapeHtml(
                     subject.name ||
-                    subject.subject_name ||
-                    "Subject"
+                    subject.subject_name
                 )}
 
                 <span class="subject-code">
@@ -1705,6 +1886,7 @@ function renderTable(){
 
 
     <tr>
+
     `;
 
 
@@ -1714,6 +1896,7 @@ function renderTable(){
             html += `
 
                 <th>Marks</th>
+
                 <th>Grade</th>
 
             `;
@@ -1729,6 +1912,7 @@ function renderTable(){
     </thead>
 
     <tbody>
+
     `;
 
 
@@ -1736,17 +1920,16 @@ function renderTable(){
         function(student,index){
 
             const studentId =
-                student.id;
-
+            student.id;
 
             const studentName =
-                student.student_name ||
-                "";
-
+            student.student_name ||
+            "";
 
             const admission =
-                student.admission_number ||
-                "";
+            student.admission_number ||
+            student.sats_no ||
+            "";
 
 
             html += `
@@ -1779,19 +1962,19 @@ function renderTable(){
                 function(subject){
 
                     const rule =
-                        getMarkRule(subject);
+                    getMarkRule(subject);
 
 
-                    const databaseSubject =
-                        findDatabaseSubject(
-                            subject
-                        );
+                    const dbSubject =
+                    findDatabaseSubject(
+                        subject
+                    );
 
 
                     const subjectId =
-                        databaseSubject
-                        ? databaseSubject.id
-                        : "";
+                    dbSubject
+                    ? dbSubject.id
+                    : "";
 
 
                     html += `
@@ -1799,9 +1982,13 @@ function renderTable(){
                     <td class="subject-cell">
 
                         <input
+
                             type="text"
+
                             inputmode="decimal"
+
                             autocomplete="off"
+
                             class="marks-input"
 
                             placeholder="Marks"
@@ -1811,7 +1998,9 @@ function renderTable(){
                             data-subject="${subjectId}"
 
                             data-code="${escapeHtml(
-                                subject.code || ""
+                                subject.code ||
+                                subject.subject_code ||
+                                ""
                             )}"
 
                             data-max="${rule.max}"
@@ -1821,14 +2010,22 @@ function renderTable(){
                             oninput="markChanged(this)"
 
                             onkeydown="markKeyDown(event,this)"
+
                         >
 
                     </td>
 
 
                     <td
+
                         class="grade-box"
-                        id="grade-${studentId}-${safeId(subject.code)}">
+
+                        id="grade-${studentId}-${safeId(
+                            subject.code ||
+                            subject.subject_code
+                        )}"
+
+                    >
 
                         -
 
@@ -1845,34 +2042,23 @@ function renderTable(){
                 <td
                     class="total-cell"
                     id="total-${studentId}">
-
                     -
-
                 </td>
-
 
                 <td
                     class="percent-cell"
                     id="percent-${studentId}">
-
                     -
-
                 </td>
-
 
                 <td
                     id="overall-grade-${studentId}">
-
                     -
-
                 </td>
-
 
                 <td
                     id="result-${studentId}">
-
                     -
-
                 </td>
 
             </tr>
@@ -1890,104 +2076,103 @@ function renderTable(){
     </table>
 
     </div>
+
     `;
 
 
     document.getElementById(
         "tableArea"
-    ).innerHTML = html;
+    ).innerHTML =
+    html;
 
 }
 
 
-/* =========================================================
+/* =====================================================
    SAFE ID
-========================================================= */
+===================================================== */
 
 function safeId(value){
 
-    return String(value || "")
-        .replace(/[^a-zA-Z0-9_-]/g,"_");
+    return String(
+        value || ""
+    )
+    .replace(
+        /[^a-zA-Z0-9_-]/g,
+        "_"
+    );
 
 }
 
 
-/* =========================================================
-   MARKS INPUT
-========================================================= */
+/* =====================================================
+   MARK CHANGED
+===================================================== */
 
 function markChanged(input){
 
-    /*
-       Allow only numbers and decimal point
-    */
-
     let value =
-        input.value
-        .replace(/[^0-9.]/g,"");
+    input.value
+    .replace(
+        /[^0-9.]/g,
+        ""
+    );
 
-
-    /*
-       Only one decimal point
-    */
 
     const parts =
-        value.split(".");
+    value.split(".");
 
 
     if(parts.length > 2){
 
         value =
-            parts[0] +
-            "." +
-            parts.slice(1).join("");
+        parts[0] +
+        "." +
+        parts.slice(1).join("");
 
     }
 
 
     input.value =
-        value;
+    value;
 
 
     const studentId =
-        input.dataset.student;
-
+    input.dataset.student;
 
     const code =
-        input.dataset.code;
-
+    input.dataset.code;
 
     const max =
-        Number(
-            input.dataset.max
-        );
-
+    Number(
+        input.dataset.max
+    );
 
     const pass =
-        Number(
-            input.dataset.pass
-        );
+    Number(
+        input.dataset.pass
+    );
 
 
     const gradeCell =
-        document.getElementById(
-            "grade-" +
-            studentId +
-            "-" +
-            safeId(code)
-        );
+    document.getElementById(
+        "grade-" +
+        studentId +
+        "-" +
+        safeId(code)
+    );
 
 
     if(value === ""){
 
         gradeCell.textContent =
-            "-";
+        "-";
 
         gradeCell.className =
-            "grade-box";
+        "grade-box";
 
         input.style.borderColor =
-            "#c5ced8";
+        "#c5ced8";
 
         calculateStudent(
             studentId
@@ -1999,7 +2184,7 @@ function markChanged(input){
 
 
     const mark =
-        Number(value);
+    Number(value);
 
 
     if(Number.isNaN(mark)){
@@ -2021,13 +2206,13 @@ function markChanged(input){
     if(mark > max){
 
         input.style.borderColor =
-            "#d62839";
+        "#d62839";
 
         gradeCell.textContent =
-            "MAX " + max;
+        "MAX " + max;
 
         gradeCell.className =
-            "grade-box fail";
+        "grade-box fail";
 
         return;
 
@@ -2035,30 +2220,30 @@ function markChanged(input){
 
 
     input.style.borderColor =
-        "#159447";
+    "#159447";
 
 
     const grade =
-        getGrade(
-            mark,
-            max
-        );
+    getGrade(
+        mark,
+        max
+    );
 
 
     gradeCell.textContent =
-        grade;
+    grade;
 
 
     if(mark >= pass){
 
         gradeCell.className =
-            "grade-box pass";
+        "grade-box pass";
 
     }
     else{
 
         gradeCell.className =
-            "grade-box fail";
+        "grade-box fail";
 
     }
 
@@ -2070,16 +2255,18 @@ function markChanged(input){
 }
 
 
-/* =========================================================
+/* =====================================================
    ENTER KEY
-========================================================= */
+===================================================== */
 
 function markKeyDown(
     event,
     input
 ){
 
-    if(event.key !== "Enter"){
+    if(
+        event.key !== "Enter"
+    ){
 
         return;
 
@@ -2090,15 +2277,15 @@ function markKeyDown(
 
 
     const inputs =
-        Array.from(
-            document.querySelectorAll(
-                ".marks-input"
-            )
-        );
+    Array.from(
+        document.querySelectorAll(
+            ".marks-input"
+        )
+    );
 
 
     const index =
-        inputs.indexOf(input);
+    inputs.indexOf(input);
 
 
     if(
@@ -2115,9 +2302,9 @@ function markKeyDown(
 }
 
 
-/* =========================================================
+/* =====================================================
    GRADE
-========================================================= */
+===================================================== */
 
 function getGrade(
     mark,
@@ -2136,10 +2323,10 @@ function getGrade(
 
 
     const percentage =
-        (
-            Number(mark) /
-            Number(max)
-        ) * 100;
+    (
+        Number(mark) /
+        Number(max)
+    ) * 100;
 
 
     if(percentage >= 90)
@@ -2168,18 +2355,18 @@ function getGrade(
 }
 
 
-/* =========================================================
+/* =====================================================
    CALCULATE STUDENT
-========================================================= */
+===================================================== */
 
 function calculateStudent(
     studentId
 ){
 
     const inputs =
-        document.querySelectorAll(
-            `input[data-student="${studentId}"]`
-        );
+    document.querySelectorAll(
+        `input[data-student="${studentId}"]`
+    );
 
 
     let total = 0;
@@ -2194,43 +2381,41 @@ function calculateStudent(
     inputs.forEach(
         function(input){
 
-            const max =
-                Number(
-                    input.dataset.max
-                );
+            const value =
+            input.value.trim();
 
+
+            const max =
+            Number(
+                input.dataset.max
+            );
 
             const pass =
-                Number(
-                    input.dataset.pass
-                );
+            Number(
+                input.dataset.pass
+            );
 
 
             maxTotal += max;
 
 
-            if(
-                input.value.trim() !== ""
-            ){
+            if(value !== ""){
 
                 const mark =
-                    Number(
-                        input.value
-                    );
-
+                Number(value);
 
                 if(
                     !Number.isNaN(mark)
                 ){
 
-                    hasMarks = true;
-
                     total += mark;
 
+                    hasMarks = true;
 
                     if(mark < pass){
 
-                        allPassed = false;
+                        allPassed =
+                        false;
 
                     }
 
@@ -2243,44 +2428,41 @@ function calculateStudent(
 
 
     const totalCell =
-        document.getElementById(
-            "total-" + studentId
-        );
-
+    document.getElementById(
+        "total-" + studentId
+    );
 
     const percentCell =
-        document.getElementById(
-            "percent-" + studentId
-        );
-
+    document.getElementById(
+        "percent-" + studentId
+    );
 
     const gradeCell =
-        document.getElementById(
-            "overall-grade-" +
-            studentId
-        );
-
+    document.getElementById(
+        "overall-grade-" +
+        studentId
+    );
 
     const resultCell =
-        document.getElementById(
-            "result-" +
-            studentId
-        );
+    document.getElementById(
+        "result-" +
+        studentId
+    );
 
 
     if(!hasMarks){
 
         totalCell.textContent =
-            "-";
+        "-";
 
         percentCell.textContent =
-            "-";
+        "-";
 
         gradeCell.textContent =
-            "-";
+        "-";
 
         resultCell.textContent =
-            "-";
+        "-";
 
         resultCell.className = "";
 
@@ -2290,61 +2472,61 @@ function calculateStudent(
 
 
     const percentage =
-        maxTotal > 0
-        ? (
-            total /
-            maxTotal
-        ) * 100
-        : 0;
+    maxTotal > 0
+    ? (
+        total /
+        maxTotal
+    ) * 100
+    : 0;
 
 
     totalCell.textContent =
-        total.toFixed(2) +
-        " / " +
-        maxTotal;
+    total.toFixed(2) +
+    " / " +
+    maxTotal;
 
 
     percentCell.textContent =
-        percentage.toFixed(2) +
-        "%";
+    percentage.toFixed(2) +
+    "%";
 
 
     const overallGrade =
-        getGrade(
-            percentage,
-            100
-        );
+    getGrade(
+        percentage,
+        100
+    );
 
 
     gradeCell.textContent =
-        overallGrade;
+    overallGrade;
 
 
     if(allPassed){
 
         resultCell.textContent =
-            "PASS";
+        "PASS";
 
         resultCell.className =
-            "result-pass";
+        "result-pass";
 
     }
     else{
 
         resultCell.textContent =
-            "FAIL";
+        "FAIL";
 
         resultCell.className =
-            "result-fail";
+        "result-fail";
 
     }
 
 }
 
 
-/* =========================================================
+/* =====================================================
    CALCULATE ALL
-========================================================= */
+===================================================== */
 
 function calculateAll(){
 
@@ -2367,9 +2549,9 @@ function calculateAll(){
 }
 
 
-/* =========================================================
+/* =====================================================
    LOAD EXISTING MARKS
-========================================================= */
+===================================================== */
 
 async function loadExistingMarks(){
 
@@ -2384,29 +2566,29 @@ async function loadExistingMarks(){
 
 
     const studentIds =
-        students.map(
-            function(student){
+    students.map(
+        function(student){
 
-                return student.id;
+            return student.id;
 
-            }
-        );
+        }
+    );
 
 
     const {data,error} =
-        await supabaseClient
-        .from("marks")
-        .select(
-            "student_id,subject_id,marks_obtained,grade"
-        )
-        .eq(
-            "exam_id",
-            selectedExamId
-        )
-        .in(
-            "student_id",
-            studentIds
-        );
+    await supabaseClient
+    .from("marks")
+    .select(
+        "student_id,subject_id,marks_obtained,grade"
+    )
+    .eq(
+        "exam_id",
+        selectedExamId
+    )
+    .in(
+        "student_id",
+        studentIds
+    );
 
 
     if(error){
@@ -2425,9 +2607,9 @@ async function loadExistingMarks(){
         function(row){
 
             const input =
-                document.querySelector(
-                    `input[data-student="${row.student_id}"][data-subject="${row.subject_id}"]`
-                );
+            document.querySelector(
+                `input[data-student="${row.student_id}"][data-subject="${row.subject_id}"]`
+            );
 
 
             if(!input){
@@ -2438,7 +2620,7 @@ async function loadExistingMarks(){
 
 
             input.value =
-                row.marks_obtained;
+            row.marks_obtained;
 
 
             markChanged(
@@ -2454,13 +2636,15 @@ async function loadExistingMarks(){
 }
 
 
-/* =========================================================
+/* =====================================================
    SAVE ALL MARKS
-========================================================= */
+===================================================== */
 
 async function saveAllMarks(){
 
-    if(students.length === 0){
+    if(
+        students.length === 0
+    ){
 
         showMessage(
             "ಮೊದಲು ವಿದ್ಯಾರ್ಥಿಗಳನ್ನು Load ಮಾಡಿ.",
@@ -2493,13 +2677,13 @@ async function saveAllMarks(){
             subjects.forEach(
                 function(subject){
 
-                    const databaseSubject =
-                        findDatabaseSubject(
-                            subject
-                        );
+                    const dbSubject =
+                    findDatabaseSubject(
+                        subject
+                    );
 
 
-                    if(!databaseSubject){
+                    if(!dbSubject){
 
                         return;
 
@@ -2507,9 +2691,9 @@ async function saveAllMarks(){
 
 
                     const input =
-                        document.querySelector(
-                            `input[data-student="${student.id}"][data-subject="${databaseSubject.id}"]`
-                        );
+                    document.querySelector(
+                        `input[data-student="${student.id}"][data-subject="${dbSubject.id}"]`
+                    );
 
 
                     if(!input){
@@ -2520,7 +2704,7 @@ async function saveAllMarks(){
 
 
                     const value =
-                        input.value.trim();
+                    input.value.trim();
 
 
                     if(value === ""){
@@ -2531,13 +2715,13 @@ async function saveAllMarks(){
 
 
                     const mark =
-                        Number(value);
+                    Number(value);
 
 
                     const max =
-                        Number(
-                            input.dataset.max
-                        );
+                    Number(
+                        input.dataset.max
+                    );
 
 
                     if(
@@ -2554,26 +2738,26 @@ async function saveAllMarks(){
                     rows.push({
 
                         student_id:
-                            student.id,
+                        student.id,
 
                         subject_id:
-                            databaseSubject.id,
+                        dbSubject.id,
 
                         exam_id:
-                            selectedExamId,
+                        selectedExamId,
 
                         marks_obtained:
-                            mark,
+                        mark,
 
                         grade:
-                            getGrade(
-                                mark,
-                                max
-                            ),
+                        getGrade(
+                            mark,
+                            max
+                        ),
 
                         academic_year_id:
-                            currentAcademicYearId ||
-                            null
+                        currentAcademicYearId ||
+                        null
 
                     });
 
@@ -2601,58 +2785,41 @@ async function saveAllMarks(){
         document.getElementById(
             "statusText"
         ).textContent =
-            "Saving...";
-
-
-        document.getElementById(
-            "statusText"
-        ).className =
-            "status-saving";
+        "Saving...";
 
 
         /*
-           Existing records update.
-           New records insert.
+           ಒಂದು ಒಂದು record
+           update / insert
         */
 
         for(
             const row of rows
         ){
 
-            let existingQuery =
-                supabaseClient
-                .from("marks")
-                .select("id")
-                .eq(
-                    "student_id",
-                    row.student_id
-                )
-                .eq(
-                    "subject_id",
-                    row.subject_id
-                )
-                .eq(
-                    "exam_id",
-                    row.exam_id
-                );
-
-
             const {
                 data:existing,
                 error:existingError
             } =
-                await existingQuery
-                .maybeSingle();
+            await supabaseClient
+            .from("marks")
+            .select("id")
+            .eq(
+                "student_id",
+                row.student_id
+            )
+            .eq(
+                "subject_id",
+                row.subject_id
+            )
+            .eq(
+                "exam_id",
+                row.exam_id
+            )
+            .maybeSingle();
 
 
             if(existingError){
-
-                /*
-                   If maybeSingle finds multiple rows,
-                   delete duplicates is not automatic.
-                   Continue with insert only when no
-                   usable existing row.
-                */
 
                 console.error(
                     existingError
@@ -2663,32 +2830,30 @@ async function saveAllMarks(){
 
             if(existing){
 
-                const updateData = {
-
-                    marks_obtained:
-                        row.marks_obtained,
-
-                    grade:
-                        row.grade,
-
-                    updated_at:
-                        new Date().toISOString()
-
-                };
-
-
                 const {
                     error:updateError
                 } =
-                    await supabaseClient
-                    .from("marks")
-                    .update(
-                        updateData
-                    )
-                    .eq(
-                        "id",
-                        existing.id
-                    );
+                await supabaseClient
+                .from("marks")
+                .update({
+
+                    marks_obtained:
+                    row.marks_obtained,
+
+                    grade:
+                    row.grade,
+
+                    academic_year_id:
+                    row.academic_year_id,
+
+                    updated_at:
+                    new Date().toISOString()
+
+                })
+                .eq(
+                    "id",
+                    existing.id
+                );
 
 
                 if(updateError){
@@ -2700,37 +2865,12 @@ async function saveAllMarks(){
             }
             else{
 
-                const insertData = {
-
-                    student_id:
-                        row.student_id,
-
-                    subject_id:
-                        row.subject_id,
-
-                    exam_id:
-                        row.exam_id,
-
-                    marks_obtained:
-                        row.marks_obtained,
-
-                    grade:
-                        row.grade,
-
-                    academic_year_id:
-                        row.academic_year_id
-
-                };
-
-
                 const {
                     error:insertError
                 } =
-                    await supabaseClient
-                    .from("marks")
-                    .insert([
-                        insertData
-                    ]);
+                await supabaseClient
+                .from("marks")
+                .insert([row]);
 
 
                 if(insertError){
@@ -2747,13 +2887,7 @@ async function saveAllMarks(){
         document.getElementById(
             "statusText"
         ).textContent =
-            "Saved";
-
-
-        document.getElementById(
-            "statusText"
-        ).className =
-            "status-saved";
+        "Saved";
 
 
         showMessage(
@@ -2761,27 +2895,23 @@ async function saveAllMarks(){
             "success"
         );
 
+
+        calculateAll();
+
     }
     catch(error){
 
         console.error(error);
 
-
         document.getElementById(
             "statusText"
         ).textContent =
-            "Error";
-
-
-        document.getElementById(
-            "statusText"
-        ).className =
-            "status-error";
+        "Error";
 
 
         showMessage(
             "❌ Marks Save ಆಗಲಿಲ್ಲ: " +
-            (error.message || error),
+            error.message,
             "error"
         );
 
@@ -2790,16 +2920,16 @@ async function saveAllMarks(){
 }
 
 
-/* =========================================================
-   CLEAR MARKS FROM SCREEN
-========================================================= */
+/* =====================================================
+   CLEAR MARKS
+===================================================== */
 
 function clearMarks(){
 
     const inputs =
-        document.querySelectorAll(
-            ".marks-input"
-        );
+    document.querySelectorAll(
+        ".marks-input"
+    );
 
 
     inputs.forEach(
@@ -2808,22 +2938,7 @@ function clearMarks(){
             input.value = "";
 
             input.style.borderColor =
-                "#c5ced8";
-
-        }
-    );
-
-
-    document.querySelectorAll(
-        ".grade-box"
-    ).forEach(
-        function(cell){
-
-            cell.textContent =
-                "-";
-
-            cell.className =
-                "grade-box";
+            "#c5ced8";
 
         }
     );
@@ -2841,40 +2956,42 @@ function clearMarks(){
 
 
     showMessage(
-        "Marks screenನಿಂದ clear ಮಾಡಲಾಗಿದೆ. Database marks delete ಆಗುವುದಿಲ್ಲ.",
+        "Marks boxes clear ಮಾಡಲಾಗಿದೆ.",
         "success"
     );
 
 }
 
 
-/* =========================================================
+/* =====================================================
    ESCAPE HTML
-========================================================= */
+===================================================== */
 
 function escapeHtml(value){
 
-    return String(value || "")
-        .replace(
-            /&/g,
-            "&amp;"
-        )
-        .replace(
-            /</g,
-            "&lt;"
-        )
-        .replace(
-            />/g,
-            "&gt;"
-        )
-        .replace(
-            /"/g,
-            "&quot;"
-        )
-        .replace(
-            /'/g,
-            "&#039;"
-        );
+    return String(
+        value || ""
+    )
+    .replace(
+        /&/g,
+        "&amp;"
+    )
+    .replace(
+        /</g,
+        "&lt;"
+    )
+    .replace(
+        />/g,
+        "&gt;"
+    )
+    .replace(
+        /"/g,
+        "&quot;"
+    )
+    .replace(
+        /'/g,
+        "&#039;"
+    );
 
 }
 
