@@ -1,806 +1,1290 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="kn">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Subject Master</title>
+<title>Subject Master - School Result Management</title>
 
 <style>
-    * {
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0;
-        font-family: Arial, sans-serif;
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f4f6f9;
+    color: #222;
+}
+
+/* HEADER */
+
+.header {
+    background: #17365d;
+    color: white;
+    padding: 20px;
+    text-align: center;
+}
+
+.header h1 {
+    font-size: 25px;
+    margin-bottom: 6px;
+}
+
+.header p {
+    font-size: 15px;
+}
+
+/* MAIN */
+
+.container {
+    width: 96%;
+    max-width: 1400px;
+    margin: 25px auto;
+}
+
+/* TOP BAR */
+
+.top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.top-bar h2 {
+    color: #17365d;
+}
+
+.back-btn {
+    background: #555;
+    color: white;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.back-btn:hover {
+    background: #333;
+}
+
+/* CARD */
+
+.card {
+    background: white;
+    padding: 22px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+
+.card h3 {
+    color: #17365d;
+    margin-bottom: 18px;
+}
+
+/* FORM */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 7px;
+    color: #333;
+}
+
+input {
+    padding: 11px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+    outline: none;
+}
+
+input:focus {
+    border-color: #17365d;
+}
+
+/* BUTTONS */
+
+.button-area {
+    margin-top: 18px;
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+button {
+    border: none;
+    border-radius: 6px;
+    padding: 11px 20px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.save-btn {
+    background: #198754;
+    color: white;
+}
+
+.save-btn:hover {
+    background: #146c43;
+}
+
+.clear-btn {
+    background: #6c757d;
+    color: white;
+}
+
+.clear-btn:hover {
+    background: #565e64;
+}
+
+/* SEARCH */
+
+.search-box {
+    width: 100%;
+    margin-bottom: 15px;
+}
+
+.search-box input {
+    width: 100%;
+}
+
+/* COUNT */
+
+.count-box {
+    background: #e8f1ff;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    color: #17365d;
+}
+
+/* TABLE */
+
+.table-container {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1100px;
+}
+
+th {
+    background: #17365d;
+    color: white;
+    padding: 12px 8px;
+    text-align: center;
+    border: 1px solid #ffffff;
+}
+
+td {
+    padding: 11px 8px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+tr:hover {
+    background: #f1f5f9;
+}
+
+/* CLASS HEADER */
+
+.class-header {
+    background: #0d6efd !important;
+    font-size: 14px;
+}
+
+/* ACTION BUTTONS */
+
+.edit-btn {
+    background: #ffc107;
+    color: #000;
+    padding: 7px 12px;
+    margin: 2px;
+}
+
+.delete-btn {
+    background: #dc3545;
+    color: white;
+    padding: 7px 12px;
+    margin: 2px;
+}
+
+.edit-btn:hover {
+    background: #e0a800;
+}
+
+.delete-btn:hover {
+    background: #bb2d3b;
+}
+
+/* EMPTY */
+
+.empty-message {
+    text-align: center;
+    padding: 25px;
+    color: #777;
+}
+
+/* NOTE */
+
+.note {
+    background: #fff3cd;
+    border-left: 5px solid #ffc107;
+    padding: 12px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    line-height: 1.6;
+}
+
+/* RESPONSIVE */
+
+@media (max-width: 900px) {
+
+    .form-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
-    body {
-        background: #f4f6f9;
-        color: #222;
-    }
+}
 
-    .header {
-        background: #17365d;
-        color: white;
-        padding: 20px;
-        text-align: center;
+@media (max-width: 600px) {
+
+    .form-grid {
+        grid-template-columns: 1fr;
     }
 
     .header h1 {
-        font-size: 25px;
-        margin-bottom: 6px;
-    }
-
-    .header p {
-        font-size: 15px;
+        font-size: 20px;
     }
 
     .container {
-        width: 95%;
-        max-width: 1200px;
-        margin: 25px auto;
+        width: 94%;
     }
 
-    .top-bar {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 20px;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
+}
 
-    .top-bar h2 {
-        color: #17365d;
-    }
-
-    .back-btn {
-        background: #555;
-        color: white;
-        padding: 10px 18px;
-        border: none;
-        border-radius: 6px;
-        cursor: pointer;
-        text-decoration: none;
-        display: inline-block;
-    }
-
-    .back-btn:hover {
-        background: #333;
-    }
-
-    .card {
-        background: white;
-        padding: 22px;
-        border-radius: 10px;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-        margin-bottom: 20px;
-    }
-
-    .card h3 {
-        color: #17365d;
-        margin-bottom: 18px;
-    }
-
-    .form-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 15px;
-    }
-
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-
-    label {
-        font-weight: bold;
-        margin-bottom: 7px;
-        color: #333;
-    }
-
-    input {
-        padding: 11px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 15px;
-        outline: none;
-    }
-
-    input:focus {
-        border-color: #17365d;
-    }
-
-    .button-area {
-        margin-top: 18px;
-        display: flex;
-        gap: 10px;
-        flex-wrap: wrap;
-    }
-
-    button {
-        border: none;
-        border-radius: 6px;
-        padding: 11px 20px;
-        font-size: 15px;
-        cursor: pointer;
-    }
-
-    .save-btn {
-        background: #198754;
-        color: white;
-    }
-
-    .save-btn:hover {
-        background: #146c43;
-    }
-
-    .clear-btn {
-        background: #6c757d;
-        color: white;
-    }
-
-    .clear-btn:hover {
-        background: #565e64;
-    }
-
-    .search-box {
-        width: 100%;
-        margin-bottom: 15px;
-    }
-
-    .search-box input {
-        width: 100%;
-    }
-
-    .table-container {
-        overflow-x: auto;
-    }
-
-    table {
-        width: 100%;
-        border-collapse: collapse;
-        min-width: 750px;
-    }
-
-    th {
-        background: #17365d;
-        color: white;
-        padding: 12px;
-        text-align: center;
-    }
-
-    td {
-        padding: 11px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-    }
-
-    tr:hover {
-        background: #f1f5f9;
-    }
-
-    .edit-btn {
-        background: #ffc107;
-        color: #000;
-        padding: 7px 12px;
-        margin: 2px;
-    }
-
-    .delete-btn {
-        background: #dc3545;
-        color: white;
-        padding: 7px 12px;
-        margin: 2px;
-    }
-
-    .edit-btn:hover {
-        background: #e0a800;
-    }
-
-    .delete-btn:hover {
-        background: #bb2d3b;
-    }
-
-    .count-box {
-        background: #e8f1ff;
-        padding: 12px;
-        border-radius: 6px;
-        margin-bottom: 15px;
-        font-weight: bold;
-        color: #17365d;
-    }
-
-    .empty-message {
-        text-align: center;
-        padding: 25px;
-        color: #777;
-    }
-
-    @media (max-width: 900px) {
-        .form-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-
-    @media (max-width: 600px) {
-        .form-grid {
-            grid-template-columns: 1fr;
-        }
-
-        .header h1 {
-            font-size: 20px;
-        }
-
-        .container {
-            width: 94%;
-        }
-    }
 </style>
 </head>
 
+
 <body>
 
+
 <!-- HEADER -->
+
 <div class="header">
-    <h1>ಶ್ರೀ ವೀರಬಲ್ಲಾಳ ಗ್ರಾಮಾಂತರ ಪ್ರೌಢಶಾಲೆ</h1>
-    <p>ಬಲ್ಲಾಳಸಮುದ್ರ, ಹೊಸದುರ್ಗ ತಾಲ್ಲೂಕು, ಚಿತ್ರದುರ್ಗ ಜಿಲ್ಲೆ</p>
-    <p>Result Management System</p>
+
+    <h1>
+        ಶ್ರೀ ವೀರಬಲ್ಲಾಳ ಗ್ರಾಮಾಂತರ ಪ್ರೌಢಶಾಲೆ
+    </h1>
+
+    <p>
+        ಬಲ್ಲಾಳಸಮುದ್ರ, ಹೊಸದುರ್ಗ ತಾಲ್ಲೂಕು, ಚಿತ್ರದುರ್ಗ ಜಿಲ್ಲೆ
+    </p>
+
+    <p>
+        Result Management System
+    </p>
+
 </div>
+
 
 
 <div class="container">
 
-    <!-- TOP BAR -->
-    <div class="top-bar">
-        <h2>📚 Subject Master</h2>
 
-        <!-- Dashboard link -->
-        <a href="index.html" class="back-btn">
-            ⬅ Dashboard
-        </a>
-    </div>
+<!-- TOP BAR -->
 
+<div class="top-bar">
 
-    <!-- ADD / EDIT SUBJECT -->
-    <div class="card">
+    <h2>
+        📚 Subject Master
+    </h2>
 
-        <h3>➕ Subject Information</h3>
+    <a href="index.html" class="back-btn">
+        ⬅ Dashboard
+    </a>
 
-        <div class="form-grid">
-
-            <div class="form-group">
-                <label for="subjectCode">Subject Code</label>
-                <input
-                    type="text"
-                    id="subjectCode"
-                    placeholder="ಉದಾ: 01K"
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="subjectName">Subject Name</label>
-                <input
-                    type="text"
-                    id="subjectName"
-                    placeholder="ಉದಾ: KANNADA"
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="maxMarks">Maximum Marks</label>
-                <input
-                    type="number"
-                    id="maxMarks"
-                    placeholder="ಉದಾ: 100"
-                    min="1"
-                >
-            </div>
-
-            <div class="form-group">
-                <label for="passMarks">Passing Marks</label>
-                <input
-                    type="number"
-                    id="passMarks"
-                    placeholder="ಉದಾ: 35"
-                    min="0"
-                >
-            </div>
-
-        </div>
+</div>
 
 
-        <div class="button-area">
 
-            <button
-                class="save-btn"
-                onclick="saveSubject()"
-                id="saveButton">
-                💾 Save Subject
-            </button>
+<!-- NOTE -->
 
-            <button
-                class="clear-btn"
-                onclick="clearForm()">
-                🔄 Clear
-            </button>
+<div class="note">
 
-        </div>
+    <strong>ಗಮನಿಸಿ:</strong>
 
-    </div>
+    Subject Maximum Marks ಮತ್ತು Passing Marks
+    ತರಗತಿವಾರು ಪ್ರತ್ಯೇಕವಾಗಿ ನಿರ್ವಹಿಸಲಾಗುತ್ತದೆ.
 
+    <br>
 
-    <!-- SUBJECT LIST -->
-    <div class="card">
+    <strong>Kannada:</strong>
+    8ನೇ = 100 / 35,
+    9ನೇ = 125 / 44,
+    10ನೇ = 125 / 44
 
-        <h3>📋 Subject List</h3>
+    <br>
 
-        <div class="count-box">
-            Total Subjects:
-            <span id="subjectCount">0</span>
-        </div>
+    <strong>ಇತರೆ ವಿಷಯಗಳು:</strong>
+    ಎಲ್ಲಾ ತರಗತಿಗಳಿಗೆ 100 / 35
+
+</div>
 
 
-        <!-- SEARCH -->
-        <div class="search-box">
+
+<!-- ADD SUBJECT -->
+
+<div class="card">
+
+    <h3>
+        ➕ Subject Information
+    </h3>
+
+
+    <div class="form-grid">
+
+
+        <div class="form-group">
+
+            <label>
+                Subject Code
+            </label>
+
             <input
                 type="text"
-                id="searchSubject"
-                placeholder="🔍 Search Subject Code or Subject Name..."
-                onkeyup="displaySubjects()"
+                id="subjectCode"
+                placeholder="ಉದಾ: 01K"
             >
+
+        </div>
+
+
+
+        <div class="form-group">
+
+            <label>
+                Subject Name
+            </label>
+
+            <input
+                type="text"
+                id="subjectName"
+                placeholder="ಉದಾ: KANNADA"
+            >
+
         </div>
 
 
-        <div class="table-container">
+    </div>
 
-            <table>
 
-                <thead>
-                    <tr>
-                        <th>Sl No</th>
-                        <th>Subject Code</th>
-                        <th>Subject Name</th>
-                        <th>Maximum Marks</th>
-                        <th>Passing Marks</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
+    <div class="button-area">
 
-                <tbody id="subjectTableBody">
-                </tbody>
+        <button
+            class="save-btn"
+            onclick="saveSubject()"
+            id="saveButton">
 
-            </table>
+            💾 Save Subject
 
-        </div>
+        </button>
+
+
+        <button
+            class="clear-btn"
+            onclick="clearForm()">
+
+            🔄 Clear
+
+        </button>
 
     </div>
 
 </div>
 
 
+
+<!-- SUBJECT LIST -->
+
+<div class="card">
+
+    <h3>
+        📋 Subject List
+    </h3>
+
+
+    <div class="count-box">
+
+        Total Subjects:
+        <span id="subjectCount">0</span>
+
+    </div>
+
+
+
+    <!-- SEARCH -->
+
+    <div class="search-box">
+
+        <input
+            type="text"
+            id="searchSubject"
+            placeholder="🔍 Search Subject Code or Subject Name..."
+            onkeyup="displaySubjects()"
+        >
+
+    </div>
+
+
+
+    <div class="table-container">
+
+
+        <table>
+
+
+            <thead>
+
+
+                <tr>
+
+                    <th rowspan="2">
+                        Sl No
+                    </th>
+
+                    <th rowspan="2">
+                        Subject Code
+                    </th>
+
+                    <th rowspan="2">
+                        Subject Name
+                    </th>
+
+                    <th colspan="2" class="class-header">
+                        8ನೇ ತರಗತಿ
+                    </th>
+
+                    <th colspan="2" class="class-header">
+                        9ನೇ ತರಗತಿ
+                    </th>
+
+                    <th colspan="2" class="class-header">
+                        10ನೇ ತರಗತಿ
+                    </th>
+
+                    <th rowspan="2">
+                        Action
+                    </th>
+
+                </tr>
+
+
+                <tr>
+
+                    <th>
+                        Max
+                    </th>
+
+                    <th>
+                        Pass
+                    </th>
+
+                    <th>
+                        Max
+                    </th>
+
+                    <th>
+                        Pass
+                    </th>
+
+                    <th>
+                        Max
+                    </th>
+
+                    <th>
+                        Pass
+                    </th>
+
+                </tr>
+
+
+            </thead>
+
+
+            <tbody id="subjectTableBody">
+
+            </tbody>
+
+
+        </table>
+
+    </div>
+
+</div>
+
+
+</div>
+
+
+
 <script>
 
-    // ---------------------------------------
-    // Subject Data
-    // ---------------------------------------
 
-    let subjects = JSON.parse(
+/* ==========================================
+   SUBJECT DATA
+========================================== */
+
+
+let subjects =
+    JSON.parse(
         localStorage.getItem("schoolSubjects")
     ) || [];
 
-    let editIndex = -1;
+
+let editIndex = -1;
 
 
-    // ---------------------------------------
-    // Default Subjects
-    // ---------------------------------------
 
-    function addDefaultSubjects() {
-
-        if (subjects.length === 0) {
-
-            subjects = [
-
-                {
-                    code: "01K",
-                    name: "KANNADA",
-                    maxMarks: 100,
-                    passMarks: 35
-                },
-
-                {
-                    code: "31E",
-                    name: "ENGLISH",
-                    maxMarks: 100,
-                    passMarks: 35
-                },
-
-                {
-                    code: "61H",
-                    name: "HINDI",
-                    maxMarks: 100,
-                    passMarks: 35
-                },
-
-                {
-                    code: "81K",
-                    name: "MATHS",
-                    maxMarks: 100,
-                    passMarks: 35
-                },
-
-                {
-                    code: "83K",
-                    name: "SCIENCE",
-                    maxMarks: 100,
-                    passMarks: 35
-                },
-
-                {
-                    code: "85K",
-                    name: "SOCIAL SCIENCE",
-                    maxMarks: 100,
-                    passMarks: 35
-                }
-
-            ];
-
-            localStorage.setItem(
-                "schoolSubjects",
-                JSON.stringify(subjects)
-            );
-        }
-
-    }
+/* ==========================================
+   DEFAULT SUBJECTS
+========================================== */
 
 
-    // ---------------------------------------
-    // Save Subject
-    // ---------------------------------------
+function createDefaultSubjects() {
 
-    function saveSubject() {
+    return [
 
-        const code =
-            document.getElementById("subjectCode")
-            .value.trim()
-            .toUpperCase();
+        {
+            code: "01K",
+            name: "KANNADA",
 
-        const name =
-            document.getElementById("subjectName")
-            .value.trim()
-            .toUpperCase();
+            class8: {
+                maxMarks: 100,
+                passMarks: 35
+            },
 
-        const maxMarks =
-            Number(
-                document.getElementById("maxMarks").value
-            );
+            class9: {
+                maxMarks: 125,
+                passMarks: 44
+            },
 
-        const passMarks =
-            Number(
-                document.getElementById("passMarks").value
-            );
-
-
-        // Validation
-
-        if (!code) {
-            alert("ದಯವಿಟ್ಟು Subject Code ನಮೂದಿಸಿ.");
-            return;
-        }
-
-        if (!name) {
-            alert("ದಯವಿಟ್ಟು Subject Name ನಮೂದಿಸಿ.");
-            return;
-        }
-
-        if (!maxMarks || maxMarks <= 0) {
-            alert("ದಯವಿಟ್ಟು Maximum Marks ಸರಿಯಾಗಿ ನಮೂದಿಸಿ.");
-            return;
-        }
-
-        if (passMarks < 0 || passMarks > maxMarks) {
-            alert(
-                "Passing Marks Maximum Marks ಗಿಂತ ಹೆಚ್ಚಾಗಿರಬಾರದು."
-            );
-            return;
-        }
-
-
-        const subject = {
-            code: code,
-            name: name,
-            maxMarks: maxMarks,
-            passMarks: passMarks
-        };
-
-
-        // Add
-
-        if (editIndex === -1) {
-
-            // Duplicate code check
-
-            const duplicate = subjects.some(
-                item =>
-                    item.code.toUpperCase() ===
-                    code.toUpperCase()
-            );
-
-            if (duplicate) {
-                alert("ಈ Subject Code ಈಗಾಗಲೇ ಇದೆ.");
-                return;
+            class10: {
+                maxMarks: 125,
+                passMarks: 44
             }
+        },
 
-            subjects.push(subject);
 
-            alert("Subject ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ.");
+        {
+            code: "31E",
+            name: "ENGLISH",
 
-        }
+            class8: {
+                maxMarks: 100,
+                passMarks: 35
+            },
 
-        // Update
+            class9: {
+                maxMarks: 100,
+                passMarks: 35
+            },
 
-        else {
-
-            const duplicate = subjects.some(
-                (item, index) =>
-                    index !== editIndex &&
-                    item.code.toUpperCase() ===
-                    code.toUpperCase()
-            );
-
-            if (duplicate) {
-                alert("ಈ Subject Code ಈಗಾಗಲೇ ಇದೆ.");
-                return;
+            class10: {
+                maxMarks: 100,
+                passMarks: 35
             }
+        },
 
-            subjects[editIndex] = subject;
 
-            alert("Subject ಯಶಸ್ವಿಯಾಗಿ ತಿದ್ದುಪಡಿ ಮಾಡಲಾಗಿದೆ.");
+        {
+            code: "61H",
+            name: "HINDI",
 
-            editIndex = -1;
+            class8: {
+                maxMarks: 100,
+                passMarks: 35
+            },
 
-            document.getElementById("saveButton")
-                .innerHTML = "💾 Save Subject";
+            class9: {
+                maxMarks: 100,
+                passMarks: 35
+            },
+
+            class10: {
+                maxMarks: 100,
+                passMarks: 35
+            }
+        },
+
+
+        {
+            code: "81K",
+            name: "MATHS",
+
+            class8: {
+                maxMarks: 100,
+                passMarks: 35
+            },
+
+            class9: {
+                maxMarks: 100,
+                passMarks: 35
+            },
+
+            class10: {
+                maxMarks: 100,
+                passMarks: 35
+            }
+        },
+
+
+        {
+            code: "83K",
+            name: "SCIENCE",
+
+            class8: {
+                maxMarks: 100,
+                passMarks: 35
+            },
+
+            class9: {
+                maxMarks: 100,
+                passMarks: 35
+            },
+
+            class10: {
+                maxMarks: 100,
+                passMarks: 35
+            }
+        },
+
+
+        {
+            code: "85K",
+            name: "SOCIAL SCIENCE",
+
+            class8: {
+                maxMarks: 100,
+                passMarks: 35
+            },
+
+            class9: {
+                maxMarks: 100,
+                passMarks: 35
+            },
+
+            class10: {
+                maxMarks: 100,
+                passMarks: 35
+            }
         }
 
+    ];
 
-        // Save Local Storage
+}
+
+
+
+/* ==========================================
+   CHECK / MIGRATE OLD DATA
+========================================== */
+
+
+function setupSubjects() {
+
+    /*
+       ಹಳೆಯ Subject Masterನಲ್ಲಿ
+       maxMarks / passMarks ಮಾತ್ರ ಇದ್ದರೆ
+       ಹೊಸ class-wise structureಗೆ ಬದಲಾಯಿಸುತ್ತದೆ.
+    */
+
+    if (
+        subjects.length === 0 ||
+        !subjects[0].class8
+    ) {
+
+        subjects = createDefaultSubjects();
 
         localStorage.setItem(
             "schoolSubjects",
             JSON.stringify(subjects)
         );
 
-
-        clearForm();
-
-        displaySubjects();
-
+        return;
     }
 
 
-    // ---------------------------------------
-    // Display Subjects
-    // ---------------------------------------
+    /*
+       ಯಾವುದೇ subject data missing ಇದ್ದರೆ
+       default values ತುಂಬುತ್ತದೆ.
+    */
 
-    function displaySubjects() {
+    subjects.forEach(subject => {
 
-        const tbody =
-            document.getElementById("subjectTableBody");
+        if (!subject.class8) {
 
-        const search =
-            document.getElementById("searchSubject")
-            .value
-            .trim()
-            .toLowerCase();
+            subject.class8 = {
+                maxMarks: 100,
+                passMarks: 35
+            };
 
-
-        tbody.innerHTML = "";
-
-
-        const filteredSubjects =
-            subjects.filter(subject =>
-
-                subject.code
-                    .toLowerCase()
-                    .includes(search)
-
-                ||
-
-                subject.name
-                    .toLowerCase()
-                    .includes(search)
-
-            );
-
-
-        document.getElementById("subjectCount")
-            .innerText = subjects.length;
-
-
-        if (filteredSubjects.length === 0) {
-
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="6" class="empty-message">
-                        ಯಾವುದೇ Subject ಕಂಡುಬಂದಿಲ್ಲ.
-                    </td>
-                </tr>
-            `;
-
-            return;
         }
 
+        if (!subject.class9) {
 
-        filteredSubjects.forEach(
-            (subject) => {
+            subject.class9 = {
+                maxMarks: 100,
+                passMarks: 35
+            };
 
-                const realIndex =
-                    subjects.indexOf(subject);
+        }
 
-                const row =
-                    document.createElement("tr");
+        if (!subject.class10) {
 
+            subject.class10 = {
+                maxMarks: 100,
+                passMarks: 35
+            };
 
-                row.innerHTML = `
+        }
 
-                    <td>
-                        ${realIndex + 1}
-                    </td>
-
-                    <td>
-                        <strong>
-                            ${subject.code}
-                        </strong>
-                    </td>
-
-                    <td>
-                        ${subject.name}
-                    </td>
-
-                    <td>
-                        ${subject.maxMarks}
-                    </td>
-
-                    <td>
-                        ${subject.passMarks}
-                    </td>
-
-                    <td>
-
-                        <button
-                            class="edit-btn"
-                            onclick="editSubject(${realIndex})">
-                            ✏️ Edit
-                        </button>
-
-                        <button
-                            class="delete-btn"
-                            onclick="deleteSubject(${realIndex})">
-                            🗑 Delete
-                        </button>
-
-                    </td>
-
-                `;
+    });
 
 
-                tbody.appendChild(row);
+    localStorage.setItem(
+        "schoolSubjects",
+        JSON.stringify(subjects)
+    );
 
-            }
+}
+
+
+
+/* ==========================================
+   SAVE SUBJECT
+========================================== */
+
+
+function saveSubject() {
+
+
+    const code =
+        document
+        .getElementById("subjectCode")
+        .value
+        .trim()
+        .toUpperCase();
+
+
+    const name =
+        document
+        .getElementById("subjectName")
+        .value
+        .trim()
+        .toUpperCase();
+
+
+
+    /* VALIDATION */
+
+    if (!code) {
+
+        alert(
+            "ದಯವಿಟ್ಟು Subject Code ನಮೂದಿಸಿ."
         );
 
-    }
-
-
-    // ---------------------------------------
-    // Edit Subject
-    // ---------------------------------------
-
-    function editSubject(index) {
-
-        const subject = subjects[index];
-
-        document.getElementById("subjectCode")
-            .value = subject.code;
-
-        document.getElementById("subjectName")
-            .value = subject.name;
-
-        document.getElementById("maxMarks")
-            .value = subject.maxMarks;
-
-        document.getElementById("passMarks")
-            .value = subject.passMarks;
-
-
-        editIndex = index;
-
-
-        document.getElementById("saveButton")
-            .innerHTML = "✏️ Update Subject";
-
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
+        return;
 
     }
 
 
-    // ---------------------------------------
-    // Delete Subject
-    // ---------------------------------------
+    if (!name) {
 
-    function deleteSubject(index) {
+        alert(
+            "ದಯವಿಟ್ಟು Subject Name ನಮೂದಿಸಿ."
+        );
 
-        const subject = subjects[index];
+        return;
 
-
-        const confirmDelete =
-            confirm(
-                `"${subject.name}" Subject ಅನ್ನು Delete ಮಾಡಬೇಕೇ?`
-            );
+    }
 
 
-        if (!confirmDelete) {
-            return;
-        }
 
+    /* DUPLICATE CHECK */
 
-        subjects.splice(index, 1);
+    const duplicate =
+        subjects.some(
+            (item, index) =>
 
+                index !== editIndex &&
 
-        localStorage.setItem(
-            "schoolSubjects",
-            JSON.stringify(subjects)
+                item.code.toUpperCase() ===
+                code.toUpperCase()
         );
 
 
-        displaySubjects();
+    if (duplicate) {
 
-        alert("Subject Delete ಮಾಡಲಾಗಿದೆ.");
+        alert(
+            "ಈ Subject Code ಈಗಾಗಲೇ ಇದೆ."
+        );
+
+        return;
 
     }
 
 
-    // ---------------------------------------
-    // Clear Form
-    // ---------------------------------------
 
-    function clearForm() {
+    /*
+       ಹೊಸ subjectಗೆ
+       default 100/35
+       ಎಲ್ಲಾ ತರಗತಿಗಳಿಗೆ.
+    */
 
-        document.getElementById("subjectCode")
-            .value = "";
+    const subject = {
 
-        document.getElementById("subjectName")
-            .value = "";
+        code: code,
 
-        document.getElementById("maxMarks")
-            .value = "";
+        name: name,
 
-        document.getElementById("passMarks")
-            .value = "";
+        class8: {
+            maxMarks: 100,
+            passMarks: 35
+        },
+
+        class9: {
+            maxMarks: 100,
+            passMarks: 35
+        },
+
+        class10: {
+            maxMarks: 100,
+            passMarks: 35
+        }
+
+    };
+
+
+
+    /* EDIT */
+
+    if (editIndex !== -1) {
+
+        /*
+           ಈಗಿರುವ marks settings
+           ಉಳಿಸಿಕೊಳ್ಳುತ್ತೇವೆ.
+        */
+
+        subject.class8 =
+            subjects[editIndex].class8;
+
+        subject.class9 =
+            subjects[editIndex].class9;
+
+        subject.class10 =
+            subjects[editIndex].class10;
+
+
+        subjects[editIndex] =
+            subject;
+
+
+        alert(
+            "Subject ಯಶಸ್ವಿಯಾಗಿ Update ಮಾಡಲಾಗಿದೆ."
+        );
 
 
         editIndex = -1;
 
 
-        document.getElementById("saveButton")
-            .innerHTML = "💾 Save Subject";
+        document
+        .getElementById("saveButton")
+        .innerHTML =
+        "💾 Save Subject";
 
     }
 
 
-    // ---------------------------------------
-    // Page Load
-    // ---------------------------------------
+    /* ADD */
 
-    addDefaultSubjects();
+    else {
+
+        subjects.push(subject);
+
+
+        alert(
+            "Subject ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ."
+        );
+
+    }
+
+
+
+    localStorage.setItem(
+        "schoolSubjects",
+        JSON.stringify(subjects)
+    );
+
+
+    clearForm();
 
     displaySubjects();
+
+}
+
+
+
+/* ==========================================
+   DISPLAY SUBJECTS
+========================================== */
+
+
+function displaySubjects() {
+
+
+    const tbody =
+        document
+        .getElementById(
+            "subjectTableBody"
+        );
+
+
+    const search =
+        document
+        .getElementById(
+            "searchSubject"
+        )
+        .value
+        .trim()
+        .toLowerCase();
+
+
+
+    tbody.innerHTML = "";
+
+
+
+    const filteredSubjects =
+        subjects.filter(subject =>
+
+            subject.code
+            .toLowerCase()
+            .includes(search)
+
+            ||
+
+            subject.name
+            .toLowerCase()
+            .includes(search)
+
+        );
+
+
+
+    document
+    .getElementById(
+        "subjectCount"
+    )
+    .innerText =
+    subjects.length;
+
+
+
+    if (
+        filteredSubjects.length === 0
+    ) {
+
+        tbody.innerHTML = `
+
+            <tr>
+
+                <td
+                    colspan="10"
+                    class="empty-message">
+
+                    ಯಾವುದೇ Subject ಕಂಡುಬಂದಿಲ್ಲ.
+
+                </td>
+
+            </tr>
+
+        `;
+
+        return;
+
+    }
+
+
+
+    filteredSubjects.forEach(
+        (subject) => {
+
+
+            const realIndex =
+                subjects.indexOf(subject);
+
+
+
+            const row =
+                document.createElement("tr");
+
+
+
+            row.innerHTML = `
+
+                <td>
+                    ${realIndex + 1}
+                </td>
+
+
+                <td>
+                    <strong>
+                        ${subject.code}
+                    </strong>
+                </td>
+
+
+                <td>
+                    ${subject.name}
+                </td>
+
+
+                <td>
+                    ${subject.class8.maxMarks}
+                </td>
+
+
+                <td>
+                    ${subject.class8.passMarks}
+                </td>
+
+
+                <td>
+                    ${subject.class9.maxMarks}
+                </td>
+
+
+                <td>
+                    ${subject.class9.passMarks}
+                </td>
+
+
+                <td>
+                    ${subject.class10.maxMarks}
+                </td>
+
+
+                <td>
+                    ${subject.class10.passMarks}
+                </td>
+
+
+                <td>
+
+                    <button
+                        class="edit-btn"
+                        onclick="editSubject(${realIndex})">
+
+                        ✏️ Edit
+
+                    </button>
+
+
+                    <button
+                        class="delete-btn"
+                        onclick="deleteSubject(${realIndex})">
+
+                        🗑 Delete
+
+                    </button>
+
+                </td>
+
+            `;
+
+
+            tbody.appendChild(row);
+
+        }
+    );
+
+}
+
+
+
+/* ==========================================
+   EDIT SUBJECT
+========================================== */
+
+
+function editSubject(index) {
+
+
+    const subject =
+        subjects[index];
+
+
+    document
+    .getElementById(
+        "subjectCode"
+    )
+    .value =
+    subject.code;
+
+
+    document
+    .getElementById(
+        "subjectName"
+    )
+    .value =
+    subject.name;
+
+
+    editIndex =
+        index;
+
+
+    document
+    .getElementById(
+        "saveButton"
+    )
+    .innerHTML =
+    "✏️ Update Subject";
+
+
+
+    window.scrollTo({
+
+        top: 0,
+
+        behavior: "smooth"
+
+    });
+
+}
+
+
+
+/* ==========================================
+   DELETE SUBJECT
+========================================== */
+
+
+function deleteSubject(index) {
+
+
+    const subject =
+        subjects[index];
+
+
+    const confirmDelete =
+        confirm(
+
+            `"${subject.name}" Subject ಅನ್ನು Delete ಮಾಡಬೇಕೇ?`
+
+        );
+
+
+    if (!confirmDelete) {
+
+        return;
+
+    }
+
+
+
+    subjects.splice(
+        index,
+        1
+    );
+
+
+    localStorage.setItem(
+        "schoolSubjects",
+        JSON.stringify(subjects)
+    );
+
+
+    displaySubjects();
+
+
+    alert(
+        "Subject Delete ಮಾಡಲಾಗಿದೆ."
+    );
+
+}
+
+
+
+/* ==========================================
+   CLEAR FORM
+========================================== */
+
+
+function clearForm() {
+
+
+    document
+    .getElementById(
+        "subjectCode"
+    )
+    .value = "";
+
+
+    document
+    .getElementById(
+        "subjectName"
+    )
+    .value = "";
+
+
+    editIndex = -1;
+
+
+    document
+    .getElementById(
+        "saveButton"
+    )
+    .innerHTML =
+    "💾 Save Subject";
+
+}
+
+
+
+/* ==========================================
+   INITIAL LOAD
+========================================== */
+
+
+setupSubjects();
+
+displaySubjects();
+
 
 </script>
 
