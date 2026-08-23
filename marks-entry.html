@@ -2481,7 +2481,111 @@ function getSubjectGrade(
    OVERALL GRADE
 ========================================================= */
 
-function getOverallGrade(
+function getOverallGrade(/* =========================================================
+   OVERALL GRADE
+   8ನೇ ತರಗತಿ = 8ನೇ ತರಗತಿಯ ವಿಶೇಷ Grade System
+   9ನೇ / 10ನೇ = Percentage Grade System
+========================================================= */
+
+function getOverallGrade(percentage){
+
+    const classNo = String(
+        selectedClassNumber || ""
+    );
+
+    /* =====================================================
+       8ನೇ ತರಗತಿ
+       
+       Overall percentage ಅನ್ನು 10ಕ್ಕೆ convert ಮಾಡಲಾಗುತ್ತದೆ.
+       
+       90-100%  = 9-10  = A+
+       70-89%   = 7-8   = A
+       50-69%   = 5-6   = B+
+       30-49%   = 3-4   = B
+       0-29%    = 0-2   = C
+    ===================================================== */
+
+    if(classNo === "8"){
+
+        if(!Number.isFinite(Number(percentage))){
+            return "-";
+        }
+
+        const p = Number(percentage);
+
+        if(p >= 90){
+            return "A+";
+        }
+
+        if(p >= 70){
+            return "A";
+        }
+
+        if(p >= 50){
+            return "B+";
+        }
+
+        if(p >= 30){
+            return "B";
+        }
+
+        return "C";
+    }
+
+
+    /* =====================================================
+       9ನೇ ಮತ್ತು 10ನೇ ತರಗತಿ
+       
+       A+ = 90%+
+       A  = 80%+
+       B+ = 70%+
+       B  = 60%+
+       C+ = 50%+
+       C  = 40%+
+       NA = below 40%
+    ===================================================== */
+
+    if(
+        classNo === "9" ||
+        classNo === "10"
+    ){
+
+        if(!Number.isFinite(Number(percentage))){
+            return "-";
+        }
+
+        const p = Number(percentage);
+
+        if(p >= 90){
+            return "A+";
+        }
+
+        if(p >= 80){
+            return "A";
+        }
+
+        if(p >= 70){
+            return "B+";
+        }
+
+        if(p >= 60){
+            return "B";
+        }
+
+        if(p >= 50){
+            return "C+";
+        }
+
+        if(p >= 40){
+            return "C";
+        }
+
+        return "NA";
+    }
+
+
+    return "NA";
+}
     percentage
 ){
 
