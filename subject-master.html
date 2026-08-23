@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="kn">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
@@ -8,286 +9,249 @@
 
 <style>
 
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
+*{
+    box-sizing:border-box;
+    margin:0;
+    padding:0;
+    font-family:Arial,sans-serif;
 }
 
-body {
-    background: #f4f6f9;
-    color: #222;
+body{
+    background:#f4f6f9;
+    color:#222;
 }
 
-/* HEADER */
-
-.header {
-    background: #17365d;
-    color: white;
-    padding: 20px;
-    text-align: center;
+.header{
+    background:#17365d;
+    color:white;
+    padding:20px;
+    text-align:center;
 }
 
-.header h1 {
-    font-size: 25px;
-    margin-bottom: 6px;
+.header h1{
+    font-size:25px;
+    margin-bottom:6px;
 }
 
-.header p {
-    font-size: 15px;
+.header p{
+    font-size:15px;
+    margin:3px;
 }
 
-/* MAIN */
-
-.container {
-    width: 96%;
-    max-width: 1400px;
-    margin: 25px auto;
+.container{
+    width:96%;
+    max-width:1450px;
+    margin:25px auto;
 }
 
-/* TOP BAR */
-
-.top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    gap: 10px;
-    flex-wrap: wrap;
+.top-bar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:20px;
+    flex-wrap:wrap;
+    gap:10px;
 }
 
-.top-bar h2 {
-    color: #17365d;
+.top-bar h2{
+    color:#17365d;
 }
 
-.back-btn {
-    background: #555;
-    color: white;
-    padding: 10px 18px;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    text-decoration: none;
-    display: inline-block;
+.back-btn{
+    background:#555;
+    color:white;
+    padding:10px 18px;
+    border-radius:6px;
+    text-decoration:none;
 }
 
-.back-btn:hover {
-    background: #333;
+.card{
+    background:white;
+    padding:22px;
+    border-radius:10px;
+    box-shadow:0 2px 10px rgba(0,0,0,.08);
+    margin-bottom:20px;
 }
 
-/* CARD */
-
-.card {
-    background: white;
-    padding: 22px;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-    margin-bottom: 20px;
+.card h3{
+    color:#17365d;
+    margin-bottom:18px;
 }
 
-.card h3 {
-    color: #17365d;
-    margin-bottom: 18px;
+.form-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
 }
 
-/* FORM */
-
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 15px;
+.form-group{
+    display:flex;
+    flex-direction:column;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
+label{
+    font-weight:bold;
+    margin-bottom:7px;
 }
 
-label {
-    font-weight: bold;
-    margin-bottom: 7px;
-    color: #333;
+input,select{
+    padding:11px;
+    border:1px solid #ccc;
+    border-radius:6px;
+    font-size:15px;
 }
 
-input {
-    padding: 11px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 15px;
-    outline: none;
+.button-area{
+    margin-top:18px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
 }
 
-input:focus {
-    border-color: #17365d;
+button{
+    border:none;
+    border-radius:6px;
+    padding:10px 18px;
+    cursor:pointer;
+    font-size:14px;
 }
 
-/* BUTTONS */
-
-.button-area {
-    margin-top: 18px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
+.save-btn{
+    background:#198754;
+    color:white;
 }
 
-button {
-    border: none;
-    border-radius: 6px;
-    padding: 11px 20px;
-    font-size: 15px;
-    cursor: pointer;
+.clear-btn{
+    background:#6c757d;
+    color:white;
 }
 
-.save-btn {
-    background: #198754;
-    color: white;
+.edit-btn{
+    background:#ffc107;
+    color:#000;
 }
 
-.save-btn:hover {
-    background: #146c43;
+.delete-btn{
+    background:#dc3545;
+    color:white;
 }
 
-.clear-btn {
-    background: #6c757d;
-    color: white;
+.marks-btn{
+    background:#0d6efd;
+    color:white;
 }
 
-.clear-btn:hover {
-    background: #565e64;
+.search-box{
+    margin-bottom:15px;
 }
 
-/* SEARCH */
-
-.search-box {
-    width: 100%;
-    margin-bottom: 15px;
+.search-box input{
+    width:100%;
 }
 
-.search-box input {
-    width: 100%;
+.count-box{
+    background:#e8f1ff;
+    color:#17365d;
+    padding:12px;
+    border-radius:6px;
+    margin-bottom:15px;
+    font-weight:bold;
 }
 
-/* COUNT */
-
-.count-box {
-    background: #e8f1ff;
-    padding: 12px;
-    border-radius: 6px;
-    margin-bottom: 15px;
-    font-weight: bold;
-    color: #17365d;
+.table-container{
+    overflow-x:auto;
 }
 
-/* TABLE */
-
-.table-container {
-    overflow-x: auto;
+table{
+    width:100%;
+    border-collapse:collapse;
+    min-width:900px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-    min-width: 1100px;
+th{
+    background:#17365d;
+    color:white;
+    padding:12px 8px;
+    border:1px solid white;
 }
 
-th {
-    background: #17365d;
-    color: white;
-    padding: 12px 8px;
-    text-align: center;
-    border: 1px solid #ffffff;
+td{
+    padding:11px 8px;
+    border-bottom:1px solid #ddd;
+    text-align:center;
 }
 
-td {
-    padding: 11px 8px;
-    border-bottom: 1px solid #ddd;
-    text-align: center;
+tr:hover{
+    background:#f1f5f9;
 }
 
-tr:hover {
-    background: #f1f5f9;
+.note{
+    background:#fff3cd;
+    border-left:5px solid #ffc107;
+    padding:13px;
+    margin-bottom:20px;
+    line-height:1.7;
 }
 
-/* CLASS HEADER */
+/* MARKS SETTINGS */
 
-.class-header {
-    background: #0d6efd !important;
-    font-size: 14px;
+.settings-panel{
+    display:none;
+    background:#eef6ff;
+    border:2px solid #0d6efd;
+    padding:20px;
+    border-radius:10px;
+    margin-top:20px;
 }
 
-/* ACTION BUTTONS */
-
-.edit-btn {
-    background: #ffc107;
-    color: #000;
-    padding: 7px 12px;
-    margin: 2px;
+.settings-title{
+    color:#17365d;
+    margin-bottom:15px;
 }
 
-.delete-btn {
-    background: #dc3545;
-    color: white;
-    padding: 7px 12px;
-    margin: 2px;
+.settings-grid{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
 }
 
-.edit-btn:hover {
-    background: #e0a800;
+.close-btn{
+    background:#6c757d;
+    color:white;
 }
 
-.delete-btn:hover {
-    background: #bb2d3b;
+.current-value{
+    background:#e8f5e9;
+    padding:10px;
+    border-radius:6px;
+    margin-top:15px;
+    line-height:1.8;
 }
 
-/* EMPTY */
+@media(max-width:900px){
 
-.empty-message {
-    text-align: center;
-    padding: 25px;
-    color: #777;
-}
-
-/* NOTE */
-
-.note {
-    background: #fff3cd;
-    border-left: 5px solid #ffc107;
-    padding: 12px;
-    margin-bottom: 20px;
-    border-radius: 5px;
-    line-height: 1.6;
-}
-
-/* RESPONSIVE */
-
-@media (max-width: 900px) {
-
-    .form-grid {
-        grid-template-columns: repeat(2, 1fr);
+    .settings-grid{
+        grid-template-columns:repeat(2,1fr);
     }
 
 }
 
-@media (max-width: 600px) {
+@media(max-width:600px){
 
-    .form-grid {
-        grid-template-columns: 1fr;
+    .form-grid,
+    .settings-grid{
+        grid-template-columns:1fr;
     }
 
-    .header h1 {
-        font-size: 20px;
-    }
-
-    .container {
-        width: 94%;
+    .header h1{
+        font-size:20px;
     }
 
 }
 
 </style>
-</head>
 
+</head>
 
 <body>
 
@@ -311,7 +275,6 @@ tr:hover {
 </div>
 
 
-
 <div class="container">
 
 
@@ -319,9 +282,7 @@ tr:hover {
 
 <div class="top-bar">
 
-    <h2>
-        📚 Subject Master
-    </h2>
+    <h2>📚 Subject Master</h2>
 
     <a href="index.html" class="back-btn">
         ⬅ Dashboard
@@ -330,74 +291,55 @@ tr:hover {
 </div>
 
 
-
 <!-- NOTE -->
 
 <div class="note">
 
-    <strong>ಗಮನಿಸಿ:</strong>
+    <strong>ಮುಖ್ಯ ಸೂಚನೆ:</strong><br>
 
-    Subject Maximum Marks ಮತ್ತು Passing Marks
-    ತರಗತಿವಾರು ಪ್ರತ್ಯೇಕವಾಗಿ ನಿರ್ವಹಿಸಲಾಗುತ್ತದೆ.
-
-    <br>
-
-    <strong>Kannada:</strong>
-    8ನೇ = 100 / 35,
-    9ನೇ = 125 / 44,
-    10ನೇ = 125 / 44
+    ಇಲ್ಲಿ ಪ್ರತಿಯೊಂದು Subjectಗೆ
+    <strong>ತರಗತಿ + ಪರೀಕ್ಷೆ + Maximum Marks + Passing Marks</strong>
+    ಪ್ರತ್ಯೇಕವಾಗಿ Edit ಮಾಡಬಹುದು.
 
     <br>
 
-    <strong>ಇತರೆ ವಿಷಯಗಳು:</strong>
-    ಎಲ್ಲಾ ತರಗತಿಗಳಿಗೆ 100 / 35
+    ನೀವು ಇಲ್ಲಿ ಮಾಡುವ ಬದಲಾವಣೆಗಳನ್ನು
+    ಮುಂದಿನ <strong>Marks Entry</strong> ನಲ್ಲಿ
+    ಸ್ವಯಂಚಾಲಿತವಾಗಿ ಬಳಸಲಾಗುತ್ತದೆ.
 
 </div>
 
 
-
-<!-- ADD SUBJECT -->
+<!-- SUBJECT ADD -->
 
 <div class="card">
 
-    <h3>
-        ➕ Subject Information
-    </h3>
-
+    <h3>➕ Subject Information</h3>
 
     <div class="form-grid">
 
-
         <div class="form-group">
 
-            <label>
-                Subject Code
-            </label>
+            <label>Subject Code</label>
 
             <input
                 type="text"
                 id="subjectCode"
-                placeholder="ಉದಾ: 01K"
-            >
+                placeholder="ಉದಾ: 01K">
 
         </div>
-
 
 
         <div class="form-group">
 
-            <label>
-                Subject Name
-            </label>
+            <label>Subject Name</label>
 
             <input
                 type="text"
                 id="subjectName"
-                placeholder="ಉದಾ: KANNADA"
-            >
+                placeholder="ಉದಾ: KANNADA">
 
         </div>
-
 
     </div>
 
@@ -432,10 +374,7 @@ tr:hover {
 
 <div class="card">
 
-    <h3>
-        📋 Subject List
-    </h3>
-
+    <h3>📋 Subject List</h3>
 
     <div class="count-box">
 
@@ -445,102 +384,186 @@ tr:hover {
     </div>
 
 
-
-    <!-- SEARCH -->
-
     <div class="search-box">
 
         <input
             type="text"
             id="searchSubject"
             placeholder="🔍 Search Subject Code or Subject Name..."
-            onkeyup="displaySubjects()"
-        >
+            onkeyup="displaySubjects()">
 
     </div>
 
 
-
     <div class="table-container">
-
 
         <table>
 
-
             <thead>
 
-
                 <tr>
 
-                    <th rowspan="2">
-                        Sl No
-                    </th>
+                    <th>Sl No</th>
 
-                    <th rowspan="2">
-                        Subject Code
-                    </th>
+                    <th>Subject Code</th>
 
-                    <th rowspan="2">
-                        Subject Name
-                    </th>
+                    <th>Subject Name</th>
 
-                    <th colspan="2" class="class-header">
-                        8ನೇ ತರಗತಿ
-                    </th>
+                    <th>8ನೇ</th>
 
-                    <th colspan="2" class="class-header">
-                        9ನೇ ತರಗತಿ
-                    </th>
+                    <th>9ನೇ</th>
 
-                    <th colspan="2" class="class-header">
-                        10ನೇ ತರಗತಿ
-                    </th>
+                    <th>10ನೇ</th>
 
-                    <th rowspan="2">
-                        Action
-                    </th>
+                    <th>Action</th>
 
                 </tr>
-
-
-                <tr>
-
-                    <th>
-                        Max
-                    </th>
-
-                    <th>
-                        Pass
-                    </th>
-
-                    <th>
-                        Max
-                    </th>
-
-                    <th>
-                        Pass
-                    </th>
-
-                    <th>
-                        Max
-                    </th>
-
-                    <th>
-                        Pass
-                    </th>
-
-                </tr>
-
 
             </thead>
 
 
-            <tbody id="subjectTableBody">
-
-            </tbody>
-
+            <tbody id="subjectTableBody"></tbody>
 
         </table>
+
+    </div>
+
+
+    <!-- MARK SETTINGS -->
+
+    <div
+        class="settings-panel"
+        id="settingsPanel">
+
+        <h3 class="settings-title">
+            ⚙️ Exam-wise Marks Settings
+        </h3>
+
+
+        <div id="selectedSubjectText"
+             style="font-weight:bold;margin-bottom:15px;">
+        </div>
+
+
+        <div class="settings-grid">
+
+
+            <!-- CLASS -->
+
+            <div class="form-group">
+
+                <label>ತರಗತಿ</label>
+
+                <select id="markClass">
+
+                    <option value="8">8ನೇ ತರಗತಿ</option>
+
+                    <option value="9">9ನೇ ತರಗತಿ</option>
+
+                    <option value="10">10ನೇ ತರಗತಿ</option>
+
+                </select>
+
+            </div>
+
+
+            <!-- EXAM -->
+
+            <div class="form-group">
+
+                <label>ಪರೀಕ್ಷೆ</label>
+
+                <select id="markExam">
+
+                    <option value="FA-1">FA-1</option>
+
+                    <option value="FA-2">FA-2</option>
+
+                    <option value="FA-3">FA-3</option>
+
+                    <option value="FA-4">FA-4</option>
+
+                    <option value="SA-1">SA-1</option>
+
+                    <option value="SA-2">SA-2</option>
+
+                    <option value="TERM-1">TERM-1</option>
+
+                    <option value="TERM-2">TERM-2</option>
+
+                    <option value="ANNUAL">ANNUAL EXAM</option>
+
+                </select>
+
+            </div>
+
+
+            <!-- MAX -->
+
+            <div class="form-group">
+
+                <label>Maximum Marks</label>
+
+                <input
+                    type="number"
+                    id="maximumMarks"
+                    min="0">
+
+            </div>
+
+
+            <!-- PASS -->
+
+            <div class="form-group">
+
+                <label>Passing Marks</label>
+
+                <input
+                    type="number"
+                    id="passingMarks"
+                    min="0">
+
+            </div>
+
+        </div>
+
+
+        <div class="button-area">
+
+            <button
+                class="marks-btn"
+                onclick="saveMarksRule()">
+
+                💾 Save Marks Setting
+
+            </button>
+
+
+            <button
+                class="clear-btn"
+                onclick="loadCurrentRule()">
+
+                🔄 Reset
+
+            </button>
+
+
+            <button
+                class="close-btn"
+                onclick="closeSettings()">
+
+                ✖ Close
+
+            </button>
+
+        </div>
+
+
+        <div
+            class="current-value"
+            id="currentValue">
+
+        </div>
 
     </div>
 
@@ -554,10 +577,9 @@ tr:hover {
 <script>
 
 
-/* ==========================================
+/* =====================================================
    SUBJECT DATA
-========================================== */
-
+===================================================== */
 
 let subjects =
     JSON.parse(
@@ -567,167 +589,261 @@ let subjects =
 
 let editIndex = -1;
 
+let selectedSubjectIndex = -1;
 
 
-/* ==========================================
-   DEFAULT SUBJECTS
-========================================== */
+/* =====================================================
+   EXAMS
+===================================================== */
+
+const exams = [
+
+    "FA-1",
+    "FA-2",
+    "FA-3",
+    "FA-4",
+    "SA-1",
+    "SA-2",
+    "TERM-1",
+    "TERM-2",
+    "ANNUAL"
+
+];
 
 
-function createDefaultSubjects() {
+/* =====================================================
+   DEFAULT MARKS
+===================================================== */
 
-    return [
+function defaultMarks(subjectCode, classNo, exam){
 
-        {
-            code: "01K",
-            name: "KANNADA",
+    /*
+       8ನೇ
+    */
 
-            class8: {
-                maxMarks: 100,
-                passMarks: 35
-            },
+    if(classNo === "8"){
 
-            class9: {
-                maxMarks: 125,
-                passMarks: 44
-            },
+        if(
+            exam === "FA-1" ||
+            exam === "FA-2" ||
+            exam === "FA-3" ||
+            exam === "FA-4"
+        ){
 
-            class10: {
-                maxMarks: 125,
-                passMarks: 44
-            }
-        },
+            return {
+                max:10,
+                pass:3
+            };
 
-
-        {
-            code: "31E",
-            name: "ENGLISH",
-
-            class8: {
-                maxMarks: 100,
-                passMarks: 35
-            },
-
-            class9: {
-                maxMarks: 100,
-                passMarks: 35
-            },
-
-            class10: {
-                maxMarks: 100,
-                passMarks: 35
-            }
-        },
-
-
-        {
-            code: "61H",
-            name: "HINDI",
-
-            class8: {
-                maxMarks: 100,
-                passMarks: 35
-            },
-
-            class9: {
-                maxMarks: 100,
-                passMarks: 35
-            },
-
-            class10: {
-                maxMarks: 100,
-                passMarks: 35
-            }
-        },
-
-
-        {
-            code: "81K",
-            name: "MATHS",
-
-            class8: {
-                maxMarks: 100,
-                passMarks: 35
-            },
-
-            class9: {
-                maxMarks: 100,
-                passMarks: 35
-            },
-
-            class10: {
-                maxMarks: 100,
-                passMarks: 35
-            }
-        },
-
-
-        {
-            code: "83K",
-            name: "SCIENCE",
-
-            class8: {
-                maxMarks: 100,
-                passMarks: 35
-            },
-
-            class9: {
-                maxMarks: 100,
-                passMarks: 35
-            },
-
-            class10: {
-                maxMarks: 100,
-                passMarks: 35
-            }
-        },
-
-
-        {
-            code: "85K",
-            name: "SOCIAL SCIENCE",
-
-            class8: {
-                maxMarks: 100,
-                passMarks: 35
-            },
-
-            class9: {
-                maxMarks: 100,
-                passMarks: 35
-            },
-
-            class10: {
-                maxMarks: 100,
-                passMarks: 35
-            }
         }
 
-    ];
+
+        if(
+            exam === "SA-1" ||
+            exam === "SA-2"
+        ){
+
+            return {
+                max:30,
+                pass:10
+            };
+
+        }
+
+
+        if(
+            exam === "TERM-1" ||
+            exam === "TERM-2"
+        ){
+
+            return {
+                max:50,
+                pass:18
+            };
+
+        }
+
+
+        if(exam === "ANNUAL"){
+
+            return {
+                max:100,
+                pass:35
+            };
+
+        }
+
+    }
+
+
+    /*
+       9ನೇ / 10ನೇ
+    */
+
+    if(
+        classNo === "9" ||
+        classNo === "10"
+    ){
+
+        if(
+            exam === "FA-1" ||
+            exam === "FA-2" ||
+            exam === "FA-3" ||
+            exam === "FA-4"
+        ){
+
+            return {
+                max:50,
+                pass:18
+            };
+
+        }
+
+
+        if(
+            exam === "SA-1" ||
+            exam === "SA-2"
+        ){
+
+            return {
+                max:80,
+                pass:28
+            };
+
+        }
+
+
+        if(
+            exam === "TERM-1" ||
+            exam === "TERM-2"
+        ){
+
+            return {
+                max:80,
+                pass:28
+            };
+
+        }
+
+
+        if(exam === "ANNUAL"){
+
+            /*
+               Kannada Annual = 125
+               Other Annual = 100
+            */
+
+            if(subjectCode === "01K"){
+
+                return {
+                    max:125,
+                    pass:44
+                };
+
+            }
+
+            return {
+                max:100,
+                pass:35
+            };
+
+        }
+
+    }
+
+
+    return {
+        max:100,
+        pass:35
+    };
 
 }
 
 
 
-/* ==========================================
-   CHECK / MIGRATE OLD DATA
-========================================== */
+/* =====================================================
+   CREATE DEFAULT SUBJECTS
+===================================================== */
+
+function createDefaultSubjects(){
+
+    const codes = [
+
+        ["01K","KANNADA"],
+        ["31E","ENGLISH"],
+        ["61H","HINDI"],
+        ["81K","MATHS"],
+        ["83K","SCIENCE"],
+        ["85K","SOCIAL SCIENCE"]
+
+    ];
 
 
-function setupSubjects() {
+    return codes.map(item => {
+
+        const subject = {
+
+            code:item[0],
+
+            name:item[1],
+
+            marks:{}
+
+        };
+
+
+        ["8","9","10"].forEach(classNo => {
+
+            exams.forEach(exam => {
+
+                const m =
+                    defaultMarks(
+                        subject.code,
+                        classNo,
+                        exam
+                    );
+
+
+                subject.marks[
+                    classNo + "_" + exam
+                ] = {
+
+                    max:m.max,
+
+                    pass:m.pass
+
+                };
+
+            });
+
+        });
+
+
+        return subject;
+
+    });
+
+}
+
+
+
+/* =====================================================
+   SETUP / MIGRATION
+===================================================== */
+
+function setupSubjects(){
 
     /*
-       ಹಳೆಯ Subject Masterನಲ್ಲಿ
-       maxMarks / passMarks ಮಾತ್ರ ಇದ್ದರೆ
-       ಹೊಸ class-wise structureಗೆ ಬದಲಾಯಿಸುತ್ತದೆ.
+       ಹಳೆಯ data ಇದ್ದರೆ ಹೊಸ structureಗೆ ಬದಲಾಯಿಸುತ್ತದೆ.
     */
 
-    if (
+    if(
         subjects.length === 0 ||
-        !subjects[0].class8
-    ) {
+        !subjects[0].marks
+    ){
 
-        subjects = createDefaultSubjects();
+        subjects =
+            createDefaultSubjects();
 
         localStorage.setItem(
             "schoolSubjects",
@@ -735,42 +851,55 @@ function setupSubjects() {
         );
 
         return;
+
     }
 
 
     /*
-       ಯಾವುದೇ subject data missing ಇದ್ದರೆ
-       default values ತುಂಬುತ್ತದೆ.
+       ಪ್ರತಿಯೊಂದು subjectಗೆ
+       ಎಲ್ಲಾ class + exam rules ಇರಬೇಕು.
     */
 
     subjects.forEach(subject => {
 
-        if (!subject.class8) {
+        if(!subject.marks){
 
-            subject.class8 = {
-                maxMarks: 100,
-                passMarks: 35
-            };
+            subject.marks = {};
 
         }
 
-        if (!subject.class9) {
 
-            subject.class9 = {
-                maxMarks: 100,
-                passMarks: 35
-            };
+        ["8","9","10"].forEach(classNo => {
 
-        }
+            exams.forEach(exam => {
 
-        if (!subject.class10) {
+                const key =
+                    classNo + "_" + exam;
 
-            subject.class10 = {
-                maxMarks: 100,
-                passMarks: 35
-            };
 
-        }
+                if(!subject.marks[key]){
+
+                    const m =
+                        defaultMarks(
+                            subject.code,
+                            classNo,
+                            exam
+                        );
+
+
+                    subject.marks[key] = {
+
+                        max:m.max,
+
+                        pass:m.pass
+
+                    };
+
+                }
+
+            });
+
+        });
 
     });
 
@@ -784,13 +913,11 @@ function setupSubjects() {
 
 
 
-/* ==========================================
+/* =====================================================
    SAVE SUBJECT
-========================================== */
+===================================================== */
 
-
-function saveSubject() {
-
+function saveSubject(){
 
     const code =
         document
@@ -808,10 +935,7 @@ function saveSubject() {
         .toUpperCase();
 
 
-
-    /* VALIDATION */
-
-    if (!code) {
+    if(!code){
 
         alert(
             "ದಯವಿಟ್ಟು Subject Code ನಮೂದಿಸಿ."
@@ -822,7 +946,7 @@ function saveSubject() {
     }
 
 
-    if (!name) {
+    if(!name){
 
         alert(
             "ದಯವಿಟ್ಟು Subject Name ನಮೂದಿಸಿ."
@@ -833,21 +957,15 @@ function saveSubject() {
     }
 
 
-
-    /* DUPLICATE CHECK */
-
     const duplicate =
         subjects.some(
-            (item, index) =>
-
+            (item,index) =>
                 index !== editIndex &&
-
-                item.code.toUpperCase() ===
-                code.toUpperCase()
+                item.code === code
         );
 
 
-    if (duplicate) {
+    if(duplicate){
 
         alert(
             "ಈ Subject Code ಈಗಾಗಲೇ ಇದೆ."
@@ -858,59 +976,60 @@ function saveSubject() {
     }
 
 
+    if(editIndex === -1){
 
-    /*
-       ಹೊಸ subjectಗೆ
-       default 100/35
-       ಎಲ್ಲಾ ತರಗತಿಗಳಿಗೆ.
-    */
+        const subject = {
 
-    const subject = {
+            code:code,
 
-        code: code,
+            name:name,
 
-        name: name,
+            marks:{}
 
-        class8: {
-            maxMarks: 100,
-            passMarks: 35
-        },
-
-        class9: {
-            maxMarks: 100,
-            passMarks: 35
-        },
-
-        class10: {
-            maxMarks: 100,
-            passMarks: 35
-        }
-
-    };
+        };
 
 
+        ["8","9","10"].forEach(classNo => {
 
-    /* EDIT */
+            exams.forEach(exam => {
 
-    if (editIndex !== -1) {
-
-        /*
-           ಈಗಿರುವ marks settings
-           ಉಳಿಸಿಕೊಳ್ಳುತ್ತೇವೆ.
-        */
-
-        subject.class8 =
-            subjects[editIndex].class8;
-
-        subject.class9 =
-            subjects[editIndex].class9;
-
-        subject.class10 =
-            subjects[editIndex].class10;
+                const m =
+                    defaultMarks(
+                        code,
+                        classNo,
+                        exam
+                    );
 
 
-        subjects[editIndex] =
-            subject;
+                subject.marks[
+                    classNo + "_" + exam
+                ] = {
+
+                    max:m.max,
+
+                    pass:m.pass
+
+                };
+
+            });
+
+        });
+
+
+        subjects.push(subject);
+
+
+        alert(
+            "Subject ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ."
+        );
+
+    }
+
+    else{
+
+        subjects[editIndex].code = code;
+
+        subjects[editIndex].name = name;
 
 
         alert(
@@ -929,21 +1048,6 @@ function saveSubject() {
     }
 
 
-    /* ADD */
-
-    else {
-
-        subjects.push(subject);
-
-
-        alert(
-            "Subject ಯಶಸ್ವಿಯಾಗಿ ಸೇರಿಸಲಾಗಿದೆ."
-        );
-
-    }
-
-
-
     localStorage.setItem(
         "schoolSubjects",
         JSON.stringify(subjects)
@@ -958,13 +1062,11 @@ function saveSubject() {
 
 
 
-/* ==========================================
+/* =====================================================
    DISPLAY SUBJECTS
-========================================== */
+===================================================== */
 
-
-function displaySubjects() {
-
+function displaySubjects(){
 
     const tbody =
         document
@@ -983,12 +1085,10 @@ function displaySubjects() {
         .toLowerCase();
 
 
-
     tbody.innerHTML = "";
 
 
-
-    const filteredSubjects =
+    const filtered =
         subjects.filter(subject =>
 
             subject.code
@@ -1004,27 +1104,109 @@ function displaySubjects() {
         );
 
 
-
     document
-    .getElementById(
-        "subjectCount"
-    )
+    .getElementById("subjectCount")
     .innerText =
     subjects.length;
 
 
+    filtered.forEach((subject,index) => {
 
-    if (
-        filteredSubjects.length === 0
-    ) {
+        const realIndex =
+            subjects.indexOf(subject);
+
+
+        const annual8 =
+            subject.marks["8_ANNUAL"];
+
+
+        const annual9 =
+            subject.marks["9_ANNUAL"];
+
+
+        const annual10 =
+            subject.marks["10_ANNUAL"];
+
+
+        const row =
+            document.createElement("tr");
+
+
+        row.innerHTML = `
+
+            <td>
+                ${realIndex + 1}
+            </td>
+
+            <td>
+                <strong>
+                    ${subject.code}
+                </strong>
+            </td>
+
+            <td>
+                ${subject.name}
+            </td>
+
+            <td>
+                ${annual8.max}/${annual8.pass}
+            </td>
+
+            <td>
+                ${annual9.max}/${annual9.pass}
+            </td>
+
+            <td>
+                ${annual10.max}/${annual10.pass}
+            </td>
+
+            <td>
+
+                <button
+                    class="marks-btn"
+                    onclick="openMarksSettings(${realIndex})">
+
+                    ⚙️ Marks
+
+                </button>
+
+
+                <button
+                    class="edit-btn"
+                    onclick="editSubject(${realIndex})">
+
+                    ✏️ Edit
+
+                </button>
+
+
+                <button
+                    class="delete-btn"
+                    onclick="deleteSubject(${realIndex})">
+
+                    🗑 Delete
+
+                </button>
+
+            </td>
+
+        `;
+
+
+        tbody.appendChild(row);
+
+    });
+
+
+    if(filtered.length === 0){
 
         tbody.innerHTML = `
 
             <tr>
 
                 <td
-                    colspan="10"
-                    class="empty-message">
+                    colspan="7"
+                    style="padding:25px;text-align:center;">
 
                     ಯಾವುದೇ Subject ಕಂಡುಬಂದಿಲ್ಲ.
 
@@ -1034,115 +1216,289 @@ function displaySubjects() {
 
         `;
 
-        return;
-
     }
-
-
-
-    filteredSubjects.forEach(
-        (subject) => {
-
-
-            const realIndex =
-                subjects.indexOf(subject);
-
-
-
-            const row =
-                document.createElement("tr");
-
-
-
-            row.innerHTML = `
-
-                <td>
-                    ${realIndex + 1}
-                </td>
-
-
-                <td>
-                    <strong>
-                        ${subject.code}
-                    </strong>
-                </td>
-
-
-                <td>
-                    ${subject.name}
-                </td>
-
-
-                <td>
-                    ${subject.class8.maxMarks}
-                </td>
-
-
-                <td>
-                    ${subject.class8.passMarks}
-                </td>
-
-
-                <td>
-                    ${subject.class9.maxMarks}
-                </td>
-
-
-                <td>
-                    ${subject.class9.passMarks}
-                </td>
-
-
-                <td>
-                    ${subject.class10.maxMarks}
-                </td>
-
-
-                <td>
-                    ${subject.class10.passMarks}
-                </td>
-
-
-                <td>
-
-                    <button
-                        class="edit-btn"
-                        onclick="editSubject(${realIndex})">
-
-                        ✏️ Edit
-
-                    </button>
-
-
-                    <button
-                        class="delete-btn"
-                        onclick="deleteSubject(${realIndex})">
-
-                        🗑 Delete
-
-                    </button>
-
-                </td>
-
-            `;
-
-
-            tbody.appendChild(row);
-
-        }
-    );
 
 }
 
 
 
-/* ==========================================
+/* =====================================================
+   OPEN MARKS SETTINGS
+===================================================== */
+
+function openMarksSettings(index){
+
+    selectedSubjectIndex = index;
+
+
+    const subject =
+        subjects[index];
+
+
+    document
+    .getElementById(
+        "settingsPanel"
+    )
+    .style.display =
+    "block";
+
+
+    document
+    .getElementById(
+        "selectedSubjectText"
+    )
+    .innerHTML =
+
+        "📚 " +
+        subject.code +
+        " - " +
+        subject.name;
+
+
+    loadCurrentRule();
+
+
+    document
+    .getElementById(
+        "settingsPanel"
+    )
+    .scrollIntoView({
+        behavior:"smooth"
+    });
+
+}
+
+
+
+/* =====================================================
+   LOAD CURRENT RULE
+===================================================== */
+
+function loadCurrentRule(){
+
+    if(selectedSubjectIndex === -1){
+
+        return;
+
+    }
+
+
+    const classNo =
+        document
+        .getElementById(
+            "markClass"
+        )
+        .value;
+
+
+    const exam =
+        document
+        .getElementById(
+            "markExam"
+        )
+        .value;
+
+
+    const subject =
+        subjects[
+            selectedSubjectIndex
+        ];
+
+
+    const key =
+        classNo + "_" + exam;
+
+
+    const rule =
+        subject.marks[key];
+
+
+    if(rule){
+
+        document
+        .getElementById(
+            "maximumMarks"
+        )
+        .value =
+        rule.max;
+
+
+        document
+        .getElementById(
+            "passingMarks"
+        )
+        .value =
+        rule.pass;
+
+    }
+
+
+    document
+    .getElementById(
+        "currentValue"
+    )
+    .innerHTML =
+
+        "<strong>ಈಗಿನ Setting:</strong> " +
+
+        rule.max +
+
+        " Maximum / " +
+
+        rule.pass +
+
+        " Passing";
+
+}
+
+
+
+/* =====================================================
+   SAVE MARKS RULE
+===================================================== */
+
+function saveMarksRule(){
+
+    if(selectedSubjectIndex === -1){
+
+        alert(
+            "ಮೊದಲು Subject ಆಯ್ಕೆ ಮಾಡಿ."
+        );
+
+        return;
+
+    }
+
+
+    const classNo =
+        document
+        .getElementById(
+            "markClass"
+        )
+        .value;
+
+
+    const exam =
+        document
+        .getElementById(
+            "markExam"
+        )
+        .value;
+
+
+    const max =
+        Number(
+            document
+            .getElementById(
+                "maximumMarks"
+            )
+            .value
+        );
+
+
+    const pass =
+        Number(
+            document
+            .getElementById(
+                "passingMarks"
+            )
+            .value
+        );
+
+
+    if(max <= 0){
+
+        alert(
+            "Maximum Marks ಸರಿಯಾಗಿ ನಮೂದಿಸಿ."
+        );
+
+        return;
+
+    }
+
+
+    if(pass < 0 || pass > max){
+
+        alert(
+            "Passing Marks Maximum Marksಗಿಂತ ಹೆಚ್ಚಾಗಬಾರದು."
+        );
+
+        return;
+
+    }
+
+
+    const subject =
+        subjects[
+            selectedSubjectIndex
+        ];
+
+
+    const key =
+        classNo + "_" + exam;
+
+
+    subject.marks[key] = {
+
+        max:max,
+
+        pass:pass
+
+    };
+
+
+    localStorage.setItem(
+        "schoolSubjects",
+        JSON.stringify(subjects)
+    );
+
+
+    alert(
+
+        subject.name +
+        " - " +
+        classNo +
+        "ನೇ - " +
+        exam +
+        " Marks Setting Update ಆಗಿದೆ."
+
+    );
+
+
+    loadCurrentRule();
+
+    displaySubjects();
+
+}
+
+
+
+/* =====================================================
+   CLASS / EXAM CHANGE
+===================================================== */
+
+document
+.getElementById("markClass")
+.addEventListener(
+    "change",
+    loadCurrentRule
+);
+
+
+document
+.getElementById("markExam")
+.addEventListener(
+    "change",
+    loadCurrentRule
+);
+
+
+
+/* =====================================================
    EDIT SUBJECT
-========================================== */
+===================================================== */
 
-
-function editSubject(index) {
-
+function editSubject(index){
 
     const subject =
         subjects[index];
@@ -1164,8 +1520,7 @@ function editSubject(index) {
     subject.name;
 
 
-    editIndex =
-        index;
+    editIndex = index;
 
 
     document
@@ -1176,12 +1531,11 @@ function editSubject(index) {
     "✏️ Update Subject";
 
 
-
     window.scrollTo({
 
-        top: 0,
+        top:0,
 
-        behavior: "smooth"
+        behavior:"smooth"
 
     });
 
@@ -1189,19 +1543,17 @@ function editSubject(index) {
 
 
 
-/* ==========================================
+/* =====================================================
    DELETE SUBJECT
-========================================== */
+===================================================== */
 
-
-function deleteSubject(index) {
-
+function deleteSubject(index){
 
     const subject =
         subjects[index];
 
 
-    const confirmDelete =
+    const answer =
         confirm(
 
             `"${subject.name}" Subject ಅನ್ನು Delete ಮಾಡಬೇಕೇ?`
@@ -1209,12 +1561,11 @@ function deleteSubject(index) {
         );
 
 
-    if (!confirmDelete) {
+    if(!answer){
 
         return;
 
     }
-
 
 
     subjects.splice(
@@ -1240,13 +1591,11 @@ function deleteSubject(index) {
 
 
 
-/* ==========================================
-   CLEAR FORM
-========================================== */
+/* =====================================================
+   CLEAR
+===================================================== */
 
-
-function clearForm() {
-
+function clearForm(){
 
     document
     .getElementById(
@@ -1276,10 +1625,29 @@ function clearForm() {
 
 
 
-/* ==========================================
-   INITIAL LOAD
-========================================== */
+/* =====================================================
+   CLOSE SETTINGS
+===================================================== */
 
+function closeSettings(){
+
+    document
+    .getElementById(
+        "settingsPanel"
+    )
+    .style.display =
+    "none";
+
+
+    selectedSubjectIndex = -1;
+
+}
+
+
+
+/* =====================================================
+   START
+===================================================== */
 
 setupSubjects();
 
